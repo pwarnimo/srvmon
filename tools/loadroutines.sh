@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SQLUSR=""
-SQLPW=""
+SQLUSR="sqlusr"
+SQLPW="q1w2e3!"
 
 echo "Loading all stored routines into DB . . ."
 

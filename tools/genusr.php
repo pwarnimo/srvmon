@@ -2,8 +2,8 @@
 <?php
   printf("GENUSR -- Generate salt and pw hash for the given user.\n");
   
-  $username = "cbiot";
-  $password = "ixpee88q1.2.3";
+  $username = "";
+  $password = "";
 
   $cost = 10;
   $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), "+", ".");

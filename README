@@ -1,6 +1,10 @@
 SRVMON SERVER MONITORING SUITE
 ------------------------------
 
+ *** This suite is currently under development.
+ *** This is a draft release.
+ *** Version 1.0 expected around May/June 2015.
+
 SRVMON is a simple monitoring suite for servers, switches, routers or
 every other device which has network access. SRVMON uses a SQL database,
 where it stores the hosts which should be checked. A user can define

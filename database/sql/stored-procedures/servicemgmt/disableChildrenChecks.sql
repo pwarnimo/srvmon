@@ -1,31 +1,25 @@
 /*---------------------------------------------------------------------------------------------
-| Routine     : addServiceToServer
+| Routine     : disableChildrenChecks.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
-| Create date : 2015-04-20
-| Version     : 0.4
+| Create date : 2015-04-22
+| Version     : 0.6
 | 
-| Description : Add an existing service to a server. By default, dtValue will be set to 4.
-|                0 = Host OK
-|                1 = Warning
-|                2 = Critical
-|                3 = Unreachable
-|                4 = Pending
+| Description : Disable all children if parent is down and set services to unreachable.
 |
 | Parameters
 | ----------
-|  IN  : pHID : ID number of the host.
-|  IN  : pSID : ID number of the service.
-|  OUT : pErr : Exit code of the procedure.
-|                 0 : Query OK
-|                -1 : Duplicate ID
-|                -2 : Foreign key error
-|                -3 : General SQL error
-|                -4 : General SQL warning
+|  IN  : pID  : ID number of the parent.
+|  OUT : pErr : Error code in case of a failure.
+|                 0 = Query OK
+|                -2 = Foreign key error
+|                -3 = General SQL error
+|                -4 = General SQL warning
+|                -5 = No data
 |
-| Changelog
+| Changelof
 | ---------
-|  2015-04-20 : Created procedure.
-|  2015-04-21 : Bugfixing and cleanup.
+|  2015-04-22 : Created procedure.
+|  2015-04-23 : Minor modifications.
 |
 | License information
 | -------------------
@@ -49,25 +43,24 @@
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS addServiceToServer $$
-CREATE PROCEDURE addServiceToServer(
-  IN  pHID MEDIUMINT,
-  IN  pSID MEDIUMINT,
+DROP PROCEDURE IF EXISTS disableChildrenChecks $$
+CREATE PROCEDURE disableChildrenChecks(
+  IN  pID  MEDIUMINT,
   OUT pErr MEDIUMINT
 )
 BEGIN
-  DECLARE cond_dupkey CONDITION FOR 1062;
+  DECLARE no_data CONDITION FOR 1329;
   DECLARE cond_forkey CONDITION FOR 1452;
-
-  DECLARE EXIT HANDLER FOR cond_dupkey
-  BEGIN
-    SET pErr = -1;
-    ROLLBACK;
-  END;
-
+  
   DECLARE EXIT HANDLER FOR cond_forkey
   BEGIN
     SET pErr = -2;
+    ROLLBACK;
+  END;
+
+  DECLARE EXIT HANDLER FOR no_data
+  BEGIN
+    SET pErr = -5;
     ROLLBACK;
   END;
 
@@ -84,9 +77,22 @@ BEGIN
   END;
 
   START TRANSACTION;
-    INSERT INTO tblServer_has_tblService (idServer, idService, dtValue)
-    VALUES (pHID, pSID, 4);
-
+    UPDATE tblServer_has_tblService SET
+      dtValue = 4
+    WHERE idServer IN (
+      SELECT idChild
+      FROM tblParent
+      WHERE idParent = pID
+    );
+    
+    UPDATE tblServer SET
+      dtEnabled = FALSE
+    WHERE idServer IN (
+      SELECT idChild
+      FROM tblParent
+      WHERE idParent = pID
+    );
+ 
     SET pErr = 0;
   COMMIT;
 END $$

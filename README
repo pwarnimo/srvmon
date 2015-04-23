@@ -41,10 +41,10 @@ application only to show you that it is possible to create multiple user
 interfaces for this suite because all the main logic happens in the
 database.
 
-I created this monitoring just for fun and I know that there are other
-monitoring solutions available but I wanted to do my own project. The
-goal of this project is to create a completely customizable monitoring 
-solution. Please feel free to modify and improve this suite.
+I created this monitoring suite just for fun and I know that there are 
+other monitoring solutions available but I wanted to do my own project. 
+The goal of this project is to create a completely customizable 
+monitoring solution. Please feel free to modify and improve this suite.
 
 For any questions please send a mail to <pwarnimo(at)gmail.com>.
 

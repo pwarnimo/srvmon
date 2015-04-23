@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='us-ascii'?>
+<srvmon>
+  <database>
+    <user></user>
+    <password></password>
+    <host>localhost</host>
+  </database>
+  <director>
+    <checktimeout>10000</checktimeout>
+    <debugmode>1</debugmode>
+  </director>
+</srvmon>

@@ -32,7 +32,15 @@
 package database;
 
 import com.mysql.jdbc.Connection;
+import host.Host;
+import host.HostManager;
 import main.SettingsManager;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,5 +68,48 @@ public class DBManager {
         dbname = settingsmngr.getDatabaseSetting("dbname");
         
         System.out.println("> DBManager class Ok.");
+    }
+    
+    private void connectToDB() {
+        System.out.println(" + Connecting to DB " + dbname + "@" + server);
+        try {
+            dbcon = (Connection) DriverManager.getConnection("jdbc:mysql://" + server + "/" + dbname, username, password);
+            System.out.println(" + Connected");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void closeDBConnection() {
+        System.out.println(" + Disconnecting . . .");
+        try {
+            dbcon.close();
+            System.out.println(" + Disconnected");
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void getServers() {
+        Statement stmt = null;
+        HostManager tmpHosts = new HostManager();
+        
+        connectToDB();
+        
+        try {
+            stmt = dbcon.createStatement();
+            String sql = "CALL getServer(-1,FALSE,@err)";
+            
+            ResultSet res = stmt.executeQuery(sql);
+            
+            while (res.next()) {
+                System.out.println(" | " + res.getInt("idServer") + ":" + res.getString("dtHostname") + ":" + res.getString("dtIPAddress"));
+                tmpHosts.addHost(res.getInt("idServer"), res.getString("dtIPAddress"), res.getString("dtHostname"), res.getBoolean("dtEnabled"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        closeDBConnection();
     }
 }

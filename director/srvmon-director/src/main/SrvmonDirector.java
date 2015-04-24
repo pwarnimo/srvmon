@@ -46,7 +46,6 @@ public class SrvmonDirector {
     public static void main(String[] args) {
         System.out.println("SRVMON DIRECTOR 0.1 INIT . . .");
         dbmngr = new DBManager();
-        settingsmngr = new SettingsManager();
         System.out.println("*** SRVMON DIRECTOR READY ***");
     }
     

@@ -72,20 +72,28 @@ public class SettingsManager {
     }
     
     public void loadDBSettingsFromXML() {
+        database_s.clear();
+        
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(settingsFile);
             
+            System.out.println(" + ROOT = " + doc.getDocumentElement().getTagName());
+            
             NodeList nList = doc.getElementsByTagName("database");
             
             for (int i = 0; i < nList.getLength(); i++) {
-                Node nNode = nList.item(i);
+                NodeList nOptions = nList.item(i).getChildNodes();
                 
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element)nNode;
-                    
-                    System.out.println(" + SETTING> " + eElement.getLocalName());
+                for (int j = 0; j < nOptions.getLength(); j++) {
+                    Node childNode = nOptions.item(j);
+                    if ("option".equals(childNode.getNodeName())) {
+                        Element option = (Element)childNode;
+                        
+                        System.out.println(" + OPT[" + option.getAttribute("caption") + "] = " + option.getTextContent());
+                        database_s.put(option.getAttribute("caption"), option.getTextContent());
+                    }
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException ex) {

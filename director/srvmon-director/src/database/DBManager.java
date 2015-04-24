@@ -31,13 +31,34 @@
 
 package database;
 
+import com.mysql.jdbc.Connection;
+import main.SettingsManager;
+
 /**
  *
  * @author pwarnimo
  */
 public class DBManager {
+    private SettingsManager settingsmngr;
+    private String username;
+    private String password;
+    private String server;
+    private String dbname;
+    private Connection dbcon;
+    
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    
     public DBManager() {
         System.out.println("> DBManager class init...");
+        
+        settingsmngr = new SettingsManager();
+        settingsmngr.loadDBSettingsFromXML();
+        
+        username = settingsmngr.getDatabaseSetting("user");
+        password = settingsmngr.getDatabaseSetting("password");
+        server = settingsmngr.getDatabaseSetting("server");
+        dbname = settingsmngr.getDatabaseSetting("dbname");
+        
         System.out.println("> DBManager class Ok.");
     }
 }

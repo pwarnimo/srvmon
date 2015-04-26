@@ -5,11 +5,11 @@ SRVMON SERVER MONITORING SUITE
  *** This is a draft release.
  *** Version 1.0 expected around May/June 2015.
 
- *** CURRENT VERSIONS : SRVMON DB       -> 0.5
+ *** CURRENT VERSIONS : SRVMON DB       -> 0.51
  ***                    SRVMON DIRECTOR -> 0.1
  ***                    SRVMON AGENT    -> N/A
  ***                    SRVMON WEBUI    -> 0.1
- ***                    SRVMON DESKTOP  -> N/A
+ ***                    SRVMON DESKTOP  -> 0.1
 
 SRVMON is a simple monitoring suite for servers, switches, routers or
 every other device which has network access. SRVMON uses a SQL database,

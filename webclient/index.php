@@ -24,6 +24,15 @@
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
     </head>
     <body>
+
+    	<?php
+		include "inc/settings/dbconfig.inc.php";
+
+		function __autoload($class_name) {
+			require_once "inc/classes/" . $class_name . ".class.php";
+		}
+	?>
+
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -47,7 +56,12 @@
 			   <h3 class="panel-title">Login</h3>
 		   </div>
 		   <div class="panel-body">
-			   Test
+			   <?php
+				$srvmngr = new serversmngr();
+
+				$srvmngr->cltest();
+				$srvmngr->printserver();
+			   ?>
 		   </div>
 	   </div>
 	   		

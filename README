@@ -5,9 +5,9 @@ SRVMON SERVER MONITORING SUITE
  *** This is a draft release.
  *** Version 1.0 expected around May/June 2015.
 
- *** CURRENT VERSIONS : SRVMON DB       -> 0.51
+ *** CURRENT VERSIONS : SRVMON DB       -> 1.0
  ***                    SRVMON DIRECTOR -> 0.1
- ***                    SRVMON AGENT    -> N/A
+ ***                    SRVMON AGENT    -> 0.1
  ***                    SRVMON WEBUI    -> 0.1
  ***                    SRVMON DESKTOP  -> 0.1
 

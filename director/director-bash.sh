@@ -3,7 +3,7 @@
 # Script      : director-bash.sh
 # Author(s)   : Pol Warnimont
 # Create date : 2015-04-24
-# Version     : 0.1
+# Version     : 0.9
 #
 # Description : A simple director script for the SRVMON monitoring suite.
 #
@@ -13,6 +13,7 @@
 #
 # License information
 # -------------------
+#  SRVMON DIRECTOR VERSION 0.9 - CHECKS ALL SERVERS FOR THEIR ONLINE STATUS
 #  Copyright (C) 2015  Pol Warnimont
 #
 #  This program is free software; you can redistribute it and/or
@@ -34,6 +35,22 @@ PASS=""
 DB=""
 
 TMPFILE=/tmp/srvmon[$$]
+
+function showVersion {
+  echo "SRVMON DIRECTOR (director-bash.sh) VERSION 0.9 (C) 2015 Pol Warnimont"
+  echo "SRVMON DIRECTOR comes with ABSOLUTELY NO WARRANTY; for details"
+  echo "type 'show w'. This is free software, and you are welcome"
+  echo "to redistribute it under certain conditions; type 'show c'"
+  echo "for details."
+}
+
+if [ $1 == "-v" ]
+then
+  showVersion
+  exit 0
+fi
+
+showVersion
 
 logger -t srvmon[$$] "SRVMON DIRECTOR STARTED."
 echo "SRVMON DIRECTOR SCRIPT 0.1"

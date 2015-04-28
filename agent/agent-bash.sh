@@ -1,9 +1,40 @@
 #!/bin/bash
+#
+# Script      : agent-bash.sh
+# Author(s)   : Pol Warnimont
+# Create date : 2015-04-24
+# Version     : 0.9
+#
+# Description : A service checks scheduler script
+#
+# Changelog
+# ---------
+#  2015-04-24 : Created script.
+#
+# License information
+# -------------------
+#  SRVMON AGENT VERSION 0.9 - SCHEDULER FOR SERVICE CHECKS
+#  Copyright (C) 2015  Pol Warnimont
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 USER=""
 PASS=""
 DB=""
-HOSTNAME=`hostname`
+DBHOST=""
+HOSTNAME=`hostname -s`
 
 BRED="\e[1;31m"
 BGREEN="\e[1;32m"
@@ -13,16 +44,32 @@ COFF="\e[0m"
 
 SERVICES=/tmp/srvmon.services.$$
 
-logger -t srvmonagent[$$] "Agent has started."
-echo "Agent [$$] has started."
-echo "Fetching server ID from database . . ."
-
-SRVID=$(mysql $DB -u$USER -p$PASS --skip-column-names<<<"SELECT getServerID('$HOSTNAME')")
-
 function cleanUp {
   echo "Cleaning up..."
   rm $SERVICES > /dev/null 2>&1
 }
+
+function showVersion {
+  echo "SRVMON AGENT (agent-bash.sh) VERSION 0.9 (C) 2015 Pol Warnimont"
+  echo "SRVMON AGENT comes with ABSOLUTELY NO WARRANTY; for details"
+  echo "type 'show w'. This is free software, and you are welcome"
+  echo "to redistribute it under certain conditions; type 'show c'"
+  echo "for details."
+}
+
+if [ $1 == "-v" ]
+then
+  showVersion
+  exit 0
+fi
+
+logger -t srvmonagent[$$] "Agent has started."
+echo "Agent [$$] has started."
+echo "Fetching server ID from database . . ."
+
+SRVID=$(mysql $DB -u$USER -p$PASS --skip-column-names -h $DBHOST<<<"SELECT getServerID('$HOSTNAME')")
+
+showVersion
 
 case $SRVID in
   "-3")
@@ -43,7 +90,7 @@ case $SRVID in
     while read line
     do
       echo $line >> $SERVICES
-    done < <(mysql --skip-column-names -u${USER} -p${PASS} ${DB} -e "CALL getServicesForServer(${SRVID},-1,1,@err)")
+    done < <(mysql --skip-column-names -u${USER} -p${PASS} -h${DBHOST} ${DB} -e "CALL getServicesForServer(${SRVID},-1,1,@err)")
 
     while read SVCID SVCCMD
     do
@@ -67,7 +114,7 @@ case $SRVID in
       esac
 
       echo -n "Updating service values for check ID=$SVCID..."
-      mysql -u${USER} -p${PASS} -D${DB} -e "CALL updateServerServiceStatus(${SRVID},${SVCID},${EXCODE},'${OUTPUT}',@err)"
+      mysql -u${USER} -p${PASS} -h${DBHOST} -D${DB} -e "CALL updateServerServiceStatus(${SRVID},${SVCID},${EXCODE},'${OUTPUT}',@err)"
       echo "OK."
     done < $SERVICES
     

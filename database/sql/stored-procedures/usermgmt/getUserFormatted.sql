@@ -2,7 +2,7 @@
 | Routine     : addUser
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 0.4
+| Version     : 1.0
 | 
 | Description : Get a formatted view of the user data with the role description.
 |
@@ -20,6 +20,7 @@
 | ---------
 |  2015-04-20 : Created procedure.
 |  2015-04-21 : Bugfixing and cleanup.
+|  2015-04-28 : Prepared procedure for DB release 1.0.
 |
 | License information
 | -------------------
@@ -59,20 +60,17 @@ BEGIN
   DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
   DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
 
-  IF pID = -1 THEN
+  SET @QRY = "SELECT idUser, dtUsername, dtEmail, dtDescription FROM tblUser, tblRole WHERE fiRole = idRole";
+
+  IF pID != -1 THEN
     BEGIN
-      SELECT idUser, dtUsername, dtEmail, dtDescription
-      FROM tblUser, tblRole
-      WHERE fiRole = idRole;
-    END;
-  ELSE
-    BEGIN
-      SELECT idUser, dtUsername, dtEmail, dtDescription
-      FROM tblUser, tblRole
-      WHERE fiRole = idRole
-        AND idUser = pID;
+      SET @QRY = CONCAT(@QRY, " AND idUser = ", pID);
     END;
   END IF;
+  
+  PREPARE STMT FROM @QRY;
+  EXECUTE STMT;
+  DEALLOCATE PREPARE STMT;
 
   SET pErr = l_errcode;
 END $$

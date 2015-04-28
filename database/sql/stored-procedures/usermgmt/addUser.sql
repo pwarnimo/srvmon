@@ -2,7 +2,7 @@
 | Routine     : addUser
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 0.4
+| Version     : 1.0
 | 
 | Description : This function adds a user with its role to the database.
 |
@@ -23,6 +23,7 @@
 | ---------
 |  2015-04-20 : Created procedure.
 |  2015-04-21 : Cleanup and bugfixing.
+|  2015-04-28 : Prepared procedure for DB release 1.0.
 |
 | License information
 | -------------------

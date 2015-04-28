@@ -2,7 +2,7 @@
 | Routine     : delServiceFromServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 0.4
+| Version     : 1.0
 | 
 | Description : Delete a linked service from a server.
 |
@@ -20,6 +20,7 @@
 | ---------
 |  2015-04-20 : Created procedure.
 |  2015-04-21 : Bugfixing and cleanup.
+|  2015-04-28 : Modified procedure for DB release 1.0.
 |
 | License information
 | -------------------

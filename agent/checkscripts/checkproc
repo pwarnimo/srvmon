@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PROCCOUNT=`ps aux | wc -l`
+
+if [ $PROCCOUNT -gt 200 ]
+then
+  EXCODE=2
+  OUTPUT="$PROCCOUNT running processes (>200)!"
+elif [ $PROCCOUNT -gt 150 ]
+then
+  EXCODE=1
+  OUTPUT="$PROCCOUNT running processes (>150)!"
+else
+  EXCODE=0
+  OUTPUT="Process count Ok ($PROCCOUNT)."
+fi
+
+echo "$EXCODE;$OUTPUT"

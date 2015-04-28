@@ -2,7 +2,7 @@
 | Routine     : addParent
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 0.4
+| Version     : 1.0
 | 
 | Description : Procedure to add a an existing host as parent to a host.
 |
@@ -16,6 +16,11 @@
 |                -2 = Foreign key error
 |                -3 = General SQL error
 |                -4 = General SQL warning
+|
+| Changelog
+| ---------
+|  2015-04-20 : Created procedure.
+|  2015-04-28 : Prepared procedure for DB version 1.0.
 |
 | License information
 | -------------------

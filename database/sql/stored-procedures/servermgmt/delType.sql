@@ -2,7 +2,7 @@
 | Routine     : delType
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 0.5
+| Version     : 1.0
 | 
 | Description : Procedure to delete a device type.
 |
@@ -18,6 +18,7 @@
 | Changelog
 | ---------
 |  2015-04-22 : Created procedure.
+|  2015-04-28 : Prepared procedure for DB release 1.0.
 |
 | License information
 | -------------------

@@ -46,6 +46,15 @@ INSERT INTO `tblHardware` (`idHardware`, `dtModel`, `dtManufacturer`) VALUES (1,
 UNLOCK TABLES;
 
 --
+-- Dumping data for table `tblMessage`
+--
+
+LOCK TABLES `tblMessage` WRITE;
+/*!40000 ALTER TABLE `tblMessage` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblMessage` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping data for table `tblOS`
 --
 
@@ -91,7 +100,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblServer_has_tblService` WRITE;
 /*!40000 ALTER TABLE `tblServer_has_tblService` DISABLE KEYS */;
-INSERT INTO `tblServer_has_tblService` (`idServer`, `idService`, `dtValue`) VALUES (1,1,4),(2,1,4),(3,1,4),(4,1,4),(5,1,4),(6,1,4),(7,1,4),(8,1,4),(9,1,4),(18,1,4),(6,2,4),(7,2,4),(8,2,4),(9,2,4),(18,2,4),(18,3,4);
+INSERT INTO `tblServer_has_tblService` (`idServer`, `idService`, `dtValue`, `dtScriptOutput`) VALUES (1,1,4,'Check pending.'),(2,1,4,'Check pending.'),(3,1,4,'Check pending.'),(4,1,4,'Check pending.'),(5,1,4,'Check pending.'),(6,1,4,'Check pending.'),(7,1,4,'Check pending.'),(8,1,4,'Check pending.'),(9,1,4,'Check pending.'),(18,1,4,'Check pending.'),(6,2,4,'Check pending.'),(7,2,4,'Check pending.'),(8,2,4,'Check pending.'),(9,2,4,'Check pending.'),(18,2,4,'Check pending.'),(18,3,4,'Check pending.');
 /*!40000 ALTER TABLE `tblServer_has_tblService` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +120,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblSetting` WRITE;
 /*!40000 ALTER TABLE `tblSetting` DISABLE KEYS */;
-INSERT INTO `tblSetting` (`idSetting`, `dtCaption`, `dtValue`) VALUES (1,'version','0.5b');
+INSERT INTO `tblSetting` (`idSetting`, `dtCaption`, `dtValue`) VALUES (1,'version','1.0');
 /*!40000 ALTER TABLE `tblSetting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,4 +153,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-28 12:54:39
+-- Dump completed on 2015-04-28 15:16:52

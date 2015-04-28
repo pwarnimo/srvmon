@@ -1,0 +1,14 @@
+#!/bin/bash
+
+/etc/init.d/ssh status > /dev/null 2>&1
+
+if [ $? -eq 0 ]
+then
+  EXCODE=0
+  MSG="SSH is running!"
+else
+  EXCODE=1
+  MSG="SSH is stopped!"
+fi
+
+echo "$EXCODE;$MSG"

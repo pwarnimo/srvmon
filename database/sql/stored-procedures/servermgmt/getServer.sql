@@ -2,7 +2,7 @@
 | Routine     : getServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 0.6
+| Version     : 1.0
 | 
 | Description : Display unformatted/formatted data for a server.
 |
@@ -20,6 +20,7 @@
 |  2015-04-20 : Created procedure.
 |  2015-04-21 : Bugfixing and cleanup.
 |  2015-04-22 : Added formatted data function for DB 0.5.
+|  2015-04-28 : Prepared procedure for DB release 1.0.
 |
 | License information
 | -------------------
@@ -58,45 +59,41 @@ BEGIN
   DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
   DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
   
-  IF pFormat = TRUE THEN
+  IF pFORMAT = TRUE THEN
     BEGIN
-      IF pID = -1 THEN
-        BEGIN
-          SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer
-          FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW
-          WHERE fiType = idType
-            AND fiOS = idOS
-            AND fiHardware = idHardware
-            AND fiResponsible = idGroup;
-        END;
-      ELSE
-        BEGIN
-          SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer
-          FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW
-          WHERE idServer = pID
-            AND fiType = idType
-            AND fiOS = idOS
-            AND fiHardware = idHardware
-            AND fiResponsible = idGroup;
-        END;
-      END IF;
+      SET @FIELDS = "idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer";
+      SET @TABLES = "tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW";
+      SET @COND = " WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup";
     END;
   ELSE
     BEGIN
-      IF pID = -1 THEN
+      SET @FIELDS = "*";
+      SET @TABLES = "tblServer";
+      SET @COND = "";
+    END;
+  END IF;
+  
+  SET @QRY = CONCAT("SELECT ", @FIELDS, " FROM ", @TABLES, @COND);
+  
+  IF pID != -1 THEN
+    BEGIN
+      IF pFormat = TRUE THEN
         BEGIN
-          SELECT * 
-          FROM tblServer;
+          SET @COND = CONCAT(" AND idServer = ", pID);
         END;
       ELSE
         BEGIN
-          SELECT *
-          FROM tblServer
-          WHERE idServer = pID;
+          SET @COND = CONCAT(" WHERE idServer = ", pID);
         END;
       END IF;
+      SET @QRY = CONCAT(@QRY, @COND);
     END;
   END IF;
+  
+  PREPARE STMT FROM @QRY;
+  EXECUTE STMT;
+  DEALLOCATE PREPARE STMT;
+ 
   SET pErr = l_errcode;
 END $$
 

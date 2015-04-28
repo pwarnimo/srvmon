@@ -2,7 +2,7 @@
 | Routine     : disableChildrenChecks.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 0.6
+| Version     : 1.0
 | 
 | Description : Disable all children if parent is down and set services to unreachable.
 |
@@ -20,6 +20,7 @@
 | ---------
 |  2015-04-22 : Created procedure.
 |  2015-04-23 : Minor modifications.
+|  2015-04-28 : Modified procedure for DB release 1.0.
 |
 | License information
 | -------------------
@@ -78,7 +79,8 @@ BEGIN
 
   START TRANSACTION;
     UPDATE tblServer_has_tblService SET
-      dtValue = 4
+      dtValue = 3,
+      dtScriptOutput = "Service unreachable!"
     WHERE idServer IN (
       SELECT idChild
       FROM tblParent

@@ -2,7 +2,7 @@
 | Routine     : addServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 0.5
+| Version     : 1.0
 | 
 | Description : This procedure is called in order to add a new server to the DB.
 |
@@ -25,6 +25,7 @@
 |  2015-04-20 : Created procedure.
 |  2015-04-21 : Bugfixing and cleanup.
 |  2015-04-22 : Optimizing procedure for DB 0.42.
+|  2015-04-28 : Prepared procedure for DB release 1.0.
 |
 | License information
 | -------------------

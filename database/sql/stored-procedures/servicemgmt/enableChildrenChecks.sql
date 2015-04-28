@@ -2,7 +2,7 @@
 | Routine     : enableChildrenChecks.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-23
-| Version     : 0.6
+| Version     : 1.0
 | 
 | Description : Enable all children if parent is up.
 |
@@ -19,6 +19,7 @@
 | Changelof
 | ---------
 |  2015-04-23 : Created procedure.
+|  2015-04-28 : Modified procedure for DB release 1.0.
 |
 | License information
 | -------------------

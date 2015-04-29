@@ -1,0 +1,51 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          srvmon-director
+# Required-Start:    $network $syslog
+# Required-Stop:     $network $syslog
+# Default-Start:     3 4 5
+# Default-Stop:      0 1 2 6
+# Short-Description: SRVMON DIRECTOR Initscript
+# Description:       Starts the SRVMON DIRECTOR daemon.
+### END INIT INFO
+
+# Author: Pol Warnimont <pwarnimo@gmail.com>
+#
+# Please remove the "Author" lines above and replace them
+# with your own name if you copy and modify this script.
+
+. /lib/lsb/init-functions
+
+case "$1" in
+  start)
+    log_daemon_msg "Starting SRVMON DIRECTOR daemon" "srvmon-director"
+
+    PID=`pidof srvmon-director`
+
+    if [ $? -eq 1 ]
+    then
+      /usr/sbin/srvmon-director 
+    else
+      log_warning_msg "Daemon already running ($PID)!"
+    fi
+
+    log_end_msg $?
+
+    ;;
+
+  stop)
+    log_daemon_msg "Stopping SRVMON DIRECTOR daemon" "srvmon-director"
+
+    PID=`pidof srvmon-director`
+   
+    if [ $? -eq 0 ]
+    then
+      kill $PID
+    else
+      log_warning_msg "Daemon already stopped!"
+    fi
+    
+    log_end_msg $?
+
+    ;;
+esac

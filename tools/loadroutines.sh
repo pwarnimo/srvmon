@@ -23,7 +23,7 @@ SQLPW="q1w2e3!"
 
 echo "Loading all stored routines into DB . . ."
 
-cd /home/pwarnimo/Coding/SRVMON-PROJECT/CURRENT/database/sql/stored-procedures
+cd /home/pwarnimo/CODING/srvmon/database/sql/stored-procedures
 
 FILES=servermgmt/*.sql
 

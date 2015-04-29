@@ -27,7 +27,7 @@
 				if ($stmt->execute()) {
 					$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-					print_r($res);
+					return json_encode($res);
 				}
 				else {
 					echo "FAIL";

@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>SRVMON Webclient 0.1 -- Login</title>
+        <title>SRVMON UI 0.1 -- Login</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -27,6 +27,7 @@
 
     	<?php
 		include "inc/settings/dbconfig.inc.php";
+		include "inc/whitelists/whitelist.inc.php";
 
 		function __autoload($class_name) {
 			require_once "inc/classes/" . $class_name . ".class.php";
@@ -45,32 +46,49 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">SRVMON 0.1</a>
+          <a class="navbar-brand" href="#">SRVMON UI 0.1</a>
         </div>
       </div>
     </nav>
-    
-    <div class="container">
-	   <div class="panel panel-primary">
-		   <div class="panel-heading">
-			   <h3 class="panel-title">Login</h3>
-		   </div>
-		   <div class="panel-body">
-			   <?php
-				$srvmngr = new serversmngr();
+   
+	<div id="wrapper">
+		<div id="sidebar-wrapper">
+			<ul class="sidebar-nav">
+				<li class="norm"><a href="#"><span class="glyphicon glyphicon-tasks"> Servers</span></a></li>
+				<li class="norm"><a href="#"><span class="glyphicon glyphicon-list-alt"> Services</span></a></li>
+				<li class="norm"><a href="#"><span class="glyphicon glyphicon-user"> Users</span></a></li>
+				<li class="norm"><a href="#"><span class="glyphicon glyphicon-cog"> Settings</span></a></li>
+			</ul>
+		</div>
 
-				$srvmngr->cltest();
-				$srvmngr->printserver();
-			   ?>
-		   </div>
-	   </div>
-	   		
-      <hr>
+		<div id="page-content-wrapper">
+			<div class="page-content">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<?php
+								$page = filter_input(INPUT_GET, "page");
 
-      <footer>
-        <p>&copy; 2015 Pol Warnimont</p>
-      </footer>
-    </div> <!-- /container -->        
+								if ($page != false) {
+									if (in_array($page, $whitelist)) {
+										include("inc/pages/" . $page . ".inc.php");
+									}
+									else {
+										include("inc/pages/error.inc.php");
+									}
+								}
+								else {
+									include("inc/pages/servers.inc.php");
+								}
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 

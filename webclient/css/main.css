@@ -4,19 +4,65 @@
    Author's custom styles
    ========================================================================== */
 
+#wrapper {
+    	padding-left: 170px;
+	transition: all 0.4s ease 0s;
+	/*margin-top: -10px;*/
+}
 
+#sidebar-wrapper {
+   	margin-left: -170px;
+        left: 170px;
+	width: 170px;
+	background: #fff;
+	position: fixed;
+	height: 100%;
+	overflow-y: auto;
+	z-index: 1000;
+	transition: all 0.4s ease 0s;
+	background-image: url("../images/bgside.png");
+	/*background-image: linear-gradient(to bottom, #3C3C3C 0px, #222 100%);*/
+}
 
+#page-content-wrapper {
+	width: 100%;
+}
 
+.sidebar-nav {
+        position: absolute;
+	top: 0;
+	width: 170px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	padding-top: 15px;
+}
 
+.sidebar-nav li {
+	width: 170px;
+        height: 40px;
+	padding-left: 15px;
+}
 
+.norm:hover {
+	background-image: url(../images/nav-arr-blu.png);
+}
 
+.sidebar-nav li a {
+	display: block;
+        height: 40px;
+	width: 170px;
+	color: #fff;
+	text-decoration: none;
+	display: table-cell;
+	vertical-align: middle;
+}
 
+.sidebar-nav li a:hover {
+	color: #fff;
+}
 
-
-
-
-
-
-
-
-
+.sidebar-nav nav hr {
+	padding: 10px;
+	margin-top: 50px;
+}

@@ -27,7 +27,8 @@ procedures which can be used to control the data of the database.
 The next part is the SRVMON director. This program is only used to check
 if the hosts, which are defined in the database, are reachable. The
 director disables a host and all its children if the communication
-fails. The director is written in Java.
+fails. The director is written in C++.
+* A director Shell script is available for testing (director-bash.sh)
 
 The next part is the SRVMON agent component. The SRVMON agent is used on
 the clients in order to communicate with the database and used to
@@ -35,7 +36,8 @@ execute the check commands on the host. The agent can execute multiple
 check commands which can be defined in the database. A service could be
 a simple shell script which checks the CPU usage. The agent would then
 periodically execute the script and send the output to the SQL database.
-The agent is written in Java.
+The agent is written in C++.
+* An agent Shell script is available for testing (agent-bash.sh)
 
 On other part is the webinterface. The webinterface can be used to view
 and configure the SRVMON suite. The webinterface has been written in

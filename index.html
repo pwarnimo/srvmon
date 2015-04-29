@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>SRVMON Monitoring Suite by pwarnimo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SRVMON Monitoring Suite</h1>
+      <h2 class="project-tagline">A simple server monitoring suite.</h2>
+      <a href="https://github.com/pwarnimo/srvmon" class="btn">View on GitHub</a>
+      <a href="https://github.com/pwarnimo/srvmon/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/pwarnimo/srvmon/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="srvmon-server-monitoring-suite" class="anchor" href="#srvmon-server-monitoring-suite" aria-hidden="true"><span class="octicon octicon-link"></span></a>SRVMON SERVER MONITORING SUITE</h1>
+
+<p>This suite is currently under development.
+This is a draft release.
+Version 1.0 expected around May/June 2015.</p>
+
+<p>CURRENT VERSIONS : </p>
+
+<ul>
+<li>SRVMON DB = 1.0.1</li>
+<li>SRVMON DIRECTOR = 0.1</li>
+<li>SRVMON AGENT = 0.1</li>
+<li>SRVMON WEBUI = 0.1</li>
+<li>SRVMON DESKTOP = 0.1</li>
+</ul>
+
+<h2>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h2>
+
+<p>SRVMON is a simple monitoring suite for servers, switches, routers or
+every other device which has network access. SRVMON uses a SQL database,
+where it stores the hosts which should be checked. A user can define
+multiple status checks which can then be applied to a host. A user group
+can be notified via mail if there is any change in status of a host.</p>
+
+<p>The suite is divided in multiple applications.</p>
+
+<h2>
+<a id="database" class="anchor" href="#database" aria-hidden="true"><span class="octicon octicon-link"></span></a>Database</h2>
+
+<p>The first an most important part is the database. The database has been 
+created in MySQL but should also work with MariaDB. It should also be 
+possible to use MSSQL. The database also offers multiple stored 
+procedures which can be used to control the data of the database.</p>
+
+<h2>
+<a id="director" class="anchor" href="#director" aria-hidden="true"><span class="octicon octicon-link"></span></a>Director</h2>
+
+<p>The next part is the SRVMON director. This program is only used to check
+if the hosts, which are defined in the database, are reachable. The
+director disables a host and all its children if the communication
+fails. The director is written in C++.</p>
+
+<ul>
+<li>A director Shell script is available for testing (director-bash.sh)</li>
+</ul>
+
+<h2>
+<a id="agent" class="anchor" href="#agent" aria-hidden="true"><span class="octicon octicon-link"></span></a>Agent</h2>
+
+<p>The next part is the SRVMON agent component. The SRVMON agent is used on
+the clients in order to communicate with the database and used to
+execute the check commands on the host. The agent can execute multiple
+check commands which can be defined in the database. A service could be
+a simple shell script which checks the CPU usage. The agent would then
+periodically execute the script and send the output to the SQL database.
+The agent is written in C++.</p>
+
+<ul>
+<li>An agent Shell script is available for testing (agent-bash.sh)</li>
+</ul>
+
+<h2>
+<a id="web-ui" class="anchor" href="#web-ui" aria-hidden="true"><span class="octicon octicon-link"></span></a>Web UI</h2>
+
+<p>On other part is the webinterface. The webinterface can be used to view
+and configure the SRVMON suite. The webinterface has been written in
+PHP 5.</p>
+
+<h2>
+<a id="desktop-client" class="anchor" href="#desktop-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Desktop Client</h2>
+
+<p>The last part is the desktop client, which is essentially the same as
+the webinterface only that it is a standalone application. I created the
+application only to show you that it is possible to create multiple user
+interfaces for this suite because all the main logic happens in the
+database.</p>
+
+<h2>
+<a id="why" class="anchor" href="#why" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why</h2>
+
+<p>I created this monitoring suite just for fun and I know that there are 
+other monitoring solutions available but I wanted to do my own project. 
+The goal of this project is to create a completely customizable 
+monitoring solution. Please feel free to modify and improve this suite.</p>
+
+<p>For any questions please send a mail to .</p>
+
+<h2>
+<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h2>
+
+<h3>
+<a id="webserver-requirements" class="anchor" href="#webserver-requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Webserver requirements</h3>
+
+<ul>
+<li>Apache 2</li>
+<li>MariaDB (or MySQL)</li>
+<li>PHP 5</li>
+<li>PHP-GD</li>
+<li>PHP-FPDF</li>
+<li>PHP-MCRYPT</li>
+</ul>
+
+<h3>
+<a id="server-requirements" class="anchor" href="#server-requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server requirements</h3>
+
+<p>As operating system for the webinterface and director, I used Debian 7.8
+Wheezy.</p>
+
+<p>The agents should run on every system which supports Java and the SQL
+connector for Java. The service scripts that I use are simple shell
+scripts.</p>
+
+<p>NOTE: You are not required to use the agent component. It is also 
+      possible to write an own agent in a shell script as long as it
+      supports a connection to the database. The only thing that the
+      agent does, is scheduling the service checks and executing the
+      stored procedures in the database.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/pwarnimo/srvmon">SRVMON Monitoring Suite</a> is maintained by <a href="https://github.com/pwarnimo">pwarnimo</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+

@@ -18,8 +18,8 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-SQLUSR=""
-SQLPW=""
+SQLUSR="sqlusr"
+SQLPW="q1w2e3!"
 
 echo "Loading all stored routines into DB . . ."
 

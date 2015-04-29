@@ -2,7 +2,7 @@
 | Routine     : enableChildrenChecks.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-23
-| Version     : 1.0
+| Version     : 1.0.1
 | 
 | Description : Enable all children if parent is up.
 |
@@ -16,10 +16,12 @@
 |                -4 = General SQL warning
 |                -5 = No data
 |
-| Changelof
+| Changelog
 | ---------
 |  2015-04-23 : Created procedure.
 |  2015-04-28 : Modified procedure for DB release 1.0.
+|  2015-04-29 : Modified procedure for DB 1.0.1.
+|               Changed host status to 4 when parent online.
 |
 | License information
 | -------------------
@@ -77,6 +79,16 @@ BEGIN
   END;
 
   START TRANSACTION;
+    UPDATE tblServer_has_tblService SET
+      dtValue = 4,
+      dtScriptOutput = "Check Pending!",
+      dtLastCheckTS = NULL
+    WHERE idServer IN (
+      SELECT idChild
+      FROM tblParent
+      WHERE idParent = pID
+    );
+  
     UPDATE tblServer SET
       dtEnabled = TRUE
     WHERE idServer IN (

@@ -21,18 +21,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-  printf("GENUSR -- Generate salt and pw hash for the given user.\n");
-  
-  $username = "";
-  $password = "";
+  if ($argc != 3) {
+    printf("SRVMON GENUSR VERSION 0.9 (C) 2015 Pol Warnimont\n");
+    printf("A script to generate users for the SRVMON monitoring suite.\n");
+    printf("SRVMON GENUSR comes with ABSOLUTELY NO WARRANTY!\n\n");
+    printf("Usage : ./genusr.php username password\n");
+  }
+  else {
+    printf("SRVMON GENUSR VERSION 0.9\n\n");
 
-  $cost = 10;
-  $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), "+", ".");
-  $salt = sprintf("$2a$%02d$", $cost) . $salt;
+    $username = $argv[1];
+    $password = $argv[2];
 
-  $hash = crypt($password, $salt);
+    $cost = 10;
+    $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), "+", ".");
+    $salt = sprintf("$2a$%02d$", $cost) . $salt;
 
-  printf("Credentials for %s:\n", $username);
-  printf("  SALT => %s\n", $salt);
-  printf("  HASH => %s\n", $hash);
+    $hash = crypt($password, $salt);
+
+    printf("Credentials for %s:\n", $username);
+    printf("  SALT => %s\n", $salt);
+    printf("  HASH => %s\n\n", $hash);
+  }
 ?>

@@ -2,7 +2,7 @@
 | Routine     : addServiceToServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 1.0
+| Version     : 1.0.1
 | 
 | Description : Add an existing service to a server. By default, dtValue will be set to 4.
 |                0 = Host OK
@@ -27,6 +27,7 @@
 |  2015-04-20 : Created procedure.
 |  2015-04-21 : Bugfixing and cleanup.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
+|  2015-04-29 : Modified procedure for DB 1.0.1.
 |
 | License information
 | -------------------
@@ -85,8 +86,8 @@ BEGIN
   END;
 
   START TRANSACTION;
-    INSERT INTO tblServer_has_tblService (idServer, idService, dtValue)
-    VALUES (pHID, pSID, 4);
+    INSERT INTO tblServer_has_tblService (idServer, idService, dtValue, dtScriptOutput, dtLastCheck)
+    VALUES (pHID, pSID, 4, "Check Pending!", NULL);
 
     SET pErr = 0;
   COMMIT;

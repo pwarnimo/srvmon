@@ -25,6 +25,7 @@
 |  2015-04-22 : Modified procedure for DB 0.41.
 |  2015-04-28 : Modified procedure to display only check commands.
 |               Prepared procedure for DB release 1.0.
+|  2015-04-29 : Modified procedure for DB 1.0.1.
 |
 | License information
 | -------------------
@@ -65,7 +66,7 @@ BEGIN
   DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
   
   CASE pFRMT
-    WHEN 0 THEN SET @FIELDS = "SR.idService, dtCaption, dtDescription, dtCheckCommand, dtValue, dtScriptOutput";
+    WHEN 0 THEN SET @FIELDS = "SR.idService, dtCaption, dtDescription, dtCheckCommand, dtValue, dtScriptOutput, dtLastCheckTS";
     WHEN 1 THEN SET @FIELDS = "SR.idService, dtCheckCommand";
     WHEN 2 THEN SET @FIELDS = "SR.idService, dtValue";
   END CASE;

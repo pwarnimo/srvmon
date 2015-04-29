@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.5.43, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: srvmon
+-- Host: 192.168.20.51    Database: srvmon
 -- ------------------------------------------------------
--- Server version	5.5.43-0+deb7u1
+-- Server version	5.5.5-10.0.16-MariaDB-1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -21,7 +21,7 @@
 
 LOCK TABLES `tblGroup` WRITE;
 /*!40000 ALTER TABLE `tblGroup` DISABLE KEYS */;
-INSERT INTO `tblGroup` (`idGroup`, `dtCaption`, `dtDescription`) VALUES (1,'DTEL-ADMIN','Main infrastructure administrators'),(2,'DTEL-NETWORK','Network notification group'),(3,'DTEL-FILESERVER','Fileservers notification group'),(4,'DTEL-GAMESERVER','Gameservers notification group');
+INSERT INTO `tblGroup` (`idGroup`, `dtCaption`, `dtDescription`) VALUES (5,'dtel-gen','General notification group'),(6,'dtel-network','Network notification group'),(7,'dtel-file','Fileserver notification group'),(8,'dtel-game','Gameserver notification group');
 /*!40000 ALTER TABLE `tblGroup` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -31,7 +31,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblGroupMember` WRITE;
 /*!40000 ALTER TABLE `tblGroupMember` DISABLE KEYS */;
-INSERT INTO `tblGroupMember` (`idGroup`, `idUser`) VALUES (1,1),(2,1),(3,1),(4,1),(2,2),(3,2),(4,2),(4,3),(4,4);
 /*!40000 ALTER TABLE `tblGroupMember` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -41,7 +40,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblHardware` WRITE;
 /*!40000 ALTER TABLE `tblHardware` DISABLE KEYS */;
-INSERT INTO `tblHardware` (`idHardware`, `dtModel`, `dtManufacturer`) VALUES (1,'Proliant ML370 G5','Hewlett Packard'),(2,'Proliant DL360 G3','Hewlett Packard'),(3,'Integrity rx4640','Hewlett Packard'),(4,'DC7900','Hewlett Packard'),(5,'GS108Ev3','Netgear'),(6,'Omnistack LS6224','Alcatel'),(7,'FRITZ!Box 7330','AVM GmbH'),(8,'VM version 8','VMware Inc.');
+INSERT INTO `tblHardware` (`idHardware`, `dtModel`, `dtManufacturer`) VALUES (1,'Proliant ML370 G5','Hewlett Packard'),(2,'Proliant DL360 G3','Hewlett Packard'),(3,'Integrity rx4640','Hewlett Packard'),(4,'DC7900','Hewlett Packard'),(5,'Virtual Machine Version 8','VMware Inc.'),(6,'Omnistack LS6224','Alcatel'),(7,'GS108Ev3','Netgear'),(8,'FRITZ!Box 7330','AVM GmbH');
 /*!40000 ALTER TABLE `tblHardware` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,7 +59,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblOS` WRITE;
 /*!40000 ALTER TABLE `tblOS` DISABLE KEYS */;
-INSERT INTO `tblOS` (`idOS`, `dtCaption`, `dtDescription`) VALUES (1,'esxi5.0','VMware ESXi 5.0'),(2,'esxi5.5','VMware ESXi 5.5'),(3,'debian7.8','Debian 7.8 Wheezy'),(4,'w2k8r2','Windows 2008 R2'),(5,'w2k12r2','Windows 2012 R2'),(6,'nas4free9.3','NAS4Free 9.3'),(7,'integrated','Integrated firmware'),(8,'hpux11i3','HP-UX 11i3');
+INSERT INTO `tblOS` (`idOS`, `dtCaption`, `dtDescription`) VALUES (1,'debian7.8','Debian 7.8 Wheezy'),(2,'debian8.0','Debian 8.0 Jessie'),(3,'esxi5.0','VMware ESXi 5.0'),(4,'esxi5.5','VMware ESXi 5.5'),(5,'windows7pro','Windows 7 Professional'),(6,'windows8.1pro','Windows 8.1 Pro'),(7,'windows2k8r2data','Windows Server 2008 R2 Datacenter'),(8,'windows2k12r2data','Windows Server 2012 R2 Datacenter'),(9,'nas4free9.3','NAS4Free 9.3'),(10,'integrated','Integrated OS'),(11,'hpux11i3','HP-UX 11i3');
 /*!40000 ALTER TABLE `tblOS` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,7 +69,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblParent` WRITE;
 /*!40000 ALTER TABLE `tblParent` DISABLE KEYS */;
-INSERT INTO `tblParent` (`idChild`, `idParent`) VALUES (4,1),(1,2),(6,3),(8,3),(9,3),(3,4),(7,4),(2,5),(18,6);
+INSERT INTO `tblParent` (`idChild`, `idParent`) VALUES (14,16),(15,14),(16,17),(17,18),(19,15),(20,14),(21,14),(22,15),(23,20),(24,19),(25,23),(25,24),(26,23),(26,24),(30,19),(31,19),(31,21),(32,19),(33,19),(34,20),(35,20),(36,19),(37,35),(37,36),(38,20),(39,19),(40,38),(40,39);
 /*!40000 ALTER TABLE `tblParent` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,7 +79,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblRole` WRITE;
 /*!40000 ALTER TABLE `tblRole` DISABLE KEYS */;
-INSERT INTO `tblRole` (`idRole`, `dtCaption`, `dtDescription`) VALUES (1,'admin','Global administrator'),(2,'operator','Server operator'),(3,'user','General user');
+INSERT INTO `tblRole` (`idRole`, `dtCaption`, `dtDescription`) VALUES (1,'admin','Administrators'),(2,'operator','Server operators'),(3,'user','Generic user');
 /*!40000 ALTER TABLE `tblRole` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +89,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblServer` WRITE;
 /*!40000 ALTER TABLE `tblServer` DISABLE KEYS */;
-INSERT INTO `tblServer` (`idServer`, `dtHostname`, `dtIPAddress`, `dtDescription`, `fiOS`, `fiType`, `dtEnabled`, `fiHardware`, `fiResponsible`) VALUES (1,'DTEL-SW0','192.168.1.252','Main switch (Basement)',7,4,'1',6,2),(2,'DTEL-SW3','192.168.1.253','Access switch (1st floor)',7,4,'1',6,2),(3,'DTEL-SW2','192.168.1.251','Server switch rack 1.2',7,4,'1',5,2),(4,'DTEL-SW1','192.168.1.250','Server switch rack 1.1',7,4,'1',5,2),(5,'DTEL-GW1','192.168.1.1','DSL main line',7,5,'1',7,2),(6,'TEMPEST','192.168.1.3','Main ESX host',1,1,'1',1,1),(7,'FLAME','192.168.1.12','Backup ESX host',2,1,'1',4,1),(8,'CLU2-FSS-B','192.168.1.2','File server cluster node B',3,1,'0',2,1),(9,'ORCHID','192.168.1.4','Unix development server',8,1,'0',3,1),(11,'CLU2-FSS-A','192.168.1.61','File server cluster node A',3,2,'1',8,3),(13,'CLU1-HA-A','192.168.1.74','HA cluster node A',3,2,'1',8,1),(14,'CLU1-HA-B','192.168.1.67','HA cluster node B',3,2,'1',8,1),(15,'HA-CLUSTER','192.168.1.245','HA cluster',3,6,'1',8,1),(16,'HAFSS-CLUSTER','192.168.1.246','HA fileserver cluster',3,6,'1',8,1),(17,'FSS-CLUSTER','192.168.1.244','Fileserver cluster',3,6,'1',8,3),(18,'DTEL-LIN01','192.168.20.65','Linux development machine',3,2,'1',8,1);
+INSERT INTO `tblServer` (`idServer`, `dtHostname`, `dtIPAddress`, `dtDescription`, `fiOS`, `fiType`, `dtEnabled`, `fiHardware`, `fiResponsible`) VALUES (14,'DTEL-SW1','192.168.1.251','Server switch (Rack 1.1)',10,5,'1',7,6),(15,'DTEL-SW2','192.168.1.252','Server switch (Rack 1.2)',10,5,'1',7,6),(16,'DTEL-SW0','192.168.1.250','Main switch (Rack 1.0)',10,5,'1',6,6),(17,'DTEL-SW3','192.168.1.253','Access switch (1st floor)',10,5,'1',6,6),(18,'DTEL-GW0','192.168.1.1','DSL Mainline',10,6,'1',8,6),(19,'TEMPEST','192.168.1.3','ESX Host 1',3,1,'1',1,5),(20,'FLAME','192.168.1.12','ESX Host 2',4,1,'1',4,5),(21,'SWAN','192.168.1.2','Backup Server',1,1,'0',2,5),(22,'ORCHID','192.168.1.4','Unix Test Server',11,1,'0',3,5),(23,'clu1-ha-a','192.168.1.74','HA Cluster Node 1',1,2,'1',5,5),(24,'clu1-ha-b','192.168.1.67','HA Cluster Node 2',1,2,'1',5,5),(25,'ha-cluster','192.168.1.245','HA Cluster',1,4,'1',5,5),(26,'hafss-cluster','192.168.1.246','HA Fileserver Cluster',1,4,'1',5,5),(30,'clu2-fss-a','192.168.1.61','Fileserver Cluster Node 1',1,4,'1',5,5),(31,'fss-cluster','192.168.1.244','Fileserver Cluster',1,4,'1',5,5),(32,'dtel-ads01','192.168.1.68','Domain Controller',8,2,'1',5,5),(33,'dtel-gsr01','192.168.1.231','Gameserver 1',7,2,'1',5,5),(34,'dtel-nas01','192.168.1.78','NAS For iSCSI Targets',9,2,'1',5,5),(35,'dtel-acc0a','192.168.1.73','Access Cluster Node 1',1,2,'1',5,5),(36,'dtel-acc0b','192.168.1.64','Access Cluster Node 2',1,2,'1',5,5),(37,'acc-cluster','192.168.1.89','Access Cluster',1,4,'1',5,5),(38,'dtel-rtr0a','192.168.1.88','Router Cluster Node 1',1,2,'1',5,6),(39,'dtel-rtr0b','192.168.1.86','Router Cluster Node 2',1,2,'1',5,6),(40,'dtel-rtr0','192.168.1.248','Router Cluster',1,4,'1',5,6);
 /*!40000 ALTER TABLE `tblServer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +99,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblServer_has_tblService` WRITE;
 /*!40000 ALTER TABLE `tblServer_has_tblService` DISABLE KEYS */;
-INSERT INTO `tblServer_has_tblService` (`idServer`, `idService`, `dtValue`, `dtScriptOutput`) VALUES (1,1,4,'Check pending.'),(2,1,4,'Check pending.'),(3,1,4,'Check pending.'),(4,1,4,'Check pending.'),(5,1,4,'Check pending.'),(6,1,4,'Check pending.'),(7,1,4,'Check pending.'),(8,1,4,'Check pending.'),(9,1,4,'Check pending.'),(18,1,4,'Check pending.'),(6,2,4,'Check pending.'),(7,2,4,'Check pending.'),(8,2,4,'Check pending.'),(9,2,4,'Check pending.'),(18,2,4,'Check pending.'),(18,3,4,'Check pending.');
+INSERT INTO `tblServer_has_tblService` (`idServer`, `idService`, `dtValue`, `dtScriptOutput`) VALUES (23,1,0,'Gateway is reachable'),(24,1,0,'Gateway is reachable'),(23,2,0,'SSH is running!'),(24,2,0,'SSH is running!'),(23,3,0,'Process count Ok (108).'),(24,3,0,'Process count Ok (117).');
 /*!40000 ALTER TABLE `tblServer_has_tblService` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,7 +109,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblService` WRITE;
 /*!40000 ALTER TABLE `tblService` DISABLE KEYS */;
-INSERT INTO `tblService` (`idService`, `dtCaption`, `dtDescription`, `dtCheckCommand`) VALUES (1,'ping','ICMP ping check','chkping'),(2,'ssh','SSH daemon check','chkssh'),(3,'processes','Get process count','checkproc');
+INSERT INTO `tblService` (`idService`, `dtCaption`, `dtDescription`, `dtCheckCommand`) VALUES (1,'ping','Check Gateway Connectivity','chkping'),(2,'ssh','Check SSH Daemon Status','chkssh'),(3,'processes','Check Process Count','checkproc');
 /*!40000 ALTER TABLE `tblService` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -130,7 +129,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblType` WRITE;
 /*!40000 ALTER TABLE `tblType` DISABLE KEYS */;
-INSERT INTO `tblType` (`idType`, `dtCaption`, `dtDescription`) VALUES (1,'pserver','Physical server'),(2,'vserver','Virtual server'),(3,'paravirt','Virtual container'),(4,'switch','Network switch'),(5,'router','Network router'),(6,'cluster','Server cluster');
+INSERT INTO `tblType` (`idType`, `dtCaption`, `dtDescription`) VALUES (1,'physical','Physical server'),(2,'virtual','Virtual server'),(3,'container','Linux container'),(4,'cluster','Server cluster'),(5,'switch','Network switch'),(6,'router','Network router'),(7,'printer','Network printer');
 /*!40000 ALTER TABLE `tblType` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -140,7 +139,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `tblUser` WRITE;
 /*!40000 ALTER TABLE `tblUser` DISABLE KEYS */;
-INSERT INTO `tblUser` (`idUser`, `dtUsername`, `dtHash`, `dtSalt`, `dtEmail`, `fiRole`, `dtTelephone`) VALUES (1,'pwarnimo','$2a$10$FvgQpkMAeup/HyGzxnGTJe6TR2idNpKTfxfz5AivQKF6mNQs5TZFS','$2a$10$FvgQpkMAeup/HyGzxnGTJg==','pwarnimo@gmail.com',1,'+352691664293'),(2,'dwarnimo','$2a$10$4MyAQS5ITR7OTv/cMQCsFOyT9s5oPijb9iAp6h9Nh.F8hjRhTaGbm','$2a$10$4MyAQS5ITR7OTv/cMQCsFQ==','d.warnimont@gmail.com',2,''),(3,'shilber','$2a$10$WHASrEY1ZPtNzKUolDOL9O2PHxVGwtZdwi7NFoPQEdnEax1o1kNEi','$2a$10$WHASrEY1ZPtNzKUolDOL9Q==','hilsteve@msn.de',3,''),(4,'cbiot','$2a$10$8d8UNd1DZEHJyfT6pyCFiu0SziwGGk93Vhe3b5xVdyNDDnFmwDBM2','$2a$10$8d8UNd1DZEHJyfT6pyCFiw==','bioch071@gmail.com',3,'');
 /*!40000 ALTER TABLE `tblUser` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -153,4 +151,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-28 15:16:52
+-- Dump completed on 2015-04-29  8:56:44

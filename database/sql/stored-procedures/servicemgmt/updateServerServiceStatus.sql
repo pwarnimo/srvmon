@@ -31,6 +31,7 @@
 |  2015-04-23 : Added checks for host status.
 |  2015-04-28 : Modified procedure to accept status messages.
 |               Prepared procedure for DB release 1.0.
+|  2015-04-29 : Modified procedure for DB 1.0.1.
 |
 | License information
 | -------------------

@@ -26,24 +26,24 @@
 |  2015-04-21 : Bugfixing and cleanup.
 |  2015-04-22 : Optimizing procedure for DB 0.42.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
+|  2015-04-30 : Changed license to AGPLv3.
 |
 | License information
 | -------------------
 |  Copyright (C) 2015  Pol Warnimont
 |
-|  This program is free software; you can redistribute it and/or
-|  modify it under the terms of the GNU General Public License
-|  as published by the Free Software Foundation; either version 2
-|  of the License, or (at your option) any later version.
+|  This program is free software: you can redistribute it and/or modify
+|  it under the terms of the GNU Affero General Public License as
+|  published by the Free Software Foundation, either version 3 of the
+|  License, or (at your option) any later version.
 |
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-|  GNU General Public License for more details.
+|  GNU Affero General Public License for more details.
 |
-|  You should have received a copy of the GNU General Public License
-|  along with this program; if not, write to the Free Software
-|  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+|  You should have received a copy of the GNU Affero General Public License
+|  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 |
 +--------------------------------------------------------------------------------------------*/
 
@@ -51,51 +51,51 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS addServer $$
 CREATE PROCEDURE addServer(
-  IN  pHostname    VARCHAR(32),
-  IN  pIPAddress   VARCHAR(15),
-  IN  pDescription TINYTEXT,
-  IN  pOS          MEDIUMINT,
-  IN  pType        MEDIUMINT,
-  IN  pEnabled     BOOLEAN,
-  OUT pID          MEDIUMINT
+	IN  pHostname    VARCHAR(32),
+	IN  pIPAddress   VARCHAR(15),
+	IN  pDescription TINYTEXT,
+	IN  pOS          MEDIUMINT,
+	IN  pType        MEDIUMINT,
+	IN  pEnabled     BOOLEAN,
+	OUT pID          MEDIUMINT
 )
 BEGIN
-  DECLARE dup_key MEDIUMINT DEFAULT 0;
-  DECLARE for_key MEDIUMINT DEFAULT 0;
+	DECLARE dup_key MEDIUMINT DEFAULT 0;
+	DECLARE for_key MEDIUMINT DEFAULT 0;
   
-  DECLARE cond_dupkey CONDITION FOR 1062;
-  DECLARE cond_forkey CONDITION FOR 1452;
+	DECLARE cond_dupkey CONDITION FOR 1062;
+	DECLARE cond_forkey CONDITION FOR 1452;
 
-  DECLARE EXIT HANDLER FOR cond_dupkey
-  BEGIN
-    SET pID = -1;
-    ROLLBACK;
-  END;
+	DECLARE EXIT HANDLER FOR cond_dupkey
+	BEGIN
+   	SET pID = -1;
+   	ROLLBACK;
+	END;
 
-  DECLARE EXIT HANDLER FOR cond_forkey
-  BEGIN
-    SET pID = -2;
-    ROLLBACK;
-  END;
+	DECLARE EXIT HANDLER FOR cond_forkey
+	BEGIN
+   	SET pID = -2;
+   	ROLLBACK;
+	END;
 
-  DECLARE EXIT HANDLER FOR sqlexception
-  BEGIN
-    SET pID = -3;
-    ROLLBACK;
-  END;
+	DECLARE EXIT HANDLER FOR sqlexception
+	BEGIN
+   	SET pID = -3;
+   	ROLLBACK;
+	END;
 
-  DECLARE EXIT HANDLER FOR sqlwarning
-  BEGIN
-    SET pID = -4;
-    ROLLBACK;
-  END;
+	DECLARE EXIT HANDLER FOR sqlwarning
+	BEGIN
+   	SET pID = -4;
+   	ROLLBACK;
+	END;
 
-  START TRANSACTION;
-    INSERT INTO tblServer (dtHostname, dtIPAddress, dtDescription, fiOS, fiType, dtEnabled)
-      VALUES (pHostname, pIPAddress, pDescription, pOS, pType, pEnabled);
+	START TRANSACTION;
+   	INSERT INTO tblServer (dtHostname, dtIPAddress, dtDescription, fiOS, fiType, dtEnabled)
+      	VALUES (pHostname, pIPAddress, pDescription, pOS, pType, pEnabled);
 
-    SET pID = LAST_INSERT_ID();
-  COMMIT;
+		SET pID = LAST_INSERT_ID();
+	COMMIT;
 END $$
 
 DELIMITER ;

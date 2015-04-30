@@ -26,24 +26,24 @@
 |  2015-04-28 : Modified procedure to display only check commands.
 |               Prepared procedure for DB release 1.0.
 |  2015-04-29 : Modified procedure for DB 1.0.1.
+|  2015-04-30 : Changed license to AGPLv3.
 |
 | License information
 | -------------------
 |  Copyright (C) 2015  Pol Warnimont
 |
-|  This program is free software; you can redistribute it and/or
-|  modify it under the terms of the GNU General Public License
-|  as published by the Free Software Foundation; either version 2
-|  of the License, or (at your option) any later version.
+|  This program is free software: you can redistribute it and/or modify
+|  it under the terms of the GNU Affero General Public License as
+|  published by the Free Software Foundation, either version 3 of the
+|  License, or (at your option) any later version.
 |
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-|  GNU General Public License for more details.
+|  GNU Affero General Public License for more details.
 |
-|  You should have received a copy of the GNU General Public License
-|  along with this program; if not, write to the Free Software
-|  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+|  You should have received a copy of the GNU Affero General Public License
+|  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 |
 +--------------------------------------------------------------------------------------------*/
 
@@ -51,43 +51,43 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS getServicesForServer $$
 CREATE PROCEDURE getServicesForServer(
-  IN  pHID  MEDIUMINT,
-  IN  pSID  MEDIUMINT,
-  IN  pFRMT MEDIUMINT,
-  OUT pErr  MEDIUMINT
+	IN  pHID  MEDIUMINT,
+	IN  pSID  MEDIUMINT,
+	IN  pFRMT MEDIUMINT,
+	OUT pErr  MEDIUMINT
 )
 BEGIN
-  DECLARE l_errcode MEDIUMINT DEFAULT 0;
+	DECLARE l_errcode MEDIUMINT DEFAULT 0;
   
-  DECLARE no_data CONDITION FOR 1329;
+	DECLARE no_data CONDITION FOR 1329;
 
-  DECLARE CONTINUE HANDLER FOR no_data SET l_errcode = -5;
-  DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
-  DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
+	DECLARE CONTINUE HANDLER FOR no_data SET l_errcode = -5;
+	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
+	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
   
-  CASE pFRMT
-    WHEN 0 THEN SET @FIELDS = "SR.idService, dtCaption, dtDescription, dtCheckCommand, dtValue, dtScriptOutput, dtLastCheckTS";
-    WHEN 1 THEN SET @FIELDS = "SR.idService, dtCheckCommand";
-    WHEN 2 THEN SET @FIELDS = "SR.idService, dtValue";
-  END CASE;
+	CASE pFRMT
+   	WHEN 0 THEN SET @FIELDS = "SR.idService, dtCaption, dtDescription, dtCheckCommand, dtValue, dtScriptOutput, dtLastCheckTS";
+   	WHEN 1 THEN SET @FIELDS = "SR.idService, dtCheckCommand";
+   	WHEN 2 THEN SET @FIELDS = "SR.idService, dtValue";
+	END CASE;
   
-  IF pSID = -1 THEN
-    BEGIN
-      SET @COND = CONCAT("WHERE idServer = ", pHID, " AND SR.idService = SE.idService");
-    END;
-  ELSE
-    BEGIN
-      SET @COND = CONCAT("WHERE idServer = ", pHID, " AND SR.idService = SE.idService AND SE.idService = ", pSID);
-    END;
-  END IF;
+	IF pSID = -1 THEN
+   	BEGIN
+      	SET @COND = CONCAT("WHERE idServer = ", pHID, " AND SR.idService = SE.idService");
+   	END;
+	ELSE
+   	BEGIN
+      	SET @COND = CONCAT("WHERE idServer = ", pHID, " AND SR.idService = SE.idService AND SE.idService = ", pSID);
+   	END;
+	END IF;
   
-  SET @QRY = CONCAT("SELECT ", @FIELDS, " FROM tblServer_has_tblService SR, tblService SE ", @COND);
+	SET @QRY = CONCAT("SELECT ", @FIELDS, " FROM tblServer_has_tblService SR, tblService SE ", @COND);
   
-  PREPARE STMT FROM @QRY;
-  EXECUTE STMT;
-  DEALLOCATE PREPARE STMT;
+	PREPARE STMT FROM @QRY;
+	EXECUTE STMT;
+	DEALLOCATE PREPARE STMT;
 
-  SET pErr = l_errcode;
+	SET pErr = l_errcode;
 END $$
 
 DELIMITER ;

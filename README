@@ -11,18 +11,27 @@ SRVMON SERVER MONITORING SUITE
  ***                    SRVMON WEBUI    -> 0.1
  ***                    SRVMON DESKTOP  -> 0.1
 
-SRVMON is a simple monitoring suite for servers, switches, routers or
+About
+-----
+
+SRVMON is a simple monitoring suite for servers, switches, routers and
 every other device which has network access. SRVMON uses a SQL database,
 where it stores the hosts which should be checked. A user can define
-multiple status checks which can then be applied to a host. A user group
-can be notified via mail if there is any change in status of a host.
+multiple status checks which can then applied to a host. A user group 
+can be notified via E-Mail if there is any change in status of a host.
 
-The suite is divided in multiple applications.
+The suite is divided into multiple parts.
 
-The first an most important part is the database. The database has been 
-created in MySQL but should also work with MariaDB. It should also be 
-possible to use MSSQL. The database also offers multiple stored 
-procedures which can be used to control the data of the database.
+Database
+--------
+
+The first and most important part is the database. The database has been
+created in MariaDB but should also work with MySQL. It should also be 
+possible to use MSSQL. The database also offers multiple stored routines
+which can be used to control the data of the database.
+
+Director
+--------
 
 The next part is the SRVMON director. This program is only used to check
 if the hosts, which are defined in the database, are reachable. The
@@ -30,8 +39,11 @@ director disables a host and all its children if the communication
 fails. The director is written in C++.
 * A director Shell script is available for testing (director-bash.sh)
 
+Agent
+-----
+
 The next part is the SRVMON agent component. The SRVMON agent is used on
-the clients in order to communicate with the database and used to
+the clients in order to communicate with the database and also used to
 execute the check commands on the host. The agent can execute multiple
 check commands which can be defined in the database. A service could be
 a simple shell script which checks the CPU usage. The agent would then
@@ -39,15 +51,25 @@ periodically execute the script and send the output to the SQL database.
 The agent is written in C++.
 * An agent Shell script is available for testing (agent-bash.sh)
 
-On other part is the webinterface. The webinterface can be used to view
-and configure the SRVMON suite. The webinterface has been written in
-PHP 5.
+Web UI
+------
+
+Another part of SRVMON is the Web UI. The webinterface can be used to 
+view and configure the SRVMON suite. The webinterface has been written 
+in PHP5 and JQuery/Javascript and also uses Boostrap.
+
+Desktop Client
+--------------
 
 The last part is the desktop client, which is essentially the same as
 the webinterface only that it is a standalone application. I created the
 application only to show you that it is possible to create multiple user
 interfaces for this suite because all the main logic happens in the
-database.
+database. The Desktop Client is written in Java for easy porting.
+* Not yet decided if I use C++ or Java...
+
+Why?
+----
 
 I created this monitoring suite just for fun and I know that there are 
 other monitoring solutions available but I wanted to do my own project. 
@@ -56,18 +78,22 @@ monitoring solution. Please feel free to modify and improve this suite.
 
 For any questions please send a mail to <pwarnimo(at)gmail.com>.
 
----------
+Requirements
+------------
 
 Webserver requirements:
  Apache 2
  MariaDB (or MySQL)
- PHP 5
+ PHP5
  PHP-GD
  PHP-FPDF
  PHP-MCRYPT
  
 As operating system for the webinterface and director, I used Debian 7.8
 Wheezy.
+
+The agents can run on Unix,Unix-like and Microsoft Windows systems.
+(It should be possible to port it on other, more exotic systems...)
 
 The agents should run on every system which supports Java and the SQL
 connector for Java. The service scripts that I use are simple shell

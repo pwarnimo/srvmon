@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# Script : <Service Check Name>
+# Author(s) : <Your Name>
+# Create data : <Date>
+# Version : <Current Version>
+#
+# Description : A SRVMON check script - <What does this script do?>
+#
+# Changelog
+# ---------
+#  <Date> : <Description of changes>
+#    ...
+#
+# License
+# -------
+#  Copyright (C) <year>  <name of author>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# v DELETE THIS BLOCK v
+# How does a check script work?
+# A checkscript normally performs a simple check. An example would be a 
+# script which checks if the gateway is pingable.
+# The check script has to return a exit code and a check message.
+# The following formate must be used : <EXIT CODE>;<MESSAGE>
+# Ex: 2;Check failed
+#
+# Valid exit codes are :
+#  0 : Check OK
+#  1 : Warning
+#  2 : Critical
+# ^ DELETE THIS BLOCK ^

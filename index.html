@@ -39,21 +39,21 @@ Version 1.0 expected around May/June 2015.</p>
 <h2>
 <a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h2>
 
-<p>SRVMON is a simple monitoring suite for servers, switches, routers or
+<p>SRVMON is a simple monitoring suite for servers, switches, routers and
 every other device which has network access. SRVMON uses a SQL database,
 where it stores the hosts which should be checked. A user can define
 multiple status checks which can then be applied to a host. A user group
-can be notified via mail if there is any change in status of a host.</p>
+can be notified via E-mail if there is any change in status of a host.</p>
 
-<p>The suite is divided in multiple applications.</p>
+<p>The suite is divided in multiple parts.</p>
 
 <h2>
 <a id="database" class="anchor" href="#database" aria-hidden="true"><span class="octicon octicon-link"></span></a>Database</h2>
 
-<p>The first an most important part is the database. The database has been 
-created in MySQL but should also work with MariaDB. It should also be 
+<p>The first and most important part is the database. The database has been 
+created in MariaDB but should also work with MySQL. It should also be 
 possible to use MSSQL. The database also offers multiple stored 
-procedures which can be used to control the data of the database.</p>
+routines which can be used to control the data of the database.</p>
 
 <h2>
 <a id="director" class="anchor" href="#director" aria-hidden="true"><span class="octicon octicon-link"></span></a>Director</h2>
@@ -71,12 +71,12 @@ fails. The director is written in C++.</p>
 <a id="agent" class="anchor" href="#agent" aria-hidden="true"><span class="octicon octicon-link"></span></a>Agent</h2>
 
 <p>The next part is the SRVMON agent component. The SRVMON agent is used on
-the clients in order to communicate with the database and used to
-execute the check commands on the host. The agent can execute multiple
-check commands which can be defined in the database. A service could be
-a simple shell script which checks the CPU usage. The agent would then
-periodically execute the script and send the output to the SQL database.
-The agent is written in C++.</p>
+the clients in order to communicate with the database and to execute the 
+check commands on the host. The agent can execute multiple check commands 
+which can be defined in the database. A service could be a simple shell 
+script which checks the CPU usage. The agent would then periodically 
+execute the script and send the output to the SQL database. The agent is 
+written in C++.</p>
 
 <ul>
 <li>An agent Shell script is available for testing (agent-bash.sh)</li>
@@ -85,9 +85,9 @@ The agent is written in C++.</p>
 <h2>
 <a id="web-ui" class="anchor" href="#web-ui" aria-hidden="true"><span class="octicon octicon-link"></span></a>Web UI</h2>
 
-<p>On other part is the webinterface. The webinterface can be used to view
-and configure the SRVMON suite. The webinterface has been written in
-PHP 5.</p>
+<p>An other part is the Web UI. The WebUI can be used to view and configure 
+the SRVMON suite. The webinterface has been written in PHP5, JQuery/Javascript
+and also uses Bootstrap.</p>
 
 <h2>
 <a id="desktop-client" class="anchor" href="#desktop-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Desktop Client</h2>
@@ -117,7 +117,7 @@ monitoring solution. Please feel free to modify and improve this suite.</p>
 <ul>
 <li>Apache 2</li>
 <li>MariaDB (or MySQL)</li>
-<li>PHP 5</li>
+<li>PHP5</li>
 <li>PHP-GD</li>
 <li>PHP-FPDF</li>
 <li>PHP-MCRYPT</li>

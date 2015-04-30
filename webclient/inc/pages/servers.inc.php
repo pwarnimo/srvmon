@@ -35,6 +35,15 @@
 			<h1>Servers <small>SRVMON UI</a></small></h1>
 		</div>
 
-		<p>Server list</p>
+		<div id="tableview">
+			<table id="dataUsers" class="testtable" width="100%">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+
+		<script src="js/pages/servers.js"></script>
 PAGE;
 ?>

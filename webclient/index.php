@@ -56,6 +56,7 @@
 		<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+		<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 	</head>
 	<body>
 		<?php
@@ -122,6 +123,7 @@
 		</div>
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 		<script src="js/vendor/bootstrap.min.js"></script>
 

@@ -36,7 +36,7 @@
 		</div>
 
 		<div id="tableview">
-			<table id="dataUsers" class="testtable" width="100%">
+			<table id="dataServers" class="testtable" width="100%">
 				<thead>
 				</thead>
 				<tbody>

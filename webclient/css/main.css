@@ -30,6 +30,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+body {
+	background-color: #fff;
+}
+
+.maincont {
+	margin-top: 50px;
+	margin-bottom: 50px;
+	background : #fff;
+}
+
+.yes {
+	text-align: center;
+	background: url(
+		data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJUlEQVQImU3IsQ0AAAiEQOb4md0ZC2PyBcVBxA9HGpEbj4g0Ii6g3CNJ18xJlAAAAABJRU5ErkJggg==
+	) repeat;
+}
+
+.no {
+	text-align: center;
+	color: #fff;
+	background: url(
+		data:image/png;base64,VBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQImWO4ws7+H4b/y8v/Z0DmXGFnhwjAOFfY2f8zIHOusLP/BwAr8h99Q7whpQAAAABJRU5ErkJggg==
+	) repeat;
+}
+
 #wrapper {
     	padding-left: 170px;
 	transition: all 0.4s ease 0s;
@@ -95,4 +120,59 @@
 
 .linkact {
 	background-image: url("../images/nav-arr-blu.png");
+}
+
+.testtable tbody td {
+	border : 1px solid #ccc;
+	/*font-size: 0.9em;*/
+	/*border-top: 1px solid #000;
+	border-right: 1px solid #000;*/
+	text-align: center;
+}
+
+.testtable tbody tr:hover {
+	background-color: #FFFFCC;
+}
+
+.testtable thead th {
+	/*border: 1px solid #ccc;*/
+	border-bottom: 2px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	/*font-size: 0.9em;*/
+	padding-top: 15px;
+	padding-bottom: 5px;
+	text-align: center;
+	/*background-color: #428bca;
+	color: #fff;*/
+	font-weight: normal;
+	font-style: italic;
+}
+
+#dtable {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid #000;
+}
+
+#dtable thead tr {
+	color: #fff;
+	background-color: #222;
+}
+
+#dtable thead th {
+	text-align: center;
+}
+
+#dtable tbody td:first-of-type {
+	text-align: center;
+}
+
+#dtable tbody td {
+	border: 1px solid #000;
+}
+
+#dtable tbody tr:nth-of-type(even) {
+	background-color: #e2e2e2;
 }

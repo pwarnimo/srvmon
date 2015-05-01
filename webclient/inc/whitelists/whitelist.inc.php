@@ -32,6 +32,7 @@
 
 	$whitelist = array(
 		"servers",
+		"server",
 		"services",
 		"users",
 		"settings"

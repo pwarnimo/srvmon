@@ -30,9 +30,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-	define("hostname", "localhost");
-	define("username", "sqlusr");
-	define("password", "q1w2e3!");
-	define("database", "srvmon");
-	define("dbtype" , "mysql");
+	define("hostname", "");
+	define("username", "");
+	define("password", "");
+	define("database", "");
+	define("dbtype" , "");
 ?>

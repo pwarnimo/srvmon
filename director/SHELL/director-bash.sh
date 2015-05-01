@@ -29,9 +29,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-USER="sqlusr"
-PASS="q1w2e3!"
-DB="srvmon"
+USER=""
+PASS=""
+DB=""
 
 TMPFILE=/tmp/srvmon[$$]
 

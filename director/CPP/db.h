@@ -1,6 +1,11 @@
-class db {
+#ifndef DB_H
+#define DB_H
+
+class DB {
 	public:
-		db();
-		~db();
+		DB();
+		~DB();
 		void performTest();
-}
+};
+
+#endif

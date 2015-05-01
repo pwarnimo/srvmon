@@ -10,6 +10,7 @@ SRVMON SERVER MONITORING SUITE
  ***                    SRVMON AGENT    -> 0.1
  ***                    SRVMON WEBUI    -> 0.1
  ***                    SRVMON DESKTOP  -> 0.1
+ ***                    SRVMON MOBILE   -> N/A
 
 About
 -----
@@ -104,3 +105,5 @@ NOTE: You are not required to use the agent component. It is also
       supports a connection to the database. The only thing that the
       agent does, is scheduling the service checks and executing the
       stored procedures in the database.
+
+NOTE: A mobile client for Android devices is planned.

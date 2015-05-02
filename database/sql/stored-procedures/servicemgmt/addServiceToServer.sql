@@ -29,6 +29,7 @@
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-02 : Fixed bug -> dtLastCheck = dtLastCheckTS.
 |
 | License information
 | -------------------
@@ -86,7 +87,7 @@ BEGIN
 	END;
 
 	START TRANSACTION;
-   	INSERT INTO tblServer_has_tblService (idServer, idService, dtValue, dtScriptOutput, dtLastCheck)
+   	INSERT INTO tblServer_has_tblService (idServer, idService, dtValue, dtScriptOutput, dtLastCheckTS)
    		VALUES (pHID, pSID, 4, "Check Pending!", NULL);
 
    	SET pErr = 0;

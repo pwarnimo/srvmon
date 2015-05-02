@@ -3,4 +3,10 @@ $(document).ready(function() {
 
 	$(".sidebar-nav li").removeClass("linkact");
 	$("#servers").addClass("linkact");
+
+	getServerData();
 });
+
+function getServerData(ID) {
+	console.log(ID);
+};

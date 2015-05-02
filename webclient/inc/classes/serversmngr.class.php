@@ -69,5 +69,33 @@
 				die();
 			}
 		}
+
+		public function getServer($id, $format) {
+			if ($format == true) {
+				$qry = "CALL getServer(:id, TRUE, @err)";
+			}
+			else {
+				$qry = "CALL getServer(:id, FALSE, @err)";
+			}
+
+			try {
+				$stmt = $this->dbh->prepare($qry);
+
+				$stmt->bindValue(":id", $id);
+
+				if ($stmt->execute()) {
+					$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+					return json_encode($res);
+				}
+				else {
+					return json_encode($false);
+				}
+			}
+			catch(PDOException $e) {
+				echo "PDO has encountered an error: " + $e->getMessage();
+				die();
+			}
+		}
 	}
 ?>

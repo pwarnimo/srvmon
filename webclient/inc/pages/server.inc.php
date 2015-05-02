@@ -1,16 +1,37 @@
 <?php
+	$sid = filter_input(INPUT_GET,"sid");
+
+	echo "<input type=\"hidden\" name=\"sid\" id=\"sid\" value=\"" . $sid . "\"/>";
+
 	echo <<< PAGE
 		<div class="page-header">                                                                                                                                            
 			<h1>Host Overview <small>SRVMON UI</a></small></h1>
 		</div>
-
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				<h3 class="panel-title">Services for the host <span id="server">?</span></h3>
+	
+		<div class="row">
+			<div class="col-md-4">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Host details</div>
+					<div class="panel-body">
+						<p>Host status: <span id="status">?</span></p>
+						<p>Hostname: <span id="host">? (?)</span></p>
+						<p>Description: <span id="description">?</span></p>
+						<p>Operating system: <span id="os">?</span></p>
+						<p>Type: <span id="type">?</span></p>
+						<p>Model: <span id="model">?</span></p>
+						<p>Manufacturer: <span id="manufacturer">?</span></p>
+						<p>Responsible group: <span id="responsible">?</span></p>
+					</div>
+				</div>
 			</div>
-
-			<div class="panel-body">
-				<p></p>
+			
+			<div class="col-md-8">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Host services</div>
+					<div class="panel-body">
+						Panel content
+					</div>
+				</div>
 			</div>
 		</div>
 

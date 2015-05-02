@@ -12,5 +12,13 @@
 			$servermngr = new serversmngr();
 			echo $servermngr->printserver();
 		break;
+
+		case "getServer" :
+			$sid = filter_input(INPUT_GET, "sid");
+			$format = filter_input(INPUT_GET, "format");
+
+			$servermngr = new serversmngr();
+			echo $servermngr->getServer($sid, $format);
+		break;
 	}
 ?>

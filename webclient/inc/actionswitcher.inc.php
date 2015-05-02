@@ -14,8 +14,8 @@
 		break;
 
 		case "getServer" :
-			$sid = filter_input(INPUT_GET, "sid");
-			$format = filter_input(INPUT_GET, "format");
+			$sid = filter_input(INPUT_POST, "sid");
+			$format = filter_input(INPUT_POST, "format");
 
 			$servermngr = new serversmngr();
 			echo $servermngr->getServer($sid, $format);

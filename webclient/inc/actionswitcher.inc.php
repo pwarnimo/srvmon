@@ -20,5 +20,14 @@
 			$servermngr = new serversmngr();
 			echo $servermngr->getServer($sid, $format);
 		break;
+
+		case "getServicesForServer" :
+			$sid = filter_input(INPUT_POST, "sid");
+			$format = filter_input(INPUT_POST, "format");
+
+			$servicesmngr = new ServicesMngr();
+
+			echo $servicesmngr->getServicesForServer($sid, $format);
+		break;
 	}
 ?>

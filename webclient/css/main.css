@@ -40,19 +40,29 @@ body {
 	background : #fff;
 }
 
-.yes {
-	text-align: center;
-	background: url(
-		data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJUlEQVQImU3IsQ0AAAiEQOb4md0ZC2PyBcVBxA9HGpEbj4g0Ii6g3CNJ18xJlAAAAABJRU5ErkJggg==
-	) repeat;
+.ok {
+	background : #66FF66;
+	color : #fff;
 }
 
-.no {
-	text-align: center;
-	color: #fff;
-	background: url(
-		data:image/png;base64,VBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQImWO4ws7+H4b/y8v/Z0DmXGFnhwjAOFfY2f8zIHOusLP/BwAr8h99Q7whpQAAAABJRU5ErkJggg==
-	) repeat;
+.warning {
+	background : #E68A00;
+	color : #fff;
+}
+
+.fail {
+	background : #e60000;
+	color : #fff;
+}
+
+.unreachable {
+	background : #000;
+	color : #fff;
+}
+
+.pending {
+	background : #4775FF;
+	color : #fff;
 }
 
 #wrapper {

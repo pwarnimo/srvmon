@@ -29,7 +29,12 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Host services</div>
 					<div class="panel-body">
-						Panel content
+						<table id="dataServices" class="testtable" width="100%">
+							<thead>
+							</thead>
+							<tbody>
+							</tbody>
+						</table
 					</div>
 				</div>
 			</div>

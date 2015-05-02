@@ -23,6 +23,7 @@
 |  2015-04-28 : Modified procedure for DB release 1.0.
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-02 : Fixed parent checks.
 |
 | License information
 | -------------------
@@ -79,6 +80,12 @@ BEGIN
 	END;
 
 	START TRANSACTION;
+		UPDATE tblServer_has_tblService SET
+			dtValue = 3,
+			dtScriptOutput = "Service Unreachable!",
+			dtLastCheckTS = NULL
+		WHERE idServer = pID;
+
    	UPDATE tblServer_has_tblService SET
       	dtValue = 3,
       	dtScriptOutput = "Service Unreachable!",

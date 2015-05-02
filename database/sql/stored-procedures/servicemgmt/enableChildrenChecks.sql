@@ -23,6 +23,7 @@
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |               Changed host status to 4 when parent online.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-02 : Fixed parent checks.
 |
 | License information
 | -------------------
@@ -79,6 +80,12 @@ BEGIN
 	END;
 
 	START TRANSACTION;
+		UPDATE tblServer_has_tblService SET
+			dtValue = 4,
+			dtScriptOutput = "Check Pending!",
+			dtLastCheckTS = NULL
+		WHERE idServer = pID;
+
    	UPDATE tblServer_has_tblService SET
       	dtValue = 4,
       	dtScriptOutput = "Check Pending!",

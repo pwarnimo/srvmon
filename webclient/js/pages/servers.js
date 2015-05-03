@@ -87,6 +87,10 @@ function populateServersTable() {
 					}
 				]
 			});
+
+			$("#dataServers tr").click(function() {
+				window.location = "main.php?page=server&sid=" + $(this).attr("id");
+			});
 		}
 	});
 };

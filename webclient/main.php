@@ -38,7 +38,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>SRVMON WebUI 0.5 -- Login</title>
+		<title>SRVMON WebUI 0.5</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -61,6 +61,7 @@
 	<body>
 		<?php
 			include "inc/settings/dbconfig.inc.php";
+			include "inc/whitelists/whitelist.inc.php";
 
 			function __autoload($class_name) {
 				require_once "inc/classes/" . $class_name . ".class.php";
@@ -83,43 +84,41 @@
 				</div>
 			</div>
 		</nav>
- 
-		<div class="row">
-			<div class="col-md-4">
+   
+		<div id="wrapper">
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+					<li id="servers" class="norm"><a href="main.php?page=servers"><span class="glyphicon glyphicon-tasks"> Servers</span></a></li>
+					<li id="services" class="norm"><a href="main.php?page=services"><span class="glyphicon glyphicon-list-alt"> Services</span></a></li>
+					<li id="users" class="norm"><a href="main.php?page=users"><span class="glyphicon glyphicon-user"> Users</span></a></li>
+					<li id="settings" class="norm"><a href="main.php?page=settings"><span class="glyphicon glyphicon-cog"> Settings</span></a></li>
+				</ul>
 			</div>
-			<div class="col-md-4">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">WebUI Login</h3>
-					</div>
-					<div class="panel-body">
-						<form class="form-horizontal" action="login.php" method="post">
-							<p>Please enter your login credentials.</p>
-							
-							<div class="form-group">
-								<label for="edtUsername" class="col-sm-2 control-label">Username</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control" id="edtUsername" placeholder="johndoe">
-								</div>
-							</div>
 
-							<div class="form-group">
-							   <label for="edtPassword" class="col-sm-2 control-label">Password</label>
-								<div class="col-sm-10">
-									<input type="password" class="form-control" id="edtPassword" placeholder="Password">
-								</div>
-							</div>
+			<div id="page-content-wrapper">
+				<div class="page-content">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<?php
+									$page = filter_input(INPUT_GET, "page");
 
-							<div class="form-group">
-								<div class="col-sm-offset-2 col-sm-10">
-									<button type="submit" class="btn btn-default">Proceed</button>
-								</div>
+									if ($page != false) {
+										if (in_array($page, $whitelist)) {
+											include("inc/pages/" . $page . ".inc.php");
+										}
+										else {
+											include("inc/pages/error.inc.php");
+										}
+									}
+									else {
+										include("inc/pages/servers.inc.php");
+									}
+								?>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-4">
 			</div>
 		</div>
 

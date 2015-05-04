@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SQLUSR=""
-SQLPW=""
+SQLUSR="sqlusr"
+SQLPW="q1w2e3!"
 
 echo "Loading all stored routines into DB . . ."
 
-cd /home/pwarnimo/Coding/srvmon-working/database/sql/stored-procedures
+cd /home/pwarnimo/Coding/srvmon/database/sql/stored-procedures
 
 FILES=servermgmt/*.sql
 

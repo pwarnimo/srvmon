@@ -11,8 +11,9 @@ int main() {
 	DB db0;
 	cout << "ID OF TEMPEST = " << db0.getHostID("tempest") << "\n";
 	db0.getServerList();
+	db0.printServers();
 
-	int ping_ret, status;
+	/*int ping_ret, status;
 
 	char one[] = "ping -w 2 ";
 	char two[] = "192.168.1.1";
@@ -34,5 +35,5 @@ int main() {
 	cout << "P=" << ping_ret << "\n";
 
 	Check chk0;
-	chk0.checkHost("test");
+	chk0.checkHost("test");*/
 }

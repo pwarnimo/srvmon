@@ -1,5 +1,6 @@
 #include "db.h"
 #include <iostream>
+#include <string>
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
@@ -63,15 +64,13 @@ void DB::getServerList() {
 		res = stmt->executeQuery("CALL getServer(-1,FALSE,@err)");
 
 		while (res->next()) {
-			cout << "SID[" + res->getString("idServer") + "] => " + res->getString("dtHostname") + 
-				"@" + res->getString("dtIPAddress");
+			Server tmpSrv;
 
-			if (res->getInt("dtEnabled") == 1) {
-				cout << " ONLINE\n";
-			}
-			else {
-				cout << " OFFLINE\n";
-			}
+			tmpSrv.hostname = res->getString("dtHostname");
+			tmpSrv.ipaddress = res->getString("dtIPAddress");
+			tmpSrv.enabled = res->getInt("dtEnabled");
+
+			servers.push_back(tmpSrv);
 		}
 	}
 	catch (sql::SQLException &e) {
@@ -80,5 +79,15 @@ void DB::getServerList() {
 		cout << "# ERR: " << e.what();
 		cout << " (MySQL error code: " << e.getErrorCode();
 		cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+	}
+}
+
+void DB::printServers() {
+	cout << "Servers in mem " << servers.size() << "\n";
+
+	for (int i = 0; i < servers.size(); i++) {
+		Server tmpSrv = servers[i];
+
+		cout << "VECTOR[" << i << "] = " << tmpSrv.hostname << "(" << tmpSrv.ipaddress << ") : " << tmpSrv.enabled << "\n";
 	}
 }

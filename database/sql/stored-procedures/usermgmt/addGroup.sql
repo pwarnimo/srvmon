@@ -1,27 +1,23 @@
 /*---------------------------------------------------------------------------------------------
-| Routine     : addSetting
+| Routine     : addGroup
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 1.1
+| Version     : 1.0
 | 
-| Description : Procedure to add a new service which should be monitored.
+| Description : This function adds a new group to the database.
 |
 | Parameters
 | ----------
-|  IN  : pCaption : Caption of the new setting.
-|  IN  : pValue   : Value of the setting.
-|  OUT : pID      : ID of the newly added setting or in case of an error the error id.
-|                    -1 = Duplicate ID
-|                    -3 = General SQL error
-|                    -4 = General SQL warning
+|  IN  : pCaption     : Name of the new user group.
+|  IN  : pDescription : Description of the new user group.
+|  OUT : pID          : ID of the newly added group or error id.
+|                        -1 = Duplicate ID
+|                        -3 = General SQL error
+|                        -4 = General SQL warning
 |
 | Changelog
 | ---------
-|  2015-04-20 : Created procedure.
-|  2015-04-21 : Bugfixing and cleanup.
-|  2015-04-28 : Prepared procedure for DB release 1.0.
-|  2015-04-30 : Changed license to AGPLv3.
-|  2015-05-05 : Using prepared statements.
+|  2015-05-05 : Created procedure.
 |
 | License information
 | -------------------
@@ -44,46 +40,46 @@
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS addSetting $$
-CREATE PROCEDURE addSetting(
-	IN  pCaption VARCHAR(45),
-	IN  pValue   VARCHAR(45),
-	OUT pID      MEDIUMINT
+DROP PROCEDURE IF EXISTS addGroup $$
+CREATE PROCEDURE addGroup(
+	IN pCaption     VARCHAR(32),
+	IN pDescription VARCHAR(45),
+	OUT pID         MEDIUMINT
 )
 BEGIN
 	DECLARE cond_dupkey CONDITION FOR 1062;
 
 	DECLARE EXIT HANDLER FOR cond_dupkey
 	BEGIN
-   	SET pID = -1;
-		DEALLOCATE PREPARE STMT;
-   	ROLLBACK;
-	END;
-
-	DECLARE EXIT HANDLER FOR sqlexception
-	BEGIN
-   	SET pID = -3;
-		DEALLOCATE PREPARE STMT;
-   	ROLLBACK;
-	END;
-
-	DECLARE EXIT HANDLER FOR sqlwarning
-	BEGIN
-   	SET pID = -4;
+		SET pID = -1;
 		DEALLOCATE PREPARE STMT;
 		ROLLBACK;
 	END;
 
-	SET @qry = "INSERT INTO tblSetting (dtCaption, dtValue) VALUES (?, ?)";
+	DECLARE EXIT HANDLER FOR sqlexception
+	BEGIN
+		SET pID = -3;
+		DEALLOCATE PREPARE STMT;
+		ROLLBACK;
+	END;
+
+	DECLARE EXIT HANDLER FOR sqlwarning
+	BEGIN
+		SET pID = -4;
+		DEALLOCATE PREPARE STMT;
+		ROLLBACK;
+	END;
+
+	SET @QRY = "INSERT INTO tblGroup (dtCaption, dtDescription) VALUES (?, ?)";
 
 	START TRANSACTION;
 		SET @p1 = pCaption;
-		SET @p2 = pValue;
+		SET @p2 = pDescription;
 
-		PREPARE STMT FROM @qry;
+		PREPARE STMT FROM @QRY;
 		EXECUTE STMT USING @p1, @p2;
 		DEALLOCATE PREPARE STMT;
-
+		
 		SET pID = LAST_INSERT_ID();
 	COMMIT;
 END $$

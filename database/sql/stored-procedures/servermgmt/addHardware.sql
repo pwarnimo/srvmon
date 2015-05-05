@@ -1,27 +1,25 @@
 /*---------------------------------------------------------------------------------------------
-| Routine     : addSetting
+| Routine     : addHardware
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
-| Create date : 2015-04-20
-| Version     : 1.1
+| Create date : 2015-05-05
+| Version     : 1.0
 | 
-| Description : Procedure to add a new service which should be monitored.
+| Description : This procedure is called in order to add new hardware entry 
+|               into the DB.
 |
 | Parameters
 | ----------
-|  IN  : pCaption : Caption of the new setting.
-|  IN  : pValue   : Value of the setting.
-|  OUT : pID      : ID of the newly added setting or in case of an error the error id.
-|                    -1 = Duplicate ID
-|                    -3 = General SQL error
-|                    -4 = General SQL warning
+|  IN  : pModel        : Hardware model name.
+|  IN  : pManufacturer : Hardware manufacturer name.
+|  OUT : pID           : ID of the newly added Hardware or in case of an 
+|                        error the error id.
+|                         -1 = Duplicate ID
+|                         -3 = General SQL error
+|                         -4 = General SQL warning
 |
 | Changelog
 | ---------
-|  2015-04-20 : Created procedure.
-|  2015-04-21 : Bugfixing and cleanup.
-|  2015-04-28 : Prepared procedure for DB release 1.0.
-|  2015-04-30 : Changed license to AGPLv3.
-|  2015-05-05 : Using prepared statements.
+|  2015-05-05 : Created procedure.
 |
 | License information
 | -------------------
@@ -44,45 +42,36 @@
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS addSetting $$
-CREATE PROCEDURE addSetting(
-	IN  pCaption VARCHAR(45),
-	IN  pValue   VARCHAR(45),
-	OUT pID      MEDIUMINT
+DROP PROCEDURE IF EXISTS addHardware $$
+CREATE PROCEDURE addHardware(
+	IN  pModel        VARCHAR(45),
+	IN  pManufacturer VARCHAR(45),
+	OUT pID           MEDIUMINT
 )
-BEGIN
+BEGIN  
 	DECLARE cond_dupkey CONDITION FOR 1062;
 
 	DECLARE EXIT HANDLER FOR cond_dupkey
 	BEGIN
    	SET pID = -1;
-		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pID = -3;
-		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pID = -4;
-		DEALLOCATE PREPARE STMT;
-		ROLLBACK;
+   	ROLLBACK;
 	END;
 
-	SET @qry = "INSERT INTO tblSetting (dtCaption, dtValue) VALUES (?, ?)";
-
 	START TRANSACTION;
-		SET @p1 = pCaption;
-		SET @p2 = pValue;
-
-		PREPARE STMT FROM @qry;
-		EXECUTE STMT USING @p1, @p2;
-		DEALLOCATE PREPARE STMT;
+   	INSERT INTO tblHardware (dtModel, dtManufacturer)
+      	VALUES (pModel, pManufacturer);
 
 		SET pID = LAST_INSERT_ID();
 	COMMIT;

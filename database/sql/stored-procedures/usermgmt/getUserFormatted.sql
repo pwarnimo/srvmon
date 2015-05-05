@@ -2,7 +2,7 @@
 | Routine     : addGetUserFormatted
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Get a formatted view of the user data with the role description.
 |
@@ -22,6 +22,7 @@
 |  2015-04-21 : Bugfixing and cleanup.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-05 : Modified prepared statement.
 |
 | License information
 | -------------------
@@ -60,16 +61,23 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
 	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
 
-	SET @QRY = "SELECT idUser, dtUsername, dtEmail, dtDescription FROM tblUser, tblRole WHERE fiRole = idRole";
+	SET @qry = "SELECT idUser, dtUsername, dtEmail, dtDescription FROM tblUser, tblRole WHERE fiRole = idRole";
 
 	IF pID != -1 THEN
    	BEGIN
-     		SET @QRY = CONCAT(@QRY, " AND idUser = ", pID);
+			SET @p1 = pID;
+     		SET @qry = CONCAT(@qry, " AND idUser = ?");
+
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT USING @p1;
     	END;
+	ELSE
+		BEGIN
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT;
+		END;
 	END IF;
   
-	PREPARE STMT FROM @QRY;
-	EXECUTE STMT;
 	DEALLOCATE PREPARE STMT;
 
 	SET pErr = l_errcode;

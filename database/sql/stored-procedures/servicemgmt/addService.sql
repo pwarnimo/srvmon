@@ -2,7 +2,7 @@
 | Routine     : addService
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Procedure to add a new service which should be monitored.
 |
@@ -23,6 +23,7 @@
 |  2015-04-22 : Modified procedure for DB 0.41.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-05 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -73,10 +74,17 @@ BEGIN
    	ROLLBACK;
 	END;
 
-	START TRANSACTION;
-   	INSERT INTO tblService (dtCaption, dtDescription, dtCheckCommand)
-   		VALUES (pCaption, pDescription, pCommand);
+	SET @qry = "INSERT INTO tblService (dtCaption, dtDescription, dtCheckCommand) VALUES (?, ?, ?)";
 
+	START TRANSACTION;
+		SET @p1 = pCaption;
+		SET @p2 = pDescription;
+		SET @p3 = pCommand;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2, @p3;
+		DEALLOCATE PREPARE STMT;
+		
 		SET pID = LAST_INSERT_ID();
 	COMMIT;
 END $$

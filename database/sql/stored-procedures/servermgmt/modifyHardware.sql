@@ -1,25 +1,25 @@
 /*---------------------------------------------------------------------------------------------
-| Routine     : updateVersionNumber
+| Routine     : modifyHardware.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
-| Create date : 2015-04-20
-| Version     : 1.1
+| Create date : 2015-05-05
+| Version     : 1.0
 | 
-| Description : Change the version string of the database.
+| Description : Update records of a given device type (By ID).
 |
 | Parameters
 | ----------
-|  IN  : pVersion : Version string to update.
-|  OUT : pErr     : ID of the newly added setting or in case of an error the error id.
-|                    -3 = General SQL error
-|                    -4 = General SQL warning
+|  IN  : pID           : ID of the hardware entry to modify.
+|  IN  : pModel        : New model name.
+|  IN  : pManufacturer : New manufacturer name.
+|  OUT : pErr          : Error ID in case of a failure.
+|                          0 = Query OK
+|                         -3 = General SQL error
+|                         -4 = General SQL warning
+|                         -5 = No data
 |
 | Changelog
 | ---------
-|  2015-04-20 : Created procedure.
-|  2015-04-21 : Bugfixing and cleanup.
-|  2015-04-28 : Prepared procedure for DB release 1.0.
-|  2015-04-30 : Changed license to AGPLv3.
-|  2015-05-05 : Using prepared statements.
+|  2015-05-05 : Created procedure.
 |
 | License information
 | -------------------
@@ -42,35 +42,40 @@
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS updateVersionNumber $$
-CREATE PROCEDURE updateVersionNumber(
-	IN  pVersion VARCHAR(45),
-	OUT pErr     MEDIUMINT
+DROP PROCEDURE IF EXISTS modifyHardware $$
+CREATE PROCEDURE modifyHardware(
+	IN  pID           MEDIUMINT,
+	IN  pModel        VARCHAR(45),
+	IN  pManufacturer VARCHAR(45),
+	OUT pErr          MEDIUMINT
 )
 BEGIN
+	DECLARE no_data CONDITION FOR 1329;
+
+	DECLARE EXIT HANDLER FOR no_data
+	BEGIN
+   	SET pErr = -5;
+   	ROLLBACK;
+	END;
+
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
-		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
-	END;
+ 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pErr = -4;
-		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
-	SET @qry = "UPDATE tblSetting SET dtValue = ? WHERE dtCaption = 'version'";
-
 	START TRANSACTION;
-		SET @p1 = pVersion;
-
-		PREPARE STMT FROM @qry;
-		EXECUTE STMT USING @p1;
-		DEALLOCATE PREPARE STMT;
-
+   	UPDATE tblType SET
+      	dtModel = pModel,
+      	dtManufacturer = pManufacturer
+		WHERE idType = pID;
+ 
 		SET pErr = 0;
 	COMMIT;
 END $$

@@ -2,7 +2,7 @@
 | Routine     : enableChildrenChecks.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-23
-| Version     : 1.0.1
+| Version     : 1.1
 | 
 | Description : Enable all children if parent is up.
 |
@@ -24,6 +24,7 @@
 |               Changed host status to 4 when parent online.
 |  2015-04-30 : Changed license to AGPLv3.
 |  2015-05-02 : Fixed parent checks.
+|  2015-05-05 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -58,52 +59,45 @@ BEGIN
 	DECLARE EXIT HANDLER FOR cond_forkey
 	BEGIN
    	SET pErr = -2;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pErr = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;	
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
  		SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
 		ROLLBACK;
 	END;
 
-	START TRANSACTION;
-		UPDATE tblServer_has_tblService SET
-			dtValue = 4,
-			dtScriptOutput = "Check Pending!",
-			dtLastCheckTS = NULL
-		WHERE idServer = pID;
+	SET @qry1 = "UPDATE tblServer_has_tblService SET dtValue = 4, dtScriptOutput = 'Check Pending!', dtLastCheckTS = NULL WHERE idServer = ?";
+	SET @qry2 = "UPDATE tblServer_has_tblService SET dtValue = 4, dtScriptOutput = 'Check Pending!', dtLastCheckTS = NULL WHERE idServer IN (SELECT idChild FROM tblParent WHERE idParent = ?)";
 
-   	UPDATE tblServer_has_tblService SET
-      	dtValue = 4,
-      	dtScriptOutput = "Check Pending!",
-      	dtLastCheckTS = NULL
-    	WHERE idServer IN (
-      	SELECT idChild
-      	FROM tblParent
-      	WHERE idParent = pID
-		);
-  
-		UPDATE tblServer SET
-      	dtEnabled = TRUE
-		WHERE idServer IN (
-      	SELECT idChild
-      	FROM tblParent
-      	WHERE idParent = pID
-		);
- 
+	START TRANSACTION;
+		SET @p1 = pID;
+
+		PREPARE STMT FROM @qry1;
+		EXECUTE STMT USING @p1;
+		DEALLOCATE PREPARE STMT;
+
+		PREPARE STMT FROM @qry2;
+		EXECUTE STMT USING @p1;
+		DEALLOCATE PREPARE STMT;
+
 		SET pErr = 0;
 	COMMIT;
 END $$

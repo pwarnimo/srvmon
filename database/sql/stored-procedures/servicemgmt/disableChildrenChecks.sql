@@ -2,7 +2,7 @@
 | Routine     : disableChildrenChecks.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0.1
+| Version     : 1.1
 | 
 | Description : Disable all children if parent is down and set services to unreachable.
 |
@@ -24,6 +24,7 @@
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |  2015-04-30 : Changed license to AGPLv3.
 |  2015-05-02 : Fixed parent checks.
+|  2015-05-05 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -58,51 +59,49 @@ BEGIN
 	DECLARE EXIT HANDLER FOR cond_forkey
 	BEGIN
    	SET pErr = -2;
-   	ROLLBACK;
+   	DEALLOCATE PREPARE STMT;
+		ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pErr = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry1 = "UPDATE tblServer_has_tblService SET dtValue = 3, dtScriptOutput = 'Service Unreachable!', dtLastCheckTS = NULL WHERE idServer = ?";
+	SET @qry2 = "UPDATE tblServer_has_tblService SET dtValue = 3, dtScriptOutput = 'Service Unreachable!', dtLastCheckTS = NULL WHERE idServer IN (SELECT idChild FROM tblParent WHERE idParent = ?)";
+	SET @qry3 = "UPDATE tblServer SET dtEnabled = FALSE WHERE idServer IN (SELECT idChild FROM tblParent WHERE idParent = ?)";
+
 	START TRANSACTION;
-		UPDATE tblServer_has_tblService SET
-			dtValue = 3,
-			dtScriptOutput = "Service Unreachable!",
-			dtLastCheckTS = NULL
-		WHERE idServer = pID;
+		SET @p1 = pID;
 
-   	UPDATE tblServer_has_tblService SET
-      	dtValue = 3,
-      	dtScriptOutput = "Service Unreachable!",
-      	dtLastCheckTS = NULL
-    	WHERE idServer IN (
-      	SELECT idChild
-      	FROM tblParent
-      	WHERE idParent = pID
-		);
+		PREPARE STMT FROM @qry1;
+		EXECUTE STMT USING @p1;
+		DEALLOCATE PREPARE STMT;
 
-		UPDATE tblServer SET
-      	dtEnabled = FALSE
-    	WHERE idServer IN (
-      	SELECT idChild
-      	FROM tblParent
-      	WHERE idParent = pID
-    	);
+		PREPARE STMT FROM @qry2;
+		EXECUTE STMT USING @p1;
+		DEALLOCATE PREPARE STMT;
+
+		PREPARE STMT FROM @qry3;
+		EXECUTE STMT USING @p1;
+		DEALLOCATE PREPARE STMT;
 
 		SET pErr = 0;
 	COMMIT;

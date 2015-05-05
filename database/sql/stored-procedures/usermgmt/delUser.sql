@@ -2,7 +2,7 @@
 | Routine     : delUser
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-21
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : This procedure deletes a user from the database.
 |
@@ -20,6 +20,7 @@
 |  2015-04-21 : Created procedure.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-05 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -53,24 +54,32 @@ BEGIN
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pID = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pID = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pID = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
+	
+	SET @qry = "DELETE FROM tblUser WHERE idUser = ?";
 
 	START TRANSACTION;
-   	DELETE FROM tblUser 
-   		WHERE idUser = pID;
+		SET @p1 = pID;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1;
+		DEALLOCATE PREPARE STMT;
 
 		SET pErr = 0;
 	COMMIT;

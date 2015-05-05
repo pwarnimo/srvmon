@@ -2,7 +2,7 @@
 | Routine     : addServiceToServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 1.0.1
+| Version     : 1.1
 | 
 | Description : Add an existing service to a server. By default, dtValue will be set to 4.
 |                0 = Host OK
@@ -30,6 +30,7 @@
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |  2015-04-30 : Changed license to AGPLv3.
 |  2015-05-02 : Fixed bug -> dtLastCheck = dtLastCheckTS.
+|  2015-05-05 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -65,30 +66,40 @@ BEGIN
 	DECLARE EXIT HANDLER FOR cond_dupkey
 	BEGIN
    	SET pErr = -1;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR cond_forkey
 	BEGIN
    	SET pErr = -2;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry = "INSERT INTO tblServer_has_tblService (idServer, idService, dtValue, dtScriptOutput, dtLastCheckTS) VALUES (?, ?, 4, 'Check Pending!', NULL)";
+
 	START TRANSACTION;
-   	INSERT INTO tblServer_has_tblService (idServer, idService, dtValue, dtScriptOutput, dtLastCheckTS)
-   		VALUES (pHID, pSID, 4, "Check Pending!", NULL);
+		SET @p1 = pHID;
+		SET @p2 = pSID;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2;
+		DEALLOCATE PREPARE STMT;
 
    	SET pErr = 0;
 	COMMIT;

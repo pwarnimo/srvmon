@@ -6,10 +6,12 @@ SRVMON SERVER MONITORING SUITE
  *** Version 1.0 expected around May/June 2015.
 
  *** CURRENT VERSIONS : SRVMON DB       -> 1.0.1
- ***                    SRVMON DIRECTOR -> 0.1
+ ***                    SRVMON DIRECTOR -> 1.0
  ***                    SRVMON AGENT    -> 0.1
  ***                    SRVMON WEBUI    -> 0.5
  ***                    SRVMON DESKTOP  -> 0.1
+
+ *** OVERALL VERSION = 0.8
 
 About
 -----
@@ -36,7 +38,7 @@ Director
 The next part is the SRVMON director. This program is only used to check
 if the hosts, which are defined in the database, are reachable. The
 director disables a host and all its children if the communication
-fails. The director is written in C++.
+fails. The director is written in Java.
 * A director Shell script is available for testing (director-bash.sh)
 
 Agent
@@ -48,7 +50,7 @@ execute the check commands on the host. The agent can execute multiple
 check commands which can be defined in the database. A service could be
 a simple shell script which checks the CPU usage. The agent would then
 periodically execute the script and send the output to the SQL database.
-The agent is written in C++.
+The agent is written in Java.
 * An agent Shell script is available for testing (agent-bash.sh)
 
 Web UI

@@ -2,7 +2,7 @@
 | Routine     : updateServerServiceStatus.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Update the status of a service a for the specified server.
 |                 0 : Host OK
@@ -33,6 +33,7 @@
 |               Prepared procedure for DB release 1.0.
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-05 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -72,24 +73,28 @@ BEGIN
 	DECLARE EXIT HANDLER FOR cond_forkey
 	BEGIN
    	SET pErr = -2;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pErr = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
  	BEGIN
    	SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
@@ -100,13 +105,18 @@ BEGIN
 
 	IF l_enabled = TRUE THEN
 		BEGIN
+			SET @qry = "UPDATE tblServer_has_tblService SET dtValue = ?, dtScriptOutput = ? WHERE idServer = ? AND idService = ?";
+
       	START TRANSACTION;
-        		UPDATE tblServer_has_tblService SET
-        			dtValue = pStatus,
-         		dtScriptOutput = pOutput
-				WHERE idServer = pHID
-					AND idService = pSID;
- 
+				SET @p1 = pStatus;
+				SET @p2 = pOutput;
+				SET @p3 = pHID;
+				SET @p4 = pSID;
+
+				PREPARE STMT FROM @qry;
+				EXECUTE STMT USING @p1, @p2, @p3, @p4;
+				DEALLOCATE PREPARE STMT;
+
 				SET pErr = 0;
 			COMMIT;
 		END;

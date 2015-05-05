@@ -44,7 +44,7 @@
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS getChildrenForParent $$
-CREATE PROCEDURE getChildsForParent(
+CREATE PROCEDURE getChildrenForParent(
 	IN  pID  MEDIUMINT,
 	OUT pErr MEDIUMINT
 )

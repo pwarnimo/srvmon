@@ -2,7 +2,7 @@
 | Routine     : getServicesForServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-21
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Display unformatted data for a server.
 |
@@ -27,6 +27,7 @@
 |               Prepared procedure for DB release 1.0.
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-05 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -70,21 +71,26 @@ BEGIN
    	WHEN 1 THEN SET @FIELDS = "SR.idService, dtCheckCommand";
    	WHEN 2 THEN SET @FIELDS = "SR.idService, dtValue";
 	END CASE;
-  
+
 	IF pSID = -1 THEN
    	BEGIN
-      	SET @COND = CONCAT("WHERE idServer = ", pHID, " AND SR.idService = SE.idService");
-   	END;
+			SET @QRY = CONCAT("SELECT ", @FIELDS, " FROM tblServer_has_tblService SR, tblService SE WHERE idServer = ? AND SR.idService = SE.idService");
+			SET @p1 = pHID;
+
+			PREPARE STMT FROM @QRY;
+			EXECUTE STMT USING @p1;
+		END;
 	ELSE
    	BEGIN
-      	SET @COND = CONCAT("WHERE idServer = ", pHID, " AND SR.idService = SE.idService AND SE.idService = ", pSID);
+			SET @QRY = CONCAT("SELECT ", @FIELDS, " FROM tblServer_has_tblService SR, tblService SE WHERE idServer = ? AND SR.idService = SE.idService AND SE.idService = ?");
+			SET @p1 = pHID;
+			SET @p2 = pSID;
+			
+			PREPARE STMT FROM @QRY;
+			EXECUTE STMT USING @p1, @p2;
    	END;
 	END IF;
   
-	SET @QRY = CONCAT("SELECT ", @FIELDS, " FROM tblServer_has_tblService SR, tblService SE ", @COND);
-  
-	PREPARE STMT FROM @QRY;
-	EXECUTE STMT;
 	DEALLOCATE PREPARE STMT;
 
 	SET pErr = l_errcode;

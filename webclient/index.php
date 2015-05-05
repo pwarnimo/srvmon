@@ -29,6 +29,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+	require_once "inc/init.php";
 ?>
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
@@ -60,6 +62,10 @@
 	</head>
 	<body>
 		<?php
+			echo Config::get("mysql/host");
+
+			DB::getInstance();
+
 			include "inc/settings/dbconfig.inc.php";
 
 			function __autoload($class_name) {

@@ -67,6 +67,25 @@
 			echo Config::get("mysql/host");
 
 			DB::getInstance();
+			
+			$user = DB::getInstance()->query("CALL getUserFormatted(?,@err)", array("1"));
+
+			if (!$user->count()) {
+				echo "Failed!";
+			}
+			else {
+				echo $user->first()->dtUsername;
+			}
+
+			if (Input::exists()) {
+				echo "<p>SUBMIT</p>";
+
+			}
+			else {
+				echo "<p>empty</p>";
+			}
+
+			var_dump($_POST);
 			// Testing END
 		?>
 
@@ -96,26 +115,26 @@
 						<h3 class="panel-title">WebUI Login</h3>
 					</div>
 					<div class="panel-body">
-						<form class="form-horizontal" action="login.php" method="post">
+						<form class="form-horizontal" action="" method="post">
 							<p>Please enter your login credentials.</p>
 							
 							<div class="form-group">
 								<label for="edtUsername" class="col-sm-2 control-label">Username</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" id="edtUsername" placeholder="johndoe">
+									<input type="text" class="form-control" name="edtUsername" id="edtUsername" placeholder="johndoe">
 								</div>
 							</div>
 
 							<div class="form-group">
 							   <label for="edtPassword" class="col-sm-2 control-label">Password</label>
 								<div class="col-sm-10">
-									<input type="password" class="form-control" id="edtPassword" placeholder="Password">
+									<input type="password" class="form-control" name="edtPassword" id="edtPassword" placeholder="Password">
 								</div>
 							</div>
 
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-10">
-									<button type="submit" class="btn btn-default">Proceed</button>
+									<input type="submit" class="btn btn-default" value="submit">
 								</div>
 							</div>
 						</form>

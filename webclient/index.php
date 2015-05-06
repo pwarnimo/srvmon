@@ -1,16 +1,17 @@
 <?php
 /*
- * File        : main.php
+ * File        : index.php
  * Author(s)   : Pol Warnimont
  * Create date : 2015-04-24
  * Version     : 0.5
  *
- * Description : The main index page for the WebUI.
+ * Description : Displays the login form for the WebUI.
  * 
  * Changelog
  * ---------
  *  2015-04-24 : Create file.
  *  2015-04-30 : Added license and header.
+ *  2015-05-06 : Changing structure.
  *
  * License
  * -------
@@ -62,15 +63,11 @@
 	</head>
 	<body>
 		<?php
+			// Testing BEGIN
 			echo Config::get("mysql/host");
 
 			DB::getInstance();
-
-			include "inc/settings/dbconfig.inc.php";
-
-			function __autoload($class_name) {
-				require_once "inc/classes/" . $class_name . ".class.php";
-			}
+			// Testing END
 		?>
 
 		<!--[if lt IE 8]>

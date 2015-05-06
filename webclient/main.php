@@ -11,6 +11,7 @@
  * ---------
  *  2015-04-24 : Create file.
  *  2015-04-30 : Added license and header.
+ *  2015-05-06 : Reworking structure.
  *
  * License
  * -------

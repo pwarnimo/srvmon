@@ -94,4 +94,34 @@ class DB {
 	public function first() {
 		return $this->results()[0];
 	}
+
+	private function action($action, $table, $where = array()) {
+		if (count($where) === 3) {
+			$operators = array(
+				"=",
+				">",
+				"<",
+				">=",
+				"<="
+			);
+
+			$field = $where[0];
+			$operator = $where[1];
+			$val = $where[2];
+
+			if (in_array($operator, $operators)) {
+				$sql = $action . " FROM " . $table . " WHERE " . $field . " " . $operator . " ?";
+				
+				if (!$this->query($sql, array($val))->error()) {
+					return $this;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function get($table, $where) {
+		return $this->action("SELECT *", $table, $where);	
+	}
 }

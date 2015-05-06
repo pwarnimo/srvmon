@@ -78,14 +78,31 @@
 			}
 
 			if (Input::exists()) {
-				echo "<p>SUBMIT</p>";
+				$validator = new Validator();
 
+				$validator->check($_POST, array(
+					"dtUsername" => array(
+						"required" => true,
+						"min" => 2,
+						"max" => 10,
+						"unique" => "tblUsers"
+					),
+					"dtPassword" => array(
+						"required" => true,
+						"matches" => "dtUsername"
+					)
+				));
+
+				if ($validator->passed()) {
+					echo "<p>Validation passed</p>";
+				}
+				else {
+					print_r($validator->errors());
+				}
 			}
 			else {
 				echo "<p>empty</p>";
 			}
-
-			var_dump($_POST);
 			// Testing END
 		?>
 
@@ -119,16 +136,16 @@
 							<p>Please enter your login credentials.</p>
 							
 							<div class="form-group">
-								<label for="edtUsername" class="col-sm-2 control-label">Username</label>
+								<label for="dtUsername" class="col-sm-2 control-label">Username</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control" name="edtUsername" id="edtUsername" placeholder="johndoe">
+									<input type="text" class="form-control" name="dtUsername" id="dtUsername" placeholder="johndoe" value="<?php echo escape(Input::get("dtUsername"))?>">
 								</div>
 							</div>
 
 							<div class="form-group">
-							   <label for="edtPassword" class="col-sm-2 control-label">Password</label>
+							   <label for="dtPassword" class="col-sm-2 control-label">Password</label>
 								<div class="col-sm-10">
-									<input type="password" class="form-control" name="edtPassword" id="edtPassword" placeholder="Password">
+									<input type="password" class="form-control" name="dtPassword" id="dtPassword" placeholder="Password">
 								</div>
 							</div>
 

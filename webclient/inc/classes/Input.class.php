@@ -46,7 +46,7 @@ class Input {
 		}
 	}
 
-	public static get($item) {
+	public static function get($item) {
 		if (isset($_POST[$item])) {
 			return $_POST[$item];
 		}

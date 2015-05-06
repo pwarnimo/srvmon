@@ -2,7 +2,7 @@
 | Routine     : addServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : This procedure is called in order to add a new server to the DB.
 |
@@ -27,6 +27,7 @@
 |  2015-04-22 : Optimizing procedure for DB 0.42.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -56,7 +57,8 @@ CREATE PROCEDURE addServer(
 	IN  pDescription TINYTEXT,
 	IN  pOS          MEDIUMINT,
 	IN  pType        MEDIUMINT,
-	IN  pEnabled     BOOLEAN,
+	IN  pHardware    MEDIUMINT,
+	IN  pResponsible MEDIUMINT,
 	OUT pID          MEDIUMINT
 )
 BEGIN
@@ -69,30 +71,45 @@ BEGIN
 	DECLARE EXIT HANDLER FOR cond_dupkey
 	BEGIN
    	SET pID = -1;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR cond_forkey
 	BEGIN
    	SET pID = -2;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pID = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pID = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry = "INSERT INTO tblServer (dtHostname, dtIPAddress, dtDescription, fiOS, fiType, dtEnabled, fiHardware, fiResponsible) VALUES (?, ?, ?, ?, ?, 0, ?, ?)";
+
 	START TRANSACTION;
-   	INSERT INTO tblServer (dtHostname, dtIPAddress, dtDescription, fiOS, fiType, dtEnabled)
-      	VALUES (pHostname, pIPAddress, pDescription, pOS, pType, pEnabled);
+		SET @p1 = pHostname;
+		SET @p2 = pIPAddress;
+		SET @p3 = pDescription;
+		SET @p4 = pOS;
+		SET @p5 = pType;
+		SET @p6 = pHardware;
+		SET @p7 = pResponsible;
+   	
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2, @p3, @p4, @p5, @p6, @p7;
+		DEALLOCATE PREPARE STMT;
 
 		SET pID = LAST_INSERT_ID();
 	COMMIT;

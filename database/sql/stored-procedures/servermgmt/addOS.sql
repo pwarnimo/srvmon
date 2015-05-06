@@ -2,7 +2,7 @@
 | Routine     : addOS
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : This procedure is called in order to add a new OS to the DB.
 |
@@ -20,6 +20,7 @@
 |  2015-04-22 : Created procedure.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -54,24 +55,33 @@ BEGIN
 	DECLARE EXIT HANDLER FOR cond_dupkey
 	BEGIN
    	SET pID = -1;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pID = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pID = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry = "INSERT INTO tblOS (dtCaption, dtDescription) VALUES (?, ?)";
+
 	START TRANSACTION;
-   	INSERT INTO tblOS (dtCaption, dtDescription)
-      	VALUES (pCaption, pDescription);
+		SET @p1 = pCaption;
+		SET @p2 = pDescription;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2;
+		DEALLOCATE PREPARE STMT;
 
 		SET pID = LAST_INSERT_ID();
 	COMMIT;

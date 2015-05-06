@@ -2,7 +2,7 @@
 | Routine     : addHardware
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-05-05
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : This procedure is called in order to add new hardware entry 
 |               into the DB.
@@ -20,6 +20,7 @@
 | Changelog
 | ---------
 |  2015-05-05 : Created procedure.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -54,24 +55,33 @@ BEGIN
 	DECLARE EXIT HANDLER FOR cond_dupkey
 	BEGIN
    	SET pID = -1;
+		DEALLOCATE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pID = -3;
+		DEALLOCATE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pID = -4;
+		DEALLOCATE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry = "INSERT INTO tblHardware (dtModel, dtManufacturer) VALUES (?, ?)";
+
 	START TRANSACTION;
-   	INSERT INTO tblHardware (dtModel, dtManufacturer)
-      	VALUES (pModel, pManufacturer);
+		SET @p1 = pModel;
+		SET @p2 = pManufacturer;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2;
+		DEALLOCATE PREPARE STMT;
 
 		SET pID = LAST_INSERT_ID();
 	COMMIT;

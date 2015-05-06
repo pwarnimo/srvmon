@@ -2,7 +2,7 @@
 | Routine     : delParent
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-21
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Procedure to delete an host as parent.
 |
@@ -22,6 +22,7 @@
 |  2015-04-21 : Created procedure.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -56,25 +57,33 @@ BEGIN
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pErr = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry = "DELETE FROM tblParent WHERE idChild = ? AND idParent = ?";
+
 	START TRANSACTION;
-   	DELETE FROM tblParent 
-    	WHERE idChild = pCID 
-      	AND idParent = pPID;
+		SET @p1 = pCID;
+		SET @p2 = pPID;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2;
+		DEALLOCATE PREPARE STMT;
 
 		SET pErr = 0;
 	COMMIT;

@@ -2,7 +2,7 @@
 | Routine     : modifyHardware.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-05-05
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Update records of a given device type (By ID).
 |
@@ -20,6 +20,7 @@
 | Changelog
 | ---------
 |  2015-05-05 : Created procedure.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -55,27 +56,35 @@ BEGIN
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pErr = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
  	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry = "UPDATE tblHardware SET dtModel = ?, dtManufacturer = ? WHERE idHardware = ?";
+
 	START TRANSACTION;
-   	UPDATE tblType SET
-      	dtModel = pModel,
-      	dtManufacturer = pManufacturer
-		WHERE idType = pID;
- 
+		SET @p1 = pModel;
+		SET @p2 = pManufacturer;
+		SET @p3 = pID;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2, @p3;
+		DEALLOCATE PREPARE STMT;
+
 		SET pErr = 0;
 	COMMIT;
 END $$

@@ -2,7 +2,7 @@
 | Routine     : getOS
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Display the data for an OS.
 |
@@ -20,6 +20,7 @@
 |  2015-04-22 : Created procedure.
 |  2015-04-28 : Created procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Bugfixing.
 |
 | License information
 | -------------------
@@ -56,16 +57,23 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
 	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
   
-	SET @QRY = "SELECT * FROM tblOS";
+	SET @qry = "SELECT * FROM tblOS";
   
 	IF pID != -1 THEN
    	BEGIN
-      	SET @QRY = CONCAT(@QRY, " WHERE idOS = ", pID);
+      	SET @qry = CONCAT(@qry, " WHERE idOS = ?");
+			SET @p1 = pID;
+
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT USING @p1;
    	END;
+	ELSE
+		BEGIN
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT;
+		END;
 	END IF;
   
-	PREPARE STMT FROM @QRY;
-	EXECUTE STMT;
 	DEALLOCATE PREPARE STMT;
 
 	SET pErr = l_errcode;

@@ -1,15 +1,15 @@
 /*---------------------------------------------------------------------------------------------
-| Routine     : delType
+| Routine     : getHardware
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
-| Create date : 2015-04-22
-| Version     : 1.1
+| Create date : 2015-05-06
+| Version     : 1.0
 | 
-| Description : Procedure to delete a device type.
+| Description : Display the data for an hardware entry.
 |
 | Parameters
 | ----------
-|  IN  : pID  : ID number of the type.
-|  OUT : pErr : Returns an error code in case of a failure.
+|  IN  : pID  : ID number of the hw entry (Displays all types if -1).
+|  OUT : pErr : Error code in a case of a failure.
 |                 0 = Query OK
 |                -3 = General SQL error
 |                -4 = General SQL warning
@@ -17,10 +17,7 @@
 |
 | Changelog
 | ---------
-|  2015-04-22 : Created procedure.
-|  2015-04-28 : Prepared procedure for DB release 1.0.
-|  2015-04-30 : Changed license to AGPLv3.
-|  2015-05-06 : Using prepared statements.
+|  2015-05-06 : Created procedure.
 |
 | License information
 | -------------------
@@ -43,46 +40,41 @@
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS delType $$
-CREATE PROCEDURE delType(
+DROP PROCEDURE IF EXISTS getHardware $$
+CREATE PROCEDURE getHardware(
 	IN  pID  MEDIUMINT,
 	OUT pErr MEDIUMINT
 )
 BEGIN
+	DECLARE l_errcode MEDIUMINT DEFAULT 0;
+  
 	DECLARE no_data CONDITION FOR 1329;
 
-	DECLARE EXIT HANDLER FOR no_data
-	BEGIN
-   	SET pErr = -5;
-		DEALLOCATE PREPARE STMT;
-   	ROLLBACK;
-	END;
+	DECLARE CONTINUE HANDLER FOR no_data SET l_errcode = -5;
+	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
+	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
+   
+	IF pID = -1 THEN
+   	BEGIN
+			SET @qry = "SELECT * FROM tblHardware";
 
-	DECLARE EXIT HANDLER FOR sqlexception
-	BEGIN
-   	SET pErr = -3;
-		DEALLOCATE PREPARE STMT;
-   	ROLLBACK;
-	END;
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT;
+   	END;
+	ELSE
+		BEGIN
+			SET @qry = "SELECT * FROM tblHardware WHERE idHardware = ?";
+			
+			SET @p1 = pID;
 
-	DECLARE EXIT HANDLER FOR sqlwarning
-	BEGIN
-   	SET pErr = -4;
-		DEALLOCATE PREPARE STMT;
-   	ROLLBACK;
-	END;
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT USING @p1;
+		END;
+	END IF;
+  
+	DEALLOCATE PREPARE STMT;
 
-	SET @qry = "DELETE FROM tblType WHERE idType = ?";
-
-	START TRANSACTION;
-		SET @p1 = pID;
-
-		PREPARE STMT FROM @qry;
-		EXECUTE STMT USING @p1;
-		DEALLOCATE PREPARE STMT;
-
-  		SET pErr = 0;
-	COMMIT;
+	SET pErr = l_errcode;
 END $$
 
 DELIMITER ;

@@ -2,9 +2,9 @@
 | Routine     : getType
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0
+| Version     : 1.1
 | 
-| Description : Display the data for an OS.
+| Description : Display the data for a type.
 |
 | Parameters
 | ----------
@@ -20,6 +20,7 @@
 |  2015-04-22 : Created procedure.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -55,17 +56,25 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR no_data SET l_errcode = -5;
 	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
 	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
-  
-	SET @QRY = "SELECT * FROM tblType";
-  
-	IF pID != -1 THEN
+   
+	IF pID = -1 THEN
    	BEGIN
-      	SET @QRY = CONCAT(@QRY, " WHERE idType = ", pID);
+			SET @qry = "SELECT * FROM tblType";
+
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT;
    	END;
+	ELSE
+		BEGIN
+			SET @qry = "SELECT * FROM tblType WHERE idType = ?";
+			
+			SET @p1 = pID;
+
+			PREPARE STMT FROM @qry;
+			EXECUTE STMT USING @p1;
+		END;
 	END IF;
   
-	PREPARE STMT FROM @QRY;
-	EXECUTE STMT;
 	DEALLOCATE PREPARE STMT;
 
 	SET pErr = l_errcode;

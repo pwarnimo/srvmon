@@ -2,13 +2,13 @@
 | Routine     : getChildrenForParent
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0
+| Version     : 1.1
 | 
-| Description : Display the cilds of a parent server.
+| Description : Display the cildren of a parent host.
 |
 | Parameters
 | ----------
-|  IN  : pID  : ID number of the parent server.
+|  IN  : pID  : ID number of the parent host.
 |  OUT : pErr : Error ID in case of a failure.
 |                 0 = Query OK
 |                -3 = General SQL error
@@ -21,6 +21,7 @@
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Fixed name of procedure.
 |               Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -56,11 +57,14 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR no_data SET l_errcode = -5;
 	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
 	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
-  
-	SELECT idServer, dtHostname, dtEnabled
-	FROM tblServer, tblParent
-	WHERE idServer = idChild
-		AND idParent = pID;
+
+	SET @qry = "SELECT idServer, dtHostname, dtEnabled FROM tblServer, tblParent WHERE idServer = idChild AND idParent = ?";
+	
+	SET @p1 = pID;
+
+	PREPARE STMT FROM @qry;
+	EXECUTE STMT USING @p1;
+	DEALLOCATE PREPARE STMT;
   
 	SET pErr = l_errcode;
 END $$

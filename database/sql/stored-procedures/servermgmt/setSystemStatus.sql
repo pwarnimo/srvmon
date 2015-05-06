@@ -2,7 +2,7 @@
 | Routine     : setSystemStatus.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Update the system status of a server.
 |
@@ -21,6 +21,7 @@
 |  2015-04-22 : Created procedure.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -55,26 +56,34 @@ BEGIN
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pErr = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
   		ROLLBACK;
 	END;
 
+	SET @qry = "UPDATE tblServer SET dtEnabled = ? WHERE idServer = ?";
+
 	START TRANSACTION;
-   	UPDATE tblServer SET
-      	dtEnabled = pStatus
-		WHERE idServer = pID;
- 
+		SET @p1 = pStatus;
+		SET @p2 = pID;
+
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2;
+		DEALLOCATE PREPARE STMT;
+
 		SET pErr = 0;
 	COMMIT;
 END $$

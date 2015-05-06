@@ -2,7 +2,7 @@
 | Routine     : getParentsForServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-22
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Display the parents of a server.
 |
@@ -20,6 +20,7 @@
 |  2015-04-22 : Created procedure.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -55,15 +56,15 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR no_data SET l_errcode = -5;
 	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
 	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
-  
-	SELECT idServer, dtHostname, dtEnabled
-	FROM tblServer
-	WHERE idServer IN (
-   	SELECT idParent
-   	FROM tblParent
-  		WHERE idChild = pID
-	);
-  
+
+	SET @qry = "SELECT idServer, dtHostname, dtEnabled FROM tblServer WHERE idServer IN (SELECT idParent FROM tblParent WHERE idChild = ?)";
+
+	SET @p1 = pID;
+
+	PREPARE STMT FROM @qry;
+	EXECUTE STMT USING @p1;
+	DEALLOCATE PREPARE STMT;
+
 	SET pErr = l_errcode;
 END $$
 

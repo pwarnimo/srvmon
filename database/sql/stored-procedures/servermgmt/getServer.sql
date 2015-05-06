@@ -2,7 +2,7 @@
 | Routine     : getServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-20
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Display unformatted/formatted data for a server.
 |
@@ -22,6 +22,7 @@
 |  2015-04-22 : Added formatted data function for DB 0.5.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Cleaning up function.
 |
 | License information
 | -------------------
@@ -58,40 +59,49 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR no_data SET l_errcode = -5;
 	DECLARE CONTINUE HANDLER FOR sqlexception SET l_errcode = -3;
 	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
-  
-	IF pFORMAT = TRUE THEN
- 		BEGIN
-      	SET @FIELDS = "idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer";
-      	SET @TABLES = "tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW";
-      	SET @COND = " WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup";
+
+	IF pFormat = TRUE THEN
+		BEGIN
+			IF pID = -1 THEN
+				BEGIN
+					SET @qry = "SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup";
+
+					PREPARE STMT FROM @qry;
+					EXECUTE STMT;
+				END;
+			ELSE
+				BEGIN
+					SET @qry = "SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup AND idServer = ?";
+
+					SET @p1 = pID;
+
+					PREPARE STMT FROM @qry;
+					EXECUTE STMT USING @p1;
+				END;
+			END IF;
 		END;
 	ELSE
-   	BEGIN
-      	SET @FIELDS = "*";
-     		SET @TABLES = "tblServer";
-     		SET @COND = "";
-    	END;
-	END IF;
-  
-	SET @QRY = CONCAT("SELECT ", @FIELDS, " FROM ", @TABLES, @COND);
-  
-	IF pID != -1 THEN
-   	BEGIN
-      	IF pFormat = TRUE THEN
-      		BEGIN
-          		SET @COND = CONCAT(" AND idServer = ", pID);
-        		END;
-      	ELSE
-        		BEGIN
-         		SET @COND = CONCAT(" WHERE idServer = ", pID);
-        		END;
-      	END IF;
-      	SET @QRY = CONCAT(@QRY, @COND);
+		BEGIN
+			IF pID = -1 THEN
+				BEGIN
+					SET @qry = "SELECT * FROM tblServer";
+
+					PREPARE STMT FROM @qry;
+					EXECUTE STMT;
+				END;
+			ELSE
+				BEGIN
+					SET @qry = "SELECT * FROM tblServer WHERE idServer = ?";
+
+					SET @p1 = pID;
+
+					PREPARE STMT FROM @qry;
+					EXECUTE STMT USING @p1;
+				END;
+			END IF;
 		END;
 	END IF;
-  
-	PREPARE STMT FROM @QRY;
-	EXECUTE STMT;
+
 	DEALLOCATE PREPARE STMT;
  
 	SET pErr = l_errcode;

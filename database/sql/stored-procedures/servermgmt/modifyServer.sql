@@ -2,7 +2,7 @@
 | Routine     : modifyServer.sql
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-21
-| Version     : 1.0
+| Version     : 1.1
 | 
 | Description : Update records of a given server (By ID).
 |
@@ -27,6 +27,7 @@
 |  2015-04-22 : Optimizing procedure for DB 0.42.
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
+|  2015-05-06 : Using prepared statements.
 |
 | License information
 | -------------------
@@ -57,7 +58,8 @@ CREATE PROCEDURE modifyServer(
 	IN  pDescription TINYTEXT,
 	IN  pOS          MEDIUMINT,
 	IN  pType        MEDIUMINT,
-	IN  pEnabled     BOOLEAN,
+	IN  pHardware    MEDIUMINT,
+	IN  pResponsible MEDIUMINT,
 	OUT pErr         MEDIUMINT
 )
 BEGIN
@@ -66,31 +68,40 @@ BEGIN
 	DECLARE EXIT HANDLER FOR no_data
 	BEGIN
    	SET pErr = -5;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlexception
 	BEGIN
    	SET pErr = -3;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
 	DECLARE EXIT HANDLER FOR sqlwarning
 	BEGIN
    	SET pErr = -4;
+		DEALLOCATE PREPARE STMT;
    	ROLLBACK;
 	END;
 
+	SET @qry = "UPDATE tblServer SET dtHostname = ?, dtIPAddress = ?, dtDescription = ?, fiOS = ?, fiType = ?, fiHardware = ?, fiResponsible = ? WHERE idServer = ?";
+
 	START TRANSACTION;
-   	UPDATE tblServer SET
-      	dtHostname = pHostname,
-     		dtIPAddress = pIPAddress,
-      	dtDescription = pDescription,
-      	fiOS = pOS,
-      	fiType = pType,
-      	dtEnabled = pEnabled
-		WHERE idServer = pID;
+		SET @p1 = pHostname;
+		SET @p2 = pIPAddress;
+		SET @p3 = pDescription;
+		SET @p4 = pOS;
+		SET @p5 = pType;
+		SET @p6 = pHardware;
+		SET @p7 = pResponsible;
+		SET @p8 = pID;
  
+		PREPARE STMT FROM @qry;
+		EXECUTE STMT USING @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8;
+		DEALLOCATE PREPARE STMT;
+
 		SET pErr = 0;
 	COMMIT;
 END $$

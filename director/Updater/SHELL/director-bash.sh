@@ -3,7 +3,7 @@
 # Script      : director-bash.sh
 # Author(s)   : Pol Warnimont
 # Create date : 2015-04-24
-# Version     : 0.9
+# Version     : 1.0
 #
 # Description : A simple director script for the SRVMON monitoring suite.
 #
@@ -11,6 +11,7 @@
 # ---------
 #  2015-04-24 : Created script.
 #  2015-04-30 : Changed license to AGPLv3.
+#  2015-05-07 : Finalized script.
 #
 # License information
 # -------------------
@@ -36,11 +37,8 @@ DB=""
 TMPFILE=/tmp/srvmon[$$]
 
 function showVersion {
-  echo "SRVMON DIRECTOR (director-bash.sh) VERSION 0.9 (C) 2015 Pol Warnimont"
-  echo "SRVMON DIRECTOR comes with ABSOLUTELY NO WARRANTY; for details"
-  echo "type 'show w'. This is free software, and you are welcome"
-  echo "to redistribute it under certain conditions; type 'show c'"
-  echo "for details."
+  echo "SRVMON DIRECTOR (director-bash.sh) VERSION 1.0 (C) 2015 Pol Warnimont"
+  echo "SRVMON DIRECTOR comes with ABSOLUTELY NO WARRANTY!"
 }
 
 if [ $1 == "-v" ]
@@ -52,7 +50,7 @@ fi
 showVersion
 
 logger -t srvmon[$$] "SRVMON DIRECTOR STARTED."
-echo "SRVMON DIRECTOR SCRIPT 0.1"
+echo "SRVMON DIRECTOR SCRIPT 1.0"
 echo "> Getting all hosts..."
 
 while read line

@@ -55,6 +55,8 @@ class DB {
 	}
 
 	public function query($sql, $params = array()) {
+		echo "*QUERY GO*";
+		
 		$this->_error = false;
 		
 		if ($this->_query = $this->_pdo->prepare($sql)) {
@@ -79,11 +81,37 @@ class DB {
 		return $this;
 	}
 
+	public function action($action, $table, $where = array()) {
+		if (count($where) === 3) {
+			$operators = array("=", "<", ">", "<=", ">=");
+
+			$field = $where[0];
+			$operator = $where[1];
+			$value = $where[2];
+
+			if (in_array($operator, $operators)) {
+				$sql = $action . " FROM " . $table . " WHERE " . $field . " " . $operator . " ?";
+
+				echo "<p>" . $sql . "</p>";
+
+				if (!$this->query($sql, array($value))->error()) {
+					return $this;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function get($table, $where) {
+		return $this->action("SELECT *", $table, $where);
+	}
+
 	public function error() {
 		return $this->_error;
 	}
 
-	public function count() {
+	public function rowCount() {
 		return $this->_count;
 	}
 
@@ -95,7 +123,7 @@ class DB {
 		return $this->results()[0];
 	}
 
-	private function action($action, $table, $where = array()) {
+	/*private function action($action, $table, $where = array()) {
 		if (count($where) === 3) {
 			$operators = array(
 				"=",
@@ -111,8 +139,12 @@ class DB {
 
 			if (in_array($operator, $operators)) {
 				$sql = $action . " FROM " . $table . " WHERE " . $field . " " . $operator . " ?";
-				
+			
+				echo $sql;
+				echo " -- " . $val;
+
 				if (!$this->query($sql, array($val))->error()) {
+					echo "*QUERY OK*";
 					return $this;
 				}
 			}
@@ -123,5 +155,5 @@ class DB {
 
 	public function get($table, $where) {
 		return $this->action("SELECT *", $table, $where);	
-	}
+	}*/
 }

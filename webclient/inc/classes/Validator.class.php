@@ -69,10 +69,10 @@ class Validator {
 						case "unique":
 							$check = $this->_db->get($ruleVal, array($item, "=", $val));
 							
-							echo $check->count();
-							//if ($check->count() > 0) {
-							//	$this->addError($item . " must be unique!");
-							//}
+
+							if ($check->rowCount() > 0) {
+								$this->addError($item . " must be unique!");
+							}
 						break;
 					}
 				}

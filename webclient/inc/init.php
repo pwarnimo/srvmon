@@ -44,7 +44,8 @@
 			"cookieExpire" => 604800
 		),
 		"session" => array(
-			"sessionName" => "user"
+			"sessionName" => "user",
+			"token_name" => "token"
 		)
 	);
 

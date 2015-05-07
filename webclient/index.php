@@ -64,45 +64,56 @@
 	<body>
 		<?php
 			// Testing BEGIN
+			echo "<pre style=\"color:#f00;\">DEBUG</pre>";
+
+			if (Session::exists("success")) {
+				echo Session::flash("success");
+				echo "<br>";
+			}
+
 			echo Config::get("mysql/host");
 
 			DB::getInstance();
 			
 			$user = DB::getInstance()->query("CALL getUserFormatted(?,@err)", array("1"));
 
-			if (!$user->count()) {
+			if (!$user->rowCount()) {
 				echo "Failed!";
 			}
 			else {
 				echo $user->first()->dtUsername;
 			}
 
+			$test = DB::getInstance()->get("tblUser", array("dtUsername", "=", "pwarnimo"));
+			echo "<b>" . $test->first()->dtUsername . "</b>";
+
 			if (Input::exists()) {
-				$validator = new Validator();
+				if(Token::check(Input::get("token"))) {
+					echo "<p>HERE</p>";
+					$validator = new Validator();
 
-				$validator->check($_POST, array(
-					"dtUsername" => array(
-						"required" => true,
-						"min" => 2,
-						"max" => 10,
-						"unique" => "tblUsers"
-					),
-					"dtPassword" => array(
-						"required" => true,
-						"matches" => "dtUsername"
-					)
-				));
+					$validator->check($_POST, array(
+						"dtUsername" => array(
+							"required" => true,
+						),
+						"dtPassword" => array(
+							"required" => true,
+						)
+					));
 
-				if ($validator->passed()) {
-					echo "<p>Validation passed</p>";
-				}
-				else {
-					print_r($validator->errors());
+					if ($validator->passed()) {
+						Session::flash("success", "Successfully!");
+					}
+					else {
+						echo "<br>";
+						print_r($validator->errors());
+					}
 				}
 			}
 			else {
 				echo "<p>empty</p>";
 			}
+			echo "<pre style=\"color:#f00;\">DEBUG</pre>";
 			// Testing END
 		?>
 
@@ -148,6 +159,8 @@
 									<input type="password" class="form-control" name="dtPassword" id="dtPassword" placeholder="Password">
 								</div>
 							</div>
+
+							<input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
 
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-10">

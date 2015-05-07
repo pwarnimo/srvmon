@@ -28,3 +28,20 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+class Token {
+	public static function generate() {
+		return Session::put(Config::get("session/token_name"), md5(uniqid()));
+	}
+
+	public static function check($token) {
+		$tokenName = Config::get("session/token_name");
+
+		if (Session::exists($tokenName) && Session::get($tokenName)) {
+			Session::delete($tokenName);
+
+			return true;
+		}
+
+		return false;
+	}
+}

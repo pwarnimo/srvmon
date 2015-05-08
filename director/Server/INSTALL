@@ -1,0 +1,79 @@
+SRVMON DIRECTOR - SERVER - INSTALLATION GUIDE
+=============================================
+
+(This guide is used for the Debian package)
+
+* Prerequisites *
+
+Before you begin please perform a system update of your installation to
+make sure that you have the newest packages installed:
+
+	sudo apt-get update
+	sudo apt-get upgrade
+
+Please make sure that you have the following packages installed on your 
+system:
+
+	Name                  Version         Architecture
+	=====================-===============-===============
+	apache2               2.4.10-10       amd64
+	php5                  5.6.7+dfsg-1    all
+	php5-mysql            5.6.7+dfsg-1    amd64
+
+It is also important that the SRVMON database is installed and 
+initialized on the system.
+
+* Installation *
+
+Simply copy all the files from the project directory to your webserver
+root:
+
+	Ex.: rsync -azP . /var/www/vhost/srvmon/
+
+After the files have been copied to your webroot, you then have to
+modify the init.php file according to your database configuration:
+
+	vim <webroot>/inc/init.php
+
+Find the section below and modify it to your needs:
+	
+	...
+	$GLOBALS["config"] = array(
+		"mysql" => array(
+			"host"   => "<IP of DB server>",
+			"user"   => "<DB username>",
+			"pass"   => "<DB user password>",
+			"dbname" => "<DB name>"
+		)
+	);
+	...
+
+I will not go into detail on how to configure a virtual host on
+Apache2. If you want to do this, please consult the documentation for
+Apache2.
+
+I everything is installed correctly, the web application will display
+the following text when you visit the url:
+
+	SRVMON DIRECTOR - SEVER 0.1
+	Copyright (C) 2015  Pol Warnimont
+	The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!
+
+	Waiting for input . . .
+
+It is advised that you use a HTTPS connection. The README files can
+be deleted after the installation.
+
+* Etc *
+
+For any questions regarding the SRVMON DIRECTOR - SERVER, please send
+an e-mail to the mantainer of the project:
+
+	<pwarnimo(at)gmail(dot)com>
+		or use
+	https://github.com/pwarnimo/srvmon/issues
+
+The source for this project can be found on GitHub:
+
+	https://github.com/pwarnimo/srvmon
+	https://pwarnimo.github.io/srvmon

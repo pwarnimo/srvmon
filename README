@@ -3,17 +3,23 @@ SRVMON SERVER MONITORING SUITE
 
  *** This suite is currently under development.
  *** This is a draft release.
- *** Version 1.0 expected around May/June 2015.
+ *** Version 1.0 (R1) expected around May/June 2015.
 
- *** CURRENT VERSIONS : SRVMON DB       -> 1.0.1
- ***                    SRVMON DIRECTOR
- ***                        -UPDATER    -> 1.0
- ***                        -SERVER     -> 0.1
- ***                    SRVMON AGENT    -> 0.1
- ***                    SRVMON WEBUI    -> 0.5
- ***                    SRVMON DESKTOP  -> 0.1
+ *** CURRENT VERSIONS : 
+ *** Part              Version   Status        Priority
+ *** SRVMON DB
+ ***   -DB SQL         1.0.1     R1 Ready      Low
+ ***   -ROUTINES       1.1       R1 Ready      Low
+ *** SRVMON DIRECTOR
+ ***   -UPDATER        1.0       R1 Ready      Low
+ ***   -SERVER         0.1       Development   High
+ *** SRVMON AGENT      0.1       Paused        High
+ *** SRVMON WEBUI      0.5       Development   Medium
+ *** SRVMON DESKTOP    0.1       Paused        Low
+ *** ANDROID CLIENT    ?.?       Planning      Low
+ *** IOS CLIENT        ?.?       Maybe         None
 
- *** OVERALL VERSION = 0.8
+ *** OVERALL SUITE VERSION = 0.8 (NOT ready for R1)
 
 About
 -----
@@ -26,7 +32,7 @@ can be notified via E-Mail if there is any change in status of a host.
 
 The suite is divided into multiple parts.
 
-Database
+Database (<basedir>/database)
 --------
 
 The first and most important part is the database. The database has been
@@ -34,7 +40,7 @@ created in MariaDB but should also work with MySQL. It should also be
 possible to use MSSQL. The database also offers multiple stored routines
 which can be used to control the data of the database.
 
-Director
+Director (<basedir>/director)
 --------
 
 The next part is the SRVMON director. The directory also has 2 parts.
@@ -43,9 +49,10 @@ UPDATER then fetches a list of the available hosts from the database and
 checks if the hosts are reachable. The second part of the director is
 the SERVER, which is used to receive the XML data from the AGENTS.
 The UPDATER is written in Java and the SERVER is written in PHP.
-* A director Shell script is available for testing (director-bash.sh)
+* A director Shell script is available for testing (director-bash.sh).
+* An updater written in C is planned (Just because I can :-)).
 
-Agent
+Agent (<basedir>/agent)
 -----
 
 The next part is the SRVMON agent component. The SRVMON agent is used on
@@ -56,15 +63,16 @@ a simple shell script which checks the CPU usage. The agent would then
 periodically execute the script and send the output to the DIRECTOR
 server using XML data. The agent is written in Java.
 * An agent Shell script is available for testing (agent-bash.sh)
+* An agent written in C is planned (Just because I can :-)).
 
-Web UI
+Web UI (<basedir>/webclient)
 ------
 
 Another part of SRVMON is the Web UI. The webinterface can be used to 
 view and configure the SRVMON suite. The webinterface has been written 
 in PHP5 and JQuery/Javascript and also uses Boostrap.
 
-Desktop Client
+Desktop Client (<basedir>/desktopclient)
 --------------
 
 The last part is the desktop client, which is essentially the same as
@@ -72,7 +80,7 @@ the webinterface only that it is a standalone application. I created the
 application only to show you that it is possible to create multiple user
 interfaces for this suite because all the main logic happens in the
 database. The Desktop Client is written in Java for easy porting.
-* Not yet decided if I use C++ or Java...
+* Not yet decided if I use C++ w/ QT or Java...
 
 Why?
 ----
@@ -81,6 +89,10 @@ I created this monitoring suite just for fun and I know that there are
 other monitoring solutions available but I wanted to do my own project. 
 The goal of this project is to create a completely customizable 
 monitoring solution. Please feel free to modify and improve this suite.
+
+I also set to my goal, that I want to get this package into the official
+Debian repositories so that everyone can get, work and share this 
+project.
 
 For any questions please send a mail to <pwarnimo(at)gmail.com>.
 
@@ -91,15 +103,42 @@ Webserver requirements:
  Apache 2
  MariaDB (or MySQL)
  PHP5
- PHP-GD
- PHP-FPDF
+ PHP-GD (Not yet used)
+ PHP-FPDF (Not yet used)
  PHP-MCRYPT
  
-As operating system for the webinterface and director, I used Debian 7.8
-Wheezy.
+As operating system for the webinterface, director and agents, I used
+the following:
+
+	* Debian 7.8 Wheezy
+	* Debian 8.0 Wheezy
+	* CentOS 6.0
+	* Arch Linux
+
+For the development of the project, I used Debian 7.8 & 8.0. The code
+has been mostly created with vim. For the Java updater and agents I
+used Eclipse 3.8.1.
+
+Some more informations of the Development System are below:
+
+	Name                  Version         Architecture 
+	=====================-===============-===============
+	mariadb-server        10.0.16-1       all
+	apache2               2.4.10-10       amd64          
+	php5                  5.6.7+dfsg-1    all
+	php5-mysql            5.6.7+dfsg-1    amd64
+	php5-mcrypt           5.6.7+dfsg-1    amd64
+	php5-gd               5.6.7+dfsg-1    amd64
+	php-fpdf              3:1.7.dfsg-1    all
+	openjdk-7-jdk:amd64   7u79-2.5.5-1~de amd64
+	ant                   1.9.4-3         all
+
+As for now, the installation guides only apply for Debian, but I plan
+to create guides for the other OSes as well.
 
 The agents can run on Unix,Unix-like and Microsoft Windows systems.
 (It should be possible to port it on other, more exotic systems...)
+* Windows support is currently non-existent but planned... :-)
 
 The agents should run on every system which supports Java and the SQL
 connector for Java. The service scripts that I use are simple shell

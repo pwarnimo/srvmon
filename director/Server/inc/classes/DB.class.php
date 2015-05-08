@@ -9,6 +9,7 @@
  * Changelog
  * ---------
  *  2015-05-07 : Create file.
+ *  2015-05-08 : Added functions action() and get().
  *
  * License
  * -------
@@ -76,6 +77,32 @@ class DB {
 		}
 
 		return $this;
+	}
+
+	private function action($actio, $from, $where = array()) {
+		if (count($where) === 3) {
+			$operators = array("=", "<", ">", "<=", ">=");
+
+			$field = $where[0];
+			$operator = $where[1];
+			$value = $where[2];
+
+			if (in_array($operator, $operators)) {
+				$sql = $action . " FROM " . $table . " WHERE " . $field . " " . $operator . " ?";
+
+				echo "<p>" . $sql . "</p>";
+
+				if (!$this->query($sql, array($value))->error()) {
+					return $this;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function get($table, $where) {
+		return $this->action("SELECT *", $table, $where);
 	}
 
 	public function error() {

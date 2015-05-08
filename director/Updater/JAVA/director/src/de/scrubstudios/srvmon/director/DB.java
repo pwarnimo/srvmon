@@ -11,6 +11,7 @@
  * ---------
  *  2015-05-05 : Created class.
  *  2015-05-07 : Finalized director updater.
+ *  2015-05-08 : Added javadoc.
  *
  * License information
  * -------------------
@@ -42,10 +43,19 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
+/** Database class for the SRVMON DIRECTOR - UPDATER. Contains all database functions which are needed for the updater.
+ *  @author Pol Warnimont
+ *  @version 1.0
+ */
 public class DB {
+	/** Database handle. */
 	private Connection con;
+	/** Message logger. */
 	private Logger logger;
 	
+	/** Constructor for the DB class. Sets up the database connection.
+	 * 
+	 */
 	public DB() {
 		logger = Logger.getLogger("SRVMON-DIRECTOR");		
 		logger.info("DB> Init DB.class...");
@@ -64,6 +74,9 @@ public class DB {
 		}
 	}
 	
+	/** This method is needed to retrieve a list of all the available hosts from the database.
+	 * @return Returns an arraylist with all the available hosts.
+	 */
 	public ArrayList<Host> getHostsFromDB() {
 		ArrayList<Host> arrHosts = new ArrayList<>();
 		Statement stmt;
@@ -95,6 +108,10 @@ public class DB {
 		return arrHosts;
 	}
 	
+	/** This method can set the online status of a host.
+	 * @param id Internal ID number of the host.
+	 * @param status New status for the host. False = OFFLINE and TRUE = ONLINE.
+	 */
 	public void setHostStatus(int id, boolean status) {
 		PreparedStatement stmt;
 		String qry = "CALL setSystemStatus(?,?,@err)";
@@ -116,6 +133,9 @@ public class DB {
 		logger.info("DB> Query OK!");
 	}
 	
+	/** This method disables all children hosts of the given parent host. The service checks are also set to UNREACHABLE.
+	 * @param id Internal ID number of the parent host.
+	 */
 	public void disableChildrenForHost(int id) {
 		PreparedStatement stmt;
 		String qry = "CALL disableChildrenChecks(?,@err)";

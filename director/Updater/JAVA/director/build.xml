@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SRVMON-DIRECTOR" basedir="." default="builddist">
+	<property file="build.properties"></property>
+
+	<path id="cp">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${bin.dir}" />
+		<delete dir="${doc.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+	
+	<target name="compile" depends="init">
+		<echo>Beginning compile...</echo>
+		<javac destdir="bin" debug="true" srcdir="${src.dir}" includeantruntime="false">
+			<classpath refid="cp" />
+		</javac>
+		<echo>Compilation OK!</echo>
+	</target>
+
+	
+	<target name="builddist" depends="compile,doc" >
+		<echo>Building SRVMON UPDATER .jar file...</echo>
+		<echo>Output filename will be srvmon-updater.jar</echo>
+		<jar destfile="${dist.dir}/srvmon-updater.jar" basedir="${bin.dir}">
+			<zipgroupfileset dir="${lib.dir}" includes="*.jar" />
+			<manifest>
+				<attribute name="Main-Class" value="de.scrubstudios.srvmon.director.Main"/>
+			</manifest>
+		</jar>
+		<echo>Build OK!</echo>
+	</target>
+	
+	<target name="doc" depends="init" description="Generate Documentation">
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}"/>
+	</target>
+</project>

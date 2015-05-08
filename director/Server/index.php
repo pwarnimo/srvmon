@@ -39,6 +39,9 @@
 	echo "<pre>RES COUNT = " . $db->rowCount() . "</pre>";
 	print_r($db->first());
 
+	$xml0 = new XML();
+	echo "<pre>" . $xml0->test() . "</pre>";
+
 	echo "<pre style=\"color:#f00;\">DEBUG END</pre>";
 	//TESTING
 

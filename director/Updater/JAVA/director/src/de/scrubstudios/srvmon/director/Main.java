@@ -11,6 +11,7 @@
  * ---------
  *  2015-05-05 : Created class.
  *  2015-05-07 : Finalized director updater.
+ *  2015-05-08 : Added javadoc.
  *
  * License information
  * -------------------
@@ -34,10 +35,14 @@ package de.scrubstudios.srvmon.director;
 
 import java.util.logging.Logger;
 
+/** Main class for the SRVMON DIRECTOR - UPDATER.
+ *  @author Pol Warnimont
+ *  @version 1.0
+ */
 public class Main {
 
-	/**
-	 * @param args
+	/** Main method of the Main class. Enters a while loop and invokes a thread every 300 * 1000 seconds.
+	 * @param args Command line arguments. If -v -> return version.
 	 */
 	public static void main(String[] args) {
 		if (args.length > 0) {

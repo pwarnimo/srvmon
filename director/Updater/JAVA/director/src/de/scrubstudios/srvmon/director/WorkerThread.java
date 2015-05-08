@@ -40,15 +40,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+/** Worker thread class for the SRVMON DIRECTOR - UPDATER. A worker thread. This class is called in the main class.
+ *  @author Pol Warnimont
+ *  @version 1.0
+ */
 public class WorkerThread extends Thread {
+	/** Arraylist containing the list of hosts. */
 	private ArrayList<Host> arrHosts;
+	/** Database instance. */
 	private DB db0;
+	/** Message logger. */
 	private Logger logger;
 	
+	/** Constructor for the worked thread. Initializes the logger.
+	 * 
+	 */
 	public WorkerThread() {
 		logger = Logger.getLogger("SRVMON-DIRECTOR");
 	}
 	
+	/** This method defines the thread which is called in the main class. The run() method will be periodically called and the host status is then determined and updated.
+	 * 
+	 */
 	public void run() {
 		logger.info("WORKER> Executing thread...");
 		

@@ -30,9 +30,9 @@
 	require_once "inc/init.php";
 
 	//TESTING
-	echo "<pre style=\"color:#f00;\">DEBUG BEGIN</pre>";
+	//echo "<pre style=\"color:#f00;\">DEBUG BEGIN</pre>";
 
-	echo "<pre>" . Config::get("mysql/user") . "</pre>";
+	/*echo "<pre>" . Config::get("mysql/user") . "</pre>";
 
 	$db = DB::getInstance();
 	$db->query("CALL getServer(?,TRUE,@err)", array("20"));
@@ -40,15 +40,45 @@
 	print_r($db->first());
 
 	$xml0 = new XML();
-	echo "<pre>" . $xml0->test() . "</pre>";
+	echo "<pre>" . $xml0->test() . "</pre>";*/
 
-	echo "<pre style=\"color:#f00;\">DEBUG END</pre>";
+	$tmp = false;
+	/*$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"getServices\" hostid=\"24\"></message>";
+	*/
+	$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"getServiceResults\" hid=\"24\" sid=\"2\"></message>";
+
+	//echo "<pre style=\"color:#f00;\">DEBUG END</pre>";
 	//TESTING
 
-	if (file_get_contents('php://input') == NULL) {
-		echo "<pre>SRVMON DIRECTOR - SERVER 0.1<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
+	//if (file_get_contents('php://input') == NULL) {
+	if ($tmp === true) {
+		echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 0.1<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
 	}
 	else {
-		echo "MAIN";
+		$xml0 = new XML();
+		$parser = xml_parser_create();
+
+		xml_parse_into_struct($parser, $tmpxml, $vals, $index);
+		xml_parser_free($parser);
+	
+		$action = $vals[0]["attributes"]["ACTION"];
+
+		switch ($action) {
+			case "getServices":
+				$hostid = $vals[0]["attributes"]["HOSTID"];
+
+				//echo "Getting services for " . $hostid;
+				Header("Content-type: text/xml");
+				echo $xml0->sendServices($hostid);
+			break;
+
+			case "getServiceResults":
+				$hid = $vals[0]["attributes"]["HID"];
+				$sid = $vals[0]["attributes"]["SID"];
+
+				Header("Content-type: text/xml");
+				echo $xml0->getServiceResults($hid, $sid);
+			break;
+		}
 	}
 ?>

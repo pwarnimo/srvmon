@@ -18,6 +18,7 @@
 | Changelog
 | ---------
 |  2015-05-08 : Created procedure
+|  2015-05-09 : Fixed name of the procedure.
 |
 | License information
 | -------------------
@@ -40,8 +41,8 @@
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS getServicesForServer $$
-CREATE PROCEDURE getServicesForServer(
+DROP PROCEDURE IF EXISTS getServices $$
+CREATE PROCEDURE getServices(
 	IN  pHID  MEDIUMINT,
 	IN  pSID  MEDIUMINT,
 	IN  pFRMT MEDIUMINT,

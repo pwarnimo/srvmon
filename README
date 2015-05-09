@@ -12,7 +12,7 @@ SRVMON SERVER MONITORING SUITE
  ***   -ROUTINES       1.1       R1 Ready      Freeze
  *** SRVMON DIRECTOR
  ***   -UPDATER        1.0       R1 Ready      Freeze
- ***   -SERVER         0.1       Development   High
+ ***   -SERVER         0.7       Development   High
  *** SRVMON AGENT      0.1       Paused        High
  *** SRVMON WEBUI      0.5       Development   Medium
  *** SRVMON DESKTOP    0.1       Paused        Low

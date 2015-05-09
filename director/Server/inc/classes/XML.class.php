@@ -9,7 +9,7 @@
  * Changelog
  * ---------
  *  2015-05-08 : Created file.
- *  2015-05-08 : Adding methods sendServices() and getServiceResults().
+ *  2015-05-09 : Adding methods sendServices() and getServiceResults().
  *               Adding method updateService().
  *
  * License
@@ -117,7 +117,23 @@ class XML {
 		return $xml->saveXML();
 	}
 
-	public function updateService($hostid, $serviceid, $value, $chkOutput) {
-		
+	public function getServiceUpdate($hostid, $serviceid, $value, $chkOutput) {
+		$this->db->query("CALL updateServerServiceStatus(?, ?, ?, ?, @err)", array($hostid, $serviceid, $value, $chkOutput));
+
+		$xml = new DOMDocument("1.0");
+
+		$root = $xml->createElement("message");
+
+		$action = $xml->createAttribute("action");
+		$action->value = "updateServiceData";
+		$status = $xml->createAttribute("status");
+		$status->value = "0";
+
+		$root->appendChild($action);
+		$root->appendChild($status);
+
+		$xml->appendChild($root);
+
+		return $xml->saveXML();
 	}
 }

@@ -9,6 +9,7 @@
  * Changelog
  * ---------
  *  2015-05-07 : Created file.
+ *  2015-05-09 : Adding methods for retrieving and updating services.
  *
  * License information
  * -------------------
@@ -45,7 +46,8 @@
 	$tmp = false;
 	/*$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"getServices\" hostid=\"24\"></message>";
 	*/
-	$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"getServiceResults\" hid=\"24\" sid=\"2\"></message>";
+	/*$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"getServiceResults\" hid=\"24\" sid=\"2\"></message>";*/
+	$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"updateServiceData\" hid=\"24\" sid=\"2\" val=\"0\" msg=\"Check Status OK!\"></message>";
 
 	//echo "<pre style=\"color:#f00;\">DEBUG END</pre>";
 	//TESTING
@@ -72,12 +74,22 @@
 				echo $xml0->sendServices($hostid);
 			break;
 
-			case "getServiceResults":
+			case "getServiceData":
 				$hid = $vals[0]["attributes"]["HID"];
 				$sid = $vals[0]["attributes"]["SID"];
 
 				Header("Content-type: text/xml");
 				echo $xml0->getServiceResults($hid, $sid);
+			break;
+
+			case "updateServiceData":
+				$hid = $vals[0]["attributes"]["HID"];
+				$sid = $vals[0]["attributes"]["SID"];
+				$val = $vals[0]["attributes"]["VAL"];
+				$message = $vals[0]["attributes"]["MSG"];
+
+				Header("Content-type: text/xml");
+				echo $xml0->getServiceUpdate($hid, $sid, $val, $message);
 			break;
 		}
 	}

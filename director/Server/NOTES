@@ -1,3 +1,13 @@
 XML Layout
 
 <message action="getServices" hostid="19">
+
+Agent
+	getServicesForHost();
+	getServiceData();
+	updateServiceData();
+
+Server
+	sendServicesForHost();
+	sendServiceData();
+	getServiceUpdate();

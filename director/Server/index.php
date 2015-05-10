@@ -43,26 +43,26 @@
 	$xml0 = new XML();
 	echo "<pre>" . $xml0->test() . "</pre>";*/
 
-	$tmp = false;
+	//$tmp = false;
 	/*$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"getServices\" hostid=\"24\"></message>";
 	*/
 	/*$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"getServiceResults\" hid=\"24\" sid=\"2\"></message>";*/
-	$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"updateServiceData\" hid=\"24\" sid=\"2\" val=\"0\" msg=\"Check Status OK!\"></message>";
+	/*$tmpxml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><message action=\"updateServiceData\" hid=\"24\" sid=\"2\" val=\"0\" msg=\"Check Status OK!\"></message>";*/
 
 	//echo "<pre style=\"color:#f00;\">DEBUG END</pre>";
 	//TESTING
 
-	//if (file_get_contents('php://input') == NULL) {
-	if ($tmp === true) {
+	if (file_get_contents('php://input') == NULL) {
+	//if ($tmp === true) {
 		echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 0.1<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
 	}
 	else {
 		$xml0 = new XML();
 		$parser = xml_parser_create();
 
-		xml_parse_into_struct($parser, $tmpxml, $vals, $index);
+		xml_parse_into_struct($parser, file_get_contents('php://input'), $vals, $index);
 		xml_parser_free($parser);
-	
+
 		$action = $vals[0]["attributes"]["ACTION"];
 
 		switch ($action) {

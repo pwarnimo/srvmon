@@ -28,3 +28,15 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+class User {
+	private $_db;
+
+	public function __construct($user = null) {
+		$this->_db = DB::getInstance();
+	}
+
+	public function create() {
+
+	}
+}

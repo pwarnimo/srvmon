@@ -9,6 +9,7 @@
  * Changelog
  * ---------
  *  2015-05-09 : Created class.
+ *  2015-05-11 : Added Javadoc comments.
  *
  * License information
  * -------------------
@@ -30,14 +31,33 @@
 
 package de.scrubstudios.srvmon.agent;
 
+/**
+ * This class defines a single service check.
+ * @author Pol Warnimont
+ * @version 0.1
+ */
 public class Service {
+	/** ID number of the service. */
 	private int _id;
+	/** Return value of the service check script */
 	private int _value;
+	/** Command for executing the check script */
+	private String _cmd;
+	/** Output of the check script */
 	private String _checkOutput;
 	
-	public Service(int id, int value, String checkOutput) {
+	/**
+	 * Constructor for the Service class.
+	 * Initializes and creates a new service instance.
+	 * @param id ID number for the new service.
+	 * @param value Check value for the new service (Usually 4).
+	 * @param cmd Command for the new service check.
+	 * @param checkOutput Output of the new service (Usually "Check Pending!").
+	 */
+	public Service(int id, int value, String cmd, String checkOutput) {
 		this._id = id;
 		this._value = value;
+		this._cmd = cmd;
 		this._checkOutput = checkOutput;
 	}
 	
@@ -47,6 +67,10 @@ public class Service {
 	
 	public void setValue(int value) {
 		this._value = value;
+	}
+	
+	public void setCmd(String cmd) {
+		this._cmd = cmd;
 	}
 	
 	public void setCheckOutput(String checkOutput) {
@@ -59,6 +83,10 @@ public class Service {
 	
 	public int getValue() {
 		return this._value;
+	}
+	
+	public String getCmd() {
+		return this._cmd;
 	}
 	
 	public String getCheckOutput() {

@@ -23,12 +23,25 @@ system:
 It is also important that the SRVMON database is installed and 
 initialized on the system.
 
+If you want to generate the documentation for the source code, you will
+have to install the phpDocumentor. This can be easily done with 
+PHP-PEAR:
+	
+	pear channel-discover pear.phpdoc.org
+	pear install phpdoc/phpDocumentor
+
+To generate the documentation use the following command:
+
+	phpdoc -d src/ -t doc
+
+The documentation will be created into the doc folder.
+
 * Installation *
 
 Simply copy all the files from the project directory to your webserver
 root:
 
-	Ex.: rsync -azP . /var/www/vhost/srvmon/
+	Ex.: rsync -azP src/ /var/www/vhost/srvmon/
 
 After the files have been copied to your webroot, you then have to
 modify the init.php file according to your database configuration:
@@ -55,7 +68,7 @@ Apache2.
 I everything is installed correctly, the web application will display
 the following text when you visit the url:
 
-	SRVMON DIRECTOR - SEVER 0.1
+	SRVMON DIRECTOR - SEVER 1.0
 	Copyright (C) 2015  Pol Warnimont
 	The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!
 

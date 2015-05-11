@@ -9,6 +9,8 @@
  * Changelog
  * ---------
  *  2015-05-09 : Created class.
+ *  2015-05-11 : Added test functions.
+ *               Added Javadoc.
  *
  * License information
  * -------------------
@@ -37,56 +39,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
+/** 
+ * Main class for the SRVMON AGENT.
+ * @author Pol Warnimont
+ * @version 0.1
+ */
 public class Main {
-	private static String postData(String xml) {
-		System.out.println("REQ = " + xml);
-		
-		URL url;
-        HttpURLConnection connection = null;
-        
-        try {
-			url = new URL("http://127.0.0.1/srvmon-server/");
-			
-			connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "text/xml");
-            
-            connection.setRequestProperty("Content-Length", Integer.toString(xml.getBytes().length));
-            connection.setRequestProperty("Content-Language", "en-US");
-
-            connection.setUseCaches(false);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(xml);
-            wr.flush();
-            wr.close();
-            
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            String line;
-            StringBuffer response = new StringBuffer();
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
-            }
-            rd.close();
-            
-            return response.toString().trim();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
+	/**
+	 * Main method of the class.
+	 * The program will enter in an endless loop. Every 300*1000 seconds, a 
+	 * thread will be executed which will perform the service checks.
+	 * @param args Command line arguments. If -v -> return version.
+	 */
 	public static void main(String[] args) {
-		System.out.println("SRVMON AGENT");
+		ArrayList<Service> services = new ArrayList<>();
 		
-		XML xml0 = new XML();
+		XMLMngr xml0 = new XMLMngr();
 		
-		System.out.println(postData(xml0.getServicesXML(24)));
+		services = xml0.getServicesFromDirector(23);
+		
+		for (int i = 0; i < services.size(); i++) {
+			System.out.println("> " + services.get(i).getCmd());
+		}
 	}
 }

@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-05 : Create file.
  *  2015-05-06 : Added license header.
+ *  2015-05-11 : Adding methods make(), salt() and unique().
  *
  * License
  * -------
@@ -28,3 +29,17 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+class Hash {
+	public static function make($string, $salt = "") {
+		return hash("sha256", $string . $salt);
+	}
+
+	public static function salt($length) {
+		return mcrypt_create_iv($length);
+	}
+
+	public static function unique() {
+		return self::make(uniqid());
+	}
+}

@@ -56,8 +56,6 @@ class DB {
 	}
 
 	public function query($sql, $params = array()) {
-		echo "*QUERY GO*";
-		
 		$this->_error = false;
 		
 		if ($this->_query = $this->_pdo->prepare($sql)) {
@@ -92,8 +90,6 @@ class DB {
 
 			if (in_array($operator, $operators)) {
 				$sql = $action . " FROM " . $table . " WHERE " . $field . " " . $operator . " ?";
-
-				echo "<p>" . $sql . "</p>";
 
 				if (!$this->query($sql, array($value))->error()) {
 					return $this;
@@ -135,7 +131,7 @@ class DB {
 			}
 		}
 
-		return false
+		return false;
 	}
 
 	public function error() {

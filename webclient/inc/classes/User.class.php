@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-05 : Create file.
  *  2015-05-06 : Added license header.
+ *  2015-05-11 : Added method create().
  *
  * License
  * -------
@@ -36,7 +37,10 @@ class User {
 		$this->_db = DB::getInstance();
 	}
 
-	public function create() {
-
+	public function create($fields = array()) {
+		if (!$this->_db->query("CALL addUser(?,?,?,?,?,?,@id)", $fields)->error()) {
+			die(">>" . $this->_db->error());
+			throw new Exception("Unable to add the user!");
+		}
 	}
 }

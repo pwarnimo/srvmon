@@ -103,6 +103,24 @@
 
 					if ($validator->passed()) {
 						Session::flash("success", "Successfully!");
+
+						$user = new User();
+
+						$salt = Hash::salt(32);
+
+						try {
+							$user->create(array(
+								"dwarnimo",
+								Hash::make("ixpee88q1.2.3", $salt),
+								$salt,
+								"d.warnimont@gmail.com",
+								2,
+								"2148398724"
+							));
+						}
+						catch (Exception $e) {
+							die($e->getMessage());
+						}
 					}
 					else {
 						echo "<br>";

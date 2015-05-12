@@ -11,8 +11,8 @@ SRVMON SERVER MONITORING SUITE
  ***   -DB SQL         1.0.1     R1 Ready      Freeze
  ***   -ROUTINES       1.1       R1 Ready      Freeze
  *** SRVMON DIRECTOR
- ***   -UPDATER        1.0       R1 Ready      Freeze
- ***   -SERVER         1.0       R1 Ready      Freeze
+ ***   -UPDATER        1.0       Bugfixing     Freeze
+ ***   -SERVER         1.0       Bugfixing     Freeze
  *** SRVMON AGENT      0.1       Development   High
  *** SRVMON WEBUI      0.5       Development   Medium
  *** SRVMON DESKTOP    0.1       Paused        Low

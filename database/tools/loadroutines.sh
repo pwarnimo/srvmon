@@ -16,14 +16,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SQLUSR=""
-SQLPW=""
+SQLUSR="sqlusr"
+SQLPW="q1w2e3!"
 
 echo "Loading all stored routines into DB . . ."
 
 cd /home/pwarnimo/Coding/srvmon-working/database/sql/stored-procedures
 
-FILES=../sql/stored-procedures/servermgmt/*.sql
+FILES=sql/stored-procedures/servermgmt/*.sql
 
 echo "PROCESSING SERVER ROUTINES"
 echo "--------------------------"
@@ -41,7 +41,7 @@ do
 done
 echo ""
 
-FILES=../sql/stored-procedures/servicemgmt/*.sql
+FILES=sql/stored-procedures/servicemgmt/*.sql
 
 echo "PROCESSING SERVICE ROUTINES"
 echo "---------------------------"
@@ -59,7 +59,7 @@ do
 done
 echo ""
 
-FILES=../sql/stored-procedures/settingsmgmt/*.sql
+FILES=sql/stored-procedures/settingsmgmt/*.sql
 
 echo "PROCESSING SETTING ROUTINES"
 echo "---------------------------"
@@ -77,7 +77,7 @@ do
 done
 echo ""
 
-FILES=../sql/stored-procedures/usermgmt/*.sql
+FILES=sql/stored-procedures/usermgmt/*.sql
 
 echo "PROCESSING USER ROUTINES"
 echo "------------------------"

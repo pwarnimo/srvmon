@@ -77,13 +77,23 @@ import org.xml.sax.SAXException;
 public class XMLMngr {
 	/** Message logger */
 	private Logger _logger;
+	/** Instance of the class itself */
+	private static XMLMngr _instance;
 	
 	/**
 	 * Constructor for the XMLMngr class.
 	 * Initializes the XMLMngr and logger.
 	 */
-	public XMLMngr() {
+	private XMLMngr() {
 		_logger = Logger.getLogger("SRVMON-AGENT");
+	}
+	
+	public static XMLMngr getInstance() {
+		if (_instance == null) {
+			_instance = new XMLMngr();
+		}
+		
+		return _instance;
 	}
 	
 	/**

@@ -40,10 +40,11 @@ public class WorkerThread extends Thread {
 	private int _host_id;
 	private ArrayList<ServiceCheck> _checks = new ArrayList<>();
 	private Logger _logger;
-	private XMLMngr _xmlmngr = new XMLMngr();
+	private XMLMngr _xmlmngr;
 	
 	public WorkerThread() {
 		_logger = Logger.getLogger("SRVMON-AGENT");
+		_xmlmngr = XMLMngr.getInstance();
 	}
 	
 	public void run() {

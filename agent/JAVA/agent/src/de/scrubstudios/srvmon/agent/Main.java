@@ -56,9 +56,9 @@ public class Main {
 	public static void main(String[] args) {
 		ArrayList<Service> services = new ArrayList<>();
 		
-		XMLMngr xml0 = new XMLMngr();
+		XMLMngr xml0 = XMLMngr.getInstance();
 		
-		services = xml0.getServicesFromDirector(23);
+		services = xml0.getServicesFromDirector(7);
 		
 		for (int i = 0; i < services.size(); i++) {
 			System.out.println("> " + services.get(i).getCmd());

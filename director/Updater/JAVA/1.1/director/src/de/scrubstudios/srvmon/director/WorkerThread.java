@@ -14,6 +14,7 @@
  *  2015-05-05 : Created class.
  *  2015-05-07 : Finalized director updater.
  *  2015-05-12 : Starting v1.1.
+ *  2015-05-13 : Modified run() method to use new DBng class.
  *
  * License information
  * -------------------
@@ -35,71 +36,77 @@
 
 package de.scrubstudios.srvmon.director;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
 import java.util.logging.Logger;
 
-/** Worker thread class for the SRVMON DIRECTOR - UPDATER. A worker thread. This class is called in the main class.
- *  @author Pol Warnimont
- *  @version 1.0
+/** Worker thread class.
+ * This class defines a so called "worker thread". A worker thread is
+ * used to check all available hosts in the database for their online
+ * status. The worker thread fetches a list of hosts and then checks
+ * if the host is reachable by using the java method
+ * InetAddress.getByName().isReachable(). The updated status for the
+ * hosts is then written to the database. The worker thread will be
+ * called periodically from the Main class.
+ * @author Pol Warnimont
+ * @version 1.1
  */
 public class WorkerThread extends Thread {
-	/** Arraylist containing the list of hosts. */
-	private ArrayList<Host> arrHosts;
-	/** Database instance. */
-	private DB db0;
 	/** Message logger. */
 	private Logger logger;
 	
-	/** Constructor for the worked thread. Initializes the logger.
-	 * 
+	/** 
+	 * Constructor for the worked thread. 
+	 * The constructor will initialize the logger for this class.
 	 */
 	public WorkerThread() {
 		logger = Logger.getLogger("SRVMON-DIRECTOR");
-		
-		try {
-			InputStream in = new FileInputStream("config.properties");
-			Properties prop = new Properties();
-			
-			prop.load(in);
-			
-			db0 = new DB(prop.getProperty("db.hostname"), prop.getProperty("db.name"), prop.getProperty("db.username"), prop.getProperty("db.password"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
-	/** This method defines the thread which is called in the main class. The run() method will be periodically called and the host status is then determined and updated.
-	 * 
+	/** 
+	 * This method defines the thread which is called in the main 
+	 * class. The run() method will be periodically called and the 
+	 * host status is then determined and updated.
 	 */
 	public void run() {
 		logger.info("WORKER> Executing thread...");
 		
-		//db0 = new DB();
-		arrHosts = db0.getHostsFromDB();
+		DBng db0 = DBng.getInstance();
 		
-		Iterator<Host> it_hosts = arrHosts.iterator();
-		
-		while (it_hosts.hasNext()) {
-			Host tmpHost = it_hosts.next();
+		if (db0.query("CALL getServer(-1, TRUE, @err)", null).error() == false) {
 			try {
-				if (InetAddress.getByName(tmpHost.getIPAddress()).isReachable(2000)) {
-					logger.info("WORKER> Host " + tmpHost.getHostname() + " is UP.");
-					db0.setHostStatus(tmpHost.getID(), true);
+				ResultSet res = db0.result();
+				
+				while (res.next()) {
+					if (InetAddress.getByName(res.getString("dtIPAddress")).isReachable(2000)) {
+						logger.info("WORKER> " + res.getString("dtHostname") + " (" + res.getString("dtIPAddress") + ") is reachable.");
+						
+						ArrayList<QueryParam> params = new ArrayList<>();
+						
+						params.add(new QueryParam(SQLTypeEnum.INT, String.valueOf(res.getInt("idServer"))));
+						
+						db0.query("CALL setSystemStatus(?, TRUE, @err)", params);
+					}
+					else {
+						logger.warning("WORKER> " + res.getString("dtHostname") + " (" + res.getString("dtIPAddress") + ") is unreachable!");
+						
+						ArrayList<QueryParam> params = new ArrayList<>();
+						
+						params.add(new QueryParam(SQLTypeEnum.INT, String.valueOf(res.getInt("idServer"))));
+						
+						db0.query("CALL setSystemStatus(?, FALSE, @err)", params);
+						db0.query("CALL disableChildrenChecks(?,@err)", params);
+					}
 				}
-				else {
-					logger.info("WORKER> Host " + tmpHost.getHostname() + " is DOWN.");
-					db0.setHostStatus(tmpHost.getID(), false);
-					db0.disableChildrenForHost(tmpHost.getID());
-				}
-			} catch (IOException e) {
+			} catch (SQLException | IOException e) {
 				e.printStackTrace();
 			}
+		}
+		else {
+			logger.warning("WORKER> A database error has occured!");
 		}
 		
 		logger.info("WORKER> Thread execution finished.");

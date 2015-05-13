@@ -12,7 +12,9 @@
  *  2015-05-05 : Created class.
  *  2015-05-07 : Finalized director updater.
  *  2015-05-08 : Added javadoc.
- *  2015-05-12 : Starting v1.1.
+ *  2015-05-12 : Starting version 1.1.
+ *  2015-05-13 : Bugfixing.
+ *  
  *
  * License information
  * -------------------
@@ -41,35 +43,39 @@ import java.io.OutputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-/** Main class for the SRVMON DIRECTOR - UPDATER.
- *  @author Pol Warnimont
- *  @version 1.0
+/**
+ * Main class for the SRVMON DIRECTOR - UPDATER.
+ * @author pwarnimo
+ * @version 1.1
  */
 public class Main {
-
-	/** Main method of the Main class. Enters a while loop and invokes a thread every 300 * 1000 seconds.
+	/**
+	 * The main method enters a while loop which will run until the
+	 * program execution is canceled. Inside the loop, a new worker
+	 * thread will be created every 5 minutes (300*1000s). If the
+	 * method is unable to find the properties file, a sample file
+	 * will be generated and the program exits.The user then has to
+	 * set the appropriate values inside the file.
 	 * @param args Command line arguments. If -v -> return version.
 	 */
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			if (args[0].equals("-v")) {
-				System.out.println("SRVMON DIRECTOR - UPDATER 1.0");
+				System.out.println("SRVMON DIRECTOR - UPDATER 1.1");
 				System.out.println("Copyright (C) 2015  Pol Warnimont");
 				System.out.println("The SRVMON DIRECTOR UPDATER comes with ABSOLUTELY NO WARRANTY!");
 			}
 		}
 		else {
 			Logger logger = Logger.getLogger("SRVMON-DIRECTOR");		
-			logger.info("Director has started.");
+			logger.info("Updater v1.1 has started.");
 			
 			File f = new File("config.properties");
 			
 			if (f.exists()) {
 				logger.info("The file settings.properties exists. Continuing...");
 				
-				DBng db0 = DBng.getInstance();
-				
-				/*try {
+				try {
 					while (true) {
 						logger.info("Invoking thread...");
 						new WorkerThread().start();
@@ -78,7 +84,7 @@ public class Main {
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}*/
+				}
 			}
 			else {
 				logger.warning("The config.properties file is non existent!");

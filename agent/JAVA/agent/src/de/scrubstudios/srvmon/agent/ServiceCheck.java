@@ -31,52 +31,30 @@
 
 package de.scrubstudios.srvmon.agent;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class ServiceCheck {
-	private int _id;
-	private String _caption;
-	private String _description;
-	private String _check_command;
-	
-	public ServiceCheck(int id, String caption, String description, String check_command) {
-		this._id = id;
-		this._caption = caption;
-		this._description = description;
-		this._check_command = check_command;
-	}
-	
-	public void setID(int id) {
-		this._id = id;
-	}
-	
-	public int getID() {
-		return this._id;
-	}
-	
-	public void setCaption(String caption) {
-		this._caption = caption;
-	}
-	
-	public String getCaption() {
-		return this._caption;
-	}
-	
-	public void setDescription(String description) {
-		this._description = description;
-	}
-	
-	public String getDescription() {
-		return this._description;
-	}
-	
-	public void setCheckCommand(String check_command) {
-		this._check_command = check_command;
-	}
-	
-	public String getCheckCommand() {
-		return this._check_command;
-	}
-	
-	public String toString() {
-		return _id + ":" + _caption + ":" + _description + ":" + _check_command;
+	public static void executeCheck(Service check) {
+		System.out.println("Executing check " + check);
+		try {
+			Process p = Runtime.getRuntime().exec("/usr/share/srvmon/checkscripts/" + check.getCmd());
+			p.waitFor();
+			 
+		    BufferedReader reader = 
+		         new BufferedReader(new InputStreamReader(p.getInputStream()));
+		 
+		    String line = "";			
+		    while ((line = reader.readLine())!= null) {
+		    	//System.out.println(line);
+		    	String[] output = line.split(";");
+		    	System.out.println("Status = " + output[0] + " MSG = " + output[1]);
+		    	check.setValue(Integer.parseInt(output[0]));
+		    	check.setCheckOutput(output[1]);
+		    }
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

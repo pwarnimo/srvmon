@@ -35,6 +35,8 @@ package de.scrubstudios.srvmon.agent;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,6 +46,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -106,9 +109,13 @@ public class XMLMngr {
 	private String postData(String xmlString) {
 		URL url;
         HttpURLConnection connection = null;
-
+        File f = new File("config.properties");
+        Properties prop = new Properties();
+        
         try {
-            url = new URL("http://127.0.0.1/srvmon-updater/");
+        	InputStream in = new FileInputStream(f.getName());
+        	prop.load(in);
+            url = new URL(prop.getProperty("director.url"));
 
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -231,5 +238,48 @@ public class XMLMngr {
 		_logger.info("XMLMNGR> Sending XML request to director...");
 		
 		return 0;
+	}
+	
+	public void updateService(int hostid, Service service) {
+		_logger.info("XMLMNGR> Updating service " + service.getCmd());
+		_logger.info("XMLMNGR> Sending XML request to director...");
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        
+        try {
+	        docBuilder = docFactory.newDocumentBuilder();
+			
+			Document doc = docBuilder.newDocument();
+	        Element rootElement = doc.createElement("updateServiceData");
+	        
+	        Element message = doc.createElement("message");
+	        
+	        message.setAttribute("hid", Integer.toString(hostid));
+	        message.setAttribute("sid", Integer.toString(service.getID()));
+	        message.setAttribute("val", Integer.toString(service.getValue()));
+	        message.setAttribute("msg", service.getCheckOutput());
+	        message.setAttribute("action", "updateServiceData");
+	        
+	        rootElement.appendChild(message);
+	        
+	        doc.appendChild(rootElement);
+	        
+	        TransformerFactory tf = TransformerFactory.newInstance();
+	        Transformer transformer = tf.newTransformer();
+	        StringWriter writer = new StringWriter();
+	        transformer.transform(new DOMSource(doc), new StreamResult(writer));
+	        String xml = writer.getBuffer().toString().replaceAll("\n|\r", "");
+	        
+	        System.out.println("XMLREQ = " + xml);
+	        
+	        InputSource is;
+	        is = new InputSource(new StringReader(postData(xml)));
+	        
+	        
+        }
+        catch (ParserConfigurationException | TransformerException e) {
+        	e.printStackTrace();
+        }
 	}
 }

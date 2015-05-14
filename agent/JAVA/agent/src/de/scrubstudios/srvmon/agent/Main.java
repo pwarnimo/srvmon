@@ -34,12 +34,17 @@ package de.scrubstudios.srvmon.agent;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 /** 
  * Main class for the SRVMON AGENT.
@@ -54,14 +59,49 @@ public class Main {
 	 * @param args Command line arguments. If -v -> return version.
 	 */
 	public static void main(String[] args) {
-		ArrayList<Service> services = new ArrayList<>();
-		
-		XMLMngr xml0 = XMLMngr.getInstance();
-		
-		services = xml0.getServicesFromDirector(7);
-		
-		for (int i = 0; i < services.size(); i++) {
-			System.out.println("> " + services.get(i).getCmd());
+		if (args.length > 0) {
+			if (args[0].equals("-v")) {
+				System.out.println("SRVMON AGENT 0.5");
+				System.out.println("Copyright (C) 2015  Pol Warnimont");
+				System.out.println("The SRVMON AGENT comes with ABSOLUTELY NO WARRANTY!");
+			}
+		}
+		else {
+			Logger logger = Logger.getLogger("SRVMON-AGENT");		
+			logger.info("Agent has started.");
+			
+			File f = new File("config.properties");
+			
+			if (f.exists()) {
+				ArrayList<Service> services = new ArrayList<>();
+				
+				XMLMngr xml0 = XMLMngr.getInstance();
+				
+				services = xml0.getServicesFromDirector(23);
+				
+				for (int i = 0; i < services.size(); i++) {
+					ServiceCheck.executeCheck(services.get(i));
+					System.out.println("New Output = " + services.get(i).getCheckOutput() + " -- " + services.get(i).getValue());
+					xml0.updateService(23, services.get(i));
+				}
+			}
+			else {
+				logger.warning("The config.properties file is non existent!");
+				logger.info("A sample configuration has been created. Please insert your values!");
+				
+				Properties prop = new Properties();
+				
+				try {
+					OutputStream out = new FileOutputStream(f.getName());
+					
+					prop.setProperty("agent.id", "23");
+					prop.setProperty("director.url", "http://127.0.0.1/srvmon-server/");
+					
+					prop.store(out, null);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }

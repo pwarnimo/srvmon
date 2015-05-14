@@ -19,6 +19,7 @@
  *	*	2015-05-08 : Created file.
  * *	2015-05-09 : Adding methods sendService() + getServiceResults() + updateService.
  *	*	2015-05-11 : Reworked class. Adding phpDocumentor comments.
+ * *	2015-05-14 : Added function for retrieving host ID.
  *  
  * ### License
  *  
@@ -216,6 +217,23 @@ class XML {
 		}
 
 		$msg->appendChild($stat);
+
+		return $xml->saveXML();
+	}
+	
+	public function sendHostID($hostname) {
+		$xml = $this->createNewXMLMessage("updateService", $hostid);
+		$msg = $xml->getElementsByTagName("message")[0];
+
+		if (!$this->_db->query("SELECT getServerID(?) AS idServer", $hostname)->error()) {
+			$result = $this->_db->first();
+			$hostid = $result->idServer;
+
+			$hid = $xml->createAttribute("hostid");
+			$hid->value = $hostid;
+
+			$msg->appendChild($hid);
+		}
 
 		return $xml->saveXML();
 	}

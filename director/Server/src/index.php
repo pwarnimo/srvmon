@@ -11,6 +11,7 @@
  *  2015-05-07 : Created file.
  *  2015-05-09 : Adding methods for retrieving and updating services.
  *  2015-05-11 : Reworked everything.
+ *  2015-05-14 : Added function for getting server ID.
  *  
  * License information
  * -------------------
@@ -90,6 +91,12 @@ else {
 			$message = $xml->message[0]["msg"];
 
 			$xmlres = $xml0->updateServiceXML($hostid, $serviceid, $val, $message);
+		break;
+
+		case "getHostID":
+			$hostname = $xml->message[0]["hostname"];
+			
+			$xmlres = $xml0->sendHostID($hostname);
 		break;
 	}
 

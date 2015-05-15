@@ -13,8 +13,8 @@ SRVMON SERVER MONITORING SUITE
  *** SRVMON DIRECTOR
  ***   -UPDATER        1.1       R1 Ready      Freeze
  ***   -SERVER         1.0       Bugfixing     Freeze
- *** SRVMON AGENT      0.5       Development   High
- *** SRVMON WEBUI      0.5       Development   Medium
+ *** SRVMON AGENT      1.0       Bugfixing     Freeze
+ *** SRVMON WEBUI      0.5       Development   High
  *** SRVMON DESKTOP    0.1       Paused        Low
  *** ANDROID CLIENT    ?.?       Planning      Low
  *** IOS CLIENT        ?.?       Maybe         None

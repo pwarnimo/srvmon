@@ -12,6 +12,7 @@
  *  2015-05-07 : Created class.
  *  2015-05-11 : Added methods for retrieving and updating services.
  *               Added Javadoc comments.
+ *  2015-05-15 : Preparing v1.0.
  *
  * License information
  * -------------------
@@ -54,7 +55,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -75,7 +75,7 @@ import org.xml.sax.SAXException;
  * XML data. With the received data, we can tell if a query was 
  * successful or retrieve new service checks.
  * @author Pol Warnimont
- * @version 0.1
+ * @version 1.0
  */
 public class XMLMngr {
 	/** Message logger */
@@ -91,6 +91,13 @@ public class XMLMngr {
 		_logger = Logger.getLogger("SRVMON-AGENT");
 	}
 	
+	/**
+	 * This method is used in order to determine if there is already an
+	 * instance of this class. If no instance of this class exists, the
+	 * constructor will be called. Else the method returns the instance
+	 * stored in _instance.
+	 * @return An instance of the class itself.
+	 */
 	public static XMLMngr getInstance() {
 		if (_instance == null) {
 			_instance = new XMLMngr();
@@ -107,6 +114,8 @@ public class XMLMngr {
 	 * @return The XML data from the server.
 	 */
 	private String postData(String xmlString) {
+		_logger.info("XMLMNGR> Sending XML request to director...");
+		
 		URL url;
         HttpURLConnection connection = null;
         File f = new File("config.properties");
@@ -154,17 +163,17 @@ public class XMLMngr {
 	}
 	
 	/**
-	 * This method is used to populate an arraylist containing service 
+	 * This method is used to populate an array list containing service 
 	 * checks. Firstly, a new XML message is generated and will be 
 	 * send to the server. If the agent receives an answer from the
 	 * server, the method will then proceed to add every single 
-	 * service for the host to the arraylist and return it.
+	 * service for the host to the array list and return it.
 	 * @param hostid ID of the host which runs the agent.
-	 * @return An arraylist of services for the host.
+	 * @return An array list of services for the host.
 	 */
 	public ArrayList<Service> getServicesFromDirector(int hostid) {
-		_logger.info("XMLMNGR> Sending XML request to director...");
-		
+		_logger.info("XMLMNGR> Getting a list of services for this agent...");
+				
 		ArrayList<Service> tmpServices = new ArrayList<>();
 		
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -200,7 +209,7 @@ public class XMLMngr {
             Element eMessage = (Element)nlistMessage.item(0);
             
             if (eMessage.getAttribute("qrystatus").equals("0")) {
-            	System.out.println("XMLMngr> Query was successfully executed on the server.");
+            	_logger.info("XMLMngr> Query was successfully executed on the server.");
             
             	NodeList nList = doc.getElementsByTagName("service");
             
@@ -217,7 +226,7 @@ public class XMLMngr {
             	return tmpServices;
             }
             else {
-            	System.out.println("XMLMngr> The query has failed on the server!");
+            	_logger.warning("XMLMngr> The query has failed on the server!");
             }
 		} catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
 			e.printStackTrace();
@@ -235,14 +244,62 @@ public class XMLMngr {
 	 * @return The ID number for the given hostname.
 	 */
 	public int getHostID(String hostname) {
-		_logger.info("XMLMNGR> Sending XML request to director...");
+		_logger.info("XMLMNGR> Getting hostid for agent host with the name " + hostname + ".");
 		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+		
+        try {
+			docBuilder = docFactory.newDocumentBuilder();
+			
+			Document doc = docBuilder.newDocument();
+	        Element rootElement = doc.createElement("srvmon");
+	        
+	        Element message = doc.createElement("message");
+	        
+	        message.setAttribute("hostname", hostname);
+	        message.setAttribute("action", "getHostID");
+	        
+	        rootElement.appendChild(message);
+	        
+	        doc.appendChild(rootElement);
+	        
+	        TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+            String xml = writer.getBuffer().toString().replaceAll("\n|\r", "");
+	        
+            InputSource is;
+            is = new InputSource(new StringReader(postData(xml)));
+            
+            doc = docBuilder.parse(is);
+            
+            NodeList nlistMessage = doc.getElementsByTagName("message");
+            Element eMessage = (Element)nlistMessage.item(0);
+            
+            if (eMessage.getAttribute("qrystatus").equals("0")) {
+            	_logger.info("XMLMngr> Query was successfully executed on the server.");
+            	
+            	return Integer.parseInt(eMessage.getAttribute("hostid"));
+            }
+            else {
+            	_logger.warning("XMLMngr> The query has failed on the server!");
+            }
+		} catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
+			e.printStackTrace();
+		}
+        
 		return 0;
 	}
 	
+	/**
+	 * This method updates the service check values on the director server.
+	 * @param hostid ID for this agent host.
+	 * @param service Currect executed service.
+	 */
 	public void updateService(int hostid, Service service) {
-		_logger.info("XMLMNGR> Updating service " + service.getCmd());
-		_logger.info("XMLMNGR> Sending XML request to director...");
+		_logger.info("XMLMNGR> Updating service " + service.getCmd() + ".");
 		
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
@@ -271,14 +328,22 @@ public class XMLMngr {
 	        transformer.transform(new DOMSource(doc), new StreamResult(writer));
 	        String xml = writer.getBuffer().toString().replaceAll("\n|\r", "");
 	        
-	        System.out.println("XMLREQ = " + xml);
-	        
 	        InputSource is;
 	        is = new InputSource(new StringReader(postData(xml)));
 	        
-	        
+	        doc = docBuilder.parse(is);
+            
+            NodeList nlistMessage = doc.getElementsByTagName("message");
+            Element eMessage = (Element)nlistMessage.item(0);
+            
+            if (eMessage.getAttribute("qrystatus").equals("0")) {
+            	_logger.info("XMLMngr> Query was successfully executed on the server.");
+            }
+            else {
+            	_logger.warning("XMLMngr> The query has failed on the server!");
+            }
         }
-        catch (ParserConfigurationException | TransformerException e) {
+        catch (ParserConfigurationException | TransformerException | SAXException | IOException e) {
         	e.printStackTrace();
         }
 	}

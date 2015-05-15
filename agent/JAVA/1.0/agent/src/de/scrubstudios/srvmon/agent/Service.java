@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-09 : Created class.
  *  2015-05-11 : Added Javadoc comments.
+ *  2015-05-15 : Preparing version 1.0.
  *
  * License information
  * -------------------
@@ -34,7 +35,7 @@ package de.scrubstudios.srvmon.agent;
 /**
  * This class defines a single service check.
  * @author Pol Warnimont
- * @version 0.1
+ * @version 1.0
  */
 public class Service {
 	/** ID number of the service. */
@@ -61,34 +62,66 @@ public class Service {
 		this._checkOutput = checkOutput;
 	}
 	
+	/**
+	 * This method sets the ID number of the service check.
+	 * @param id ID number of the service.
+	 */
 	public void setID(int id) {
 		this._id = id;
 	}
 	
+	/**
+	 * This method sets the return value of the service check.
+	 * @param value Return value of the service check.
+	 */
 	public void setValue(int value) {
 		this._value = value;
 	}
 	
+	/**
+	 * This method sets the check command which should be executed.
+	 * @param cmd Check command name.
+	 */
 	public void setCmd(String cmd) {
 		this._cmd = cmd;
 	}
 	
+	/**
+	 * This method stores the output of the service check script.
+	 * @param checkOutput Ouput of the service check.
+	 */
 	public void setCheckOutput(String checkOutput) {
 		this._checkOutput = checkOutput;
 	}
 	
+	/**
+	 * This method returns the ID number of the service check.
+	 * @return The ID number of the check.
+	 */
 	public int getID() {
 		return this._id; 
 	}
 	
+	/**
+	 * This method returns the return value of the executed service check.
+	 * @return The return value of the service check.
+	 */
 	public int getValue() {
 		return this._value;
 	}
 	
+	/**
+	 * This method gets the name of the service check command.
+	 * @return The name of the service check command.
+	 */
 	public String getCmd() {
 		return this._cmd;
 	}
 	
+	/**
+	 * This method returns the output of the executed service check.
+	 * @return The output of the executed service check.
+	 */
 	public String getCheckOutput() {
 		return this._checkOutput;
 	}

@@ -222,18 +222,31 @@ class XML {
 	}
 	
 	public function sendHostID($hostname) {
-		$xml = $this->createNewXMLMessage("updateService", $hostid);
+		$xml = $this->createNewXMLMessage("getHostID", $hostname);
 		$msg = $xml->getElementsByTagName("message")[0];
 
-		if (!$this->_db->query("SELECT getServerID(?) AS idServer", $hostname)->error()) {
+		
+
+		//$this->_db->query("SELECT getServerID(?) AS idServer", array($hostname));
+		//$this->_db->query("SELECT idServer FROM tblServer WHERE dtHostname LIKE ?", $hostname);
+
+		if (!$this->_db->query("SELECT getServerID(?) AS idServer", array($hostname))->error()) {
 			$result = $this->_db->first();
 			$hostid = $result->idServer;
 
 			$hid = $xml->createAttribute("hostid");
 			$hid->value = $hostid;
+			$stat = $xml->createAttribute("qrystatus");
+			$stat->value = "0";
 
 			$msg->appendChild($hid);
 		}
+		else {
+			$stat = $xml->createAttribute("qrystatus");
+			$stat->value = "1";
+		}
+
+		$msg->appendChild($stat);
 
 		return $xml->saveXML();
 	}

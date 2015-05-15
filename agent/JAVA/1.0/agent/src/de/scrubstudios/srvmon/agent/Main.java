@@ -11,6 +11,7 @@
  *  2015-05-09 : Created class.
  *  2015-05-11 : Added test functions.
  *               Added Javadoc.
+ *  2015-05-15 : Preparing agent 1.0.
  *
  * License information
  * -------------------
@@ -32,30 +33,29 @@
 
 package de.scrubstudios.srvmon.agent;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Logger;
+
+import de.scrubstudios.srvmon.agent.WorkerThread;
 
 /** 
  * Main class for the SRVMON AGENT.
  * @author Pol Warnimont
- * @version 0.1
+ * @version 1.0
  */
 public class Main {
+	private static int _host_id = 0;
 	/**
 	 * Main method of the class.
 	 * The program will enter in an endless loop. Every 300*1000 seconds, a 
-	 * thread will be executed which will perform the service checks.
+	 * thread will be executed which will perform the service checks. The
+	 * check interval can be defined by the user in the config file.
 	 * @param args Command line arguments. If -v -> return version.
 	 */
 	public static void main(String[] args) {
@@ -72,30 +72,45 @@ public class Main {
 			
 			File f = new File("config.properties");
 			
+			Properties prop = new Properties();
+			
 			if (f.exists()) {
-				ArrayList<Service> services = new ArrayList<>();
+				_host_id = XMLMngr.getInstance().getHostID("debvm");
 				
-				XMLMngr xml0 = XMLMngr.getInstance();
+				InputStream in = null;
+				try {
+					in = new FileInputStream(f.getName());
+					
+					prop.load(in);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
-				services = xml0.getServicesFromDirector(23);
+				logger.info("MAIN> Using the SRVMON DIRECTOR SERVER with the URL: " + prop.getProperty("director.url"));
+				logger.info("MAIN> The check interval has been set to " + prop.getProperty("agent.interval") + " seconds.");
 				
-				for (int i = 0; i < services.size(); i++) {
-					ServiceCheck.executeCheck(services.get(i));
-					System.out.println("New Output = " + services.get(i).getCheckOutput() + " -- " + services.get(i).getValue());
-					xml0.updateService(23, services.get(i));
+				while (true) {
+					logger.info("MAIN> Invoking thread...");
+					new WorkerThread(_host_id).start();
+					logger.info("MAIN> Sleeping...");
+					try {
+						Thread.sleep(Integer.parseInt(prop.getProperty("agent.interval")) * 1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			else {
 				logger.warning("The config.properties file is non existent!");
 				logger.info("A sample configuration has been created. Please insert your values!");
 				
-				Properties prop = new Properties();
+				OutputStream out = null;
 				
 				try {
-					OutputStream out = new FileOutputStream(f.getName());
-					
-					prop.setProperty("agent.id", "23");
+					out = new FileOutputStream(f.getName());
+
 					prop.setProperty("director.url", "http://127.0.0.1/srvmon-server/");
+					prop.setProperty("agent.interval", "300");
 					
 					prop.store(out, null);
 				} catch (IOException e) {

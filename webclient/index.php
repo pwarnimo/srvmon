@@ -12,6 +12,7 @@
  *  2015-04-24 : Create file.
  *  2015-04-30 : Added license and header.
  *  2015-05-06 : Changing structure.
+ *  2015-05-16 : Worked on the login system.
  *
  * License
  * -------
@@ -66,71 +67,33 @@
 			// Testing BEGIN
 			echo "<pre style=\"color:#f00;\">DEBUG</pre>";
 
-			if (Session::exists("success")) {
-				echo Session::flash("success");
-				echo "<br>";
-			}
-
-			echo Config::get("mysql/host");
-
-			DB::getInstance();
-			
-			$user = DB::getInstance()->query("CALL getUserFormatted(?,@err)", array("1"));
-
-			if (!$user->rowCount()) {
-				echo "Failed!";
-			}
-			else {
-				echo $user->first()->dtUsername;
-			}
-
-			$test = DB::getInstance()->get("tblUser", array("dtUsername", "=", "pwarnimo"));
-			echo "<b>" . $test->first()->dtUsername . "</b>";
-
 			if (Input::exists()) {
-				if(Token::check(Input::get("token"))) {
-					echo "<p>HERE</p>";
+				if (Token::check(Input::get("token"))) {
 					$validator = new Validator();
 
-					$validator->check($_POST, array(
-						"dtUsername" => array(
-							"required" => true,
-						),
-						"dtPassword" => array(
-							"required" => true,
-						)
+					$validation = $validator->check($_POST, array(
+						"dtUsername" => array("required" => true),
+						"dtPassword" => array("required" => true)
 					));
 
-					if ($validator->passed()) {
-						Session::flash("success", "Successfully!");
-
+					if ($validation->passed()) {
 						$user = new User();
+						$login = $user->login(Input::get("dtUsername"), Input::get("dtPassword"));
 
-						$salt = Hash::salt(32);
+						if ($login) {
+							echo "Logged in";
 
-						try {
-							$user->create(array(
-								"dwarnimo",
-								Hash::make("ixpee88q1.2.3", $salt),
-								$salt,
-								"d.warnimont@gmail.com",
-								2,
-								"2148398724"
-							));
-						}
-						catch (Exception $e) {
-							die($e->getMessage());
+							echo "<p>" . Session::get(Config::get("session/session_name")) . "</p>";
 						}
 					}
 					else {
-						echo "<br>";
-						print_r($validator->errors());
+						foreach ($validation->errors() as $error) {
+							echo $error . "<br>";
+						}
 					}
 				}
 			}
-			else {
-				echo "<p>empty</p>";
-			}
+
 			echo "<pre style=\"color:#f00;\">DEBUG</pre>";
 			// Testing END
 		?>

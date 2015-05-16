@@ -11,6 +11,7 @@
  *  2015-05-05 : Create file.
  *  2015-05-06 : Added license header.
  *  2015-05-11 : Added method create().
+ *  2015-05-16 : Worked on the login system.
  *
  * License
  * -------
@@ -32,9 +33,12 @@
 
 class User {
 	private $_db;
+	private $_data;
+	private $_sessionName;
 
 	public function __construct($user = null) {
 		$this->_db = DB::getInstance();
+		$this->_sessionName = Config::get("session/session_name");
 	}
 
 	public function create($fields = array()) {
@@ -42,5 +46,38 @@ class User {
 			die(">>" . $this->_db->error());
 			throw new Exception("Unable to add the user!");
 		}
+	}
+
+	public function find($user = null) {
+		if ($user) {
+			$field = (is_numeric($user)) ? "idUser" : "dtUsername";
+			$data = $this->_db->get("tblUser", array($field, "=", $user));
+
+			if ($data->rowCount()) {
+				$this->_data = $data->first();
+				
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function login($username = null, $password = null) {
+		$user = $this->find($username);
+
+		if ($user) {
+			if ($this->data()->dtHash === Hash::make($password, $this->data()->dtSalt)) {
+				Session::put($this->_sessionName, $this->data()->idUser);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function data() {
+		return $this->_data;
 	}
 }

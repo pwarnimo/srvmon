@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-05 : Create file.
  *  2015-05-06 : Added license header.
+ *  2015-05-15 : Working on class.
  *
  * License
  * -------
@@ -28,3 +29,22 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+class Redirect {
+	public static function to($location = null) {
+		if ($location) {
+			if (is_numeric($location)) {
+				switch ($location) {
+					case 404:
+						header("HTTP/1.0 404 Not Found");
+						include "inc/pages/error.inc.php";
+						exit();
+					break;
+				}
+			}
+
+			header("Location: " . $location);
+			exit();
+		}
+	}
+}

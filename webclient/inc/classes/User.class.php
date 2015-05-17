@@ -12,6 +12,7 @@
  *  2015-05-06 : Added license header.
  *  2015-05-11 : Added method create().
  *  2015-05-16 : Worked on the login system.
+ *  2015-05-17 : Worked on login() and added logout() method.
  *
  * License
  * -------
@@ -35,10 +36,26 @@ class User {
 	private $_db;
 	private $_data;
 	private $_sessionName;
+	private $_isLoggedIn;
 
 	public function __construct($user = null) {
 		$this->_db = DB::getInstance();
 		$this->_sessionName = Config::get("session/session_name");
+
+		if (!$user) {
+			if (Session::exists($this->_sessionName)) {
+				$user = Session::get($this->_sessionName);
+
+				if ($this->find($user)) {
+					$this->_isLoggedIn = true;
+				}
+				else {
+				}
+			}
+		}
+		else {
+			$this->find($user);
+		}
 	}
 
 	public function create($fields = array()) {
@@ -77,7 +94,15 @@ class User {
 		return false;
 	}
 
-	private function data() {
+	public function logout() {
+		Session::delete($this->_sessionName);
+	}
+
+	public function data() {
 		return $this->_data;
+	}
+
+	public function isLoggedIn() {
+		return $this->_isLoggedIn;
 	}
 }

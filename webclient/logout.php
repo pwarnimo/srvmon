@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-05 : Create file.
  *  2015-05-06 : Added license header.
+ *  2015-05-17 : Added logout functionality.
  *
  * License
  * -------
@@ -28,3 +29,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once "inc/init.php";
+
+$user = new User();
+
+$user->logout();
+
+Redirect::to("index.php");

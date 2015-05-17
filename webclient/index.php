@@ -13,6 +13,7 @@
  *  2015-04-30 : Added license and header.
  *  2015-05-06 : Changing structure.
  *  2015-05-16 : Worked on the login system.
+ *  2015-05-17 : Worked on the login system.
  *
  * License
  * -------
@@ -81,9 +82,8 @@
 						$login = $user->login(Input::get("dtUsername"), Input::get("dtPassword"));
 
 						if ($login) {
-							echo "Logged in";
-
-							echo "<p>" . Session::get(Config::get("session/session_name")) . "</p>";
+							Redirect::to("test.php");
+							//echo "<p>" . Session::get(Config::get("session/session_name")) . "</p>";
 						}
 					}
 					else {

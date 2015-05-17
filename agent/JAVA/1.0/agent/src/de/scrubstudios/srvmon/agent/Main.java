@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -74,14 +75,14 @@ public class Main {
 			
 			Properties prop = new Properties();
 			
-			if (f.exists()) {
-				_host_id = XMLMngr.getInstance().getHostID("debvm");
-				
+			if (f.exists()) {	
 				InputStream in = null;
 				try {
 					in = new FileInputStream(f.getName());
 					
 					prop.load(in);
+					
+					_host_id = XMLMngr.getInstance().getHostID(prop.getProperty("agent.hostname"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -111,6 +112,7 @@ public class Main {
 
 					prop.setProperty("director.url", "http://127.0.0.1/srvmon-server/");
 					prop.setProperty("agent.interval", "300");
+					prop.setProperty("agent.hostname", InetAddress.getLocalHost().getHostName());
 					
 					prop.store(out, null);
 				} catch (IOException e) {

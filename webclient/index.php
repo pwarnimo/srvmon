@@ -14,6 +14,7 @@
  *  2015-05-06 : Changing structure.
  *  2015-05-16 : Worked on the login system.
  *  2015-05-17 : Worked on the login system.
+ *  2015-05-18 : Adding remember me functionality.
  *
  * License
  * -------
@@ -79,7 +80,8 @@
 
 					if ($validation->passed()) {
 						$user = new User();
-						$login = $user->login(Input::get("dtUsername"), Input::get("dtPassword"));
+						$remember = (Input::get("remember") === "on") ? true : false;
+						$login = $user->login(Input::get("dtUsername"), Input::get("dtPassword"), $remember);
 
 						if ($login) {
 							Redirect::to("test.php");
@@ -138,6 +140,16 @@
 							   <label for="dtPassword" class="col-sm-2 control-label">Password</label>
 								<div class="col-sm-10">
 									<input type="password" class="form-control" name="dtPassword" id="dtPassword" placeholder="Password">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="remember" id="remember"> Remember me
+										</label>
+									</div>
 								</div>
 							</div>
 

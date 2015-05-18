@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-05 : Create file.
  *  2015-05-06 : Added license header.
+ *  2015-05-18 : Working on Cookie class.
  *
  * License
  * -------
@@ -28,3 +29,26 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+class Cookie {
+	public static function exists($name) {
+		return (isset($_COOKIE[$name])) ? true : false;
+	}
+
+	public static function get($name) {
+		return $_COOKIE[$name];
+	}
+
+	public static function put($name, $value, $expiry) {
+		if (setcookie($name, $value, time() + $expiry, "/")) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public static function delete($name) {
+		self::put($name, "", time() -1);
+	}
+}

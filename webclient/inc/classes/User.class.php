@@ -13,6 +13,7 @@
  *  2015-05-11 : Added method create().
  *  2015-05-16 : Worked on the login system.
  *  2015-05-17 : Worked on login() and added logout() method.
+ *  2015-05-18 : Adding remember me functionality.
  *
  * License
  * -------
@@ -36,11 +37,13 @@ class User {
 	private $_db;
 	private $_data;
 	private $_sessionName;
+	private $_cookieName;
 	private $_isLoggedIn;
 
 	public function __construct($user = null) {
 		$this->_db = DB::getInstance();
 		$this->_sessionName = Config::get("session/session_name");
+		$this->_cookieName = Config::get("remember/cookie_name");
 
 		if (!$user) {
 			if (Session::exists($this->_sessionName)) {
@@ -80,22 +83,51 @@ class User {
 		return false;
 	}
 
-	public function login($username = null, $password = null) {
-		$user = $this->find($username);
+	public function login($username = null, $password = null, $remember = false) {
+		if (!$username && !$password && $this->exists()) {
+			Session::put($this->_sessionName, $this->data()->idUser);
+		}
+		else {
+			$user = $this->find($username);
 
-		if ($user) {
-			if ($this->data()->dtHash === Hash::make($password, $this->data()->dtSalt)) {
-				Session::put($this->_sessionName, $this->data()->idUser);
+			if ($user) {
+				if ($this->data()->dtHash === Hash::make($password, $this->data()->dtSalt)) {
+					Session::put($this->_sessionName, $this->data()->idUser);
 
-				return true;
+					if ($remember) {
+						$hash = Hash::unique();
+						$hashCheck = $this->_db->get("tblSession", array("idUser", "=", $this->data()->idUser));
+
+						if (!$hashCheck->rowCount()) {
+							$this->_db->query("INSERT INTO tblSession VALUES (NULL, ?, ?)", array(
+								$this->data()->idUser,
+								$hash
+							));
+						}
+						else {
+							$hash = $hashCheck->first()->dtHash;
+						}
+
+						Cookie::put($this->_cookieName, $hash, Config::get("remember/cookie_expiry"));
+					}
+
+					return true;
+				}
 			}
 		}
 
 		return false;
 	}
 
+	public function exists() {
+		return (!empty($this->data())) ? true : false;
+	}
+
 	public function logout() {
+		$this->_db->query("DELETE FROM tblSession WHERE idUser = ?", array($this->data()->idUser));
+
 		Session::delete($this->_sessionName);
+		Cookie::delete($this->_cookieName);
 	}
 
 	public function data() {

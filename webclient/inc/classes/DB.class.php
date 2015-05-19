@@ -11,6 +11,7 @@
  *  2015-05-05 : Create file.
  *  2015-05-06 : Added license and header.
  *  2015-05-10 : Added insert function.
+ *  2015-05-19 : Added update() method.
  *
  * License
  * -------
@@ -129,6 +130,29 @@ class DB {
 			if ($this->query($sql, $fields)->error()) {
 				return true;
 			}
+		}
+
+		return false;
+	}
+
+	public function update($table, $idField, $id, $fields) {
+		$set = "";
+		$x = 1;
+
+		foreach ($fields as $name => $value) {
+			$set .= $name . " = ?";
+
+			if ($x < count($fields)) {
+				$set .= ", ";
+			}
+
+			$x++;
+		}
+
+		$sql = "UPDATE " . $table . " SET " . $set . " WHERE " . $idField . " = " . $id;
+
+		if (!$this->query($sql, $fields)->error()) {
+			return true;
 		}
 
 		return false;

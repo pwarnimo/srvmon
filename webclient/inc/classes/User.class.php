@@ -14,6 +14,7 @@
  *  2015-05-16 : Worked on the login system.
  *  2015-05-17 : Worked on login() and added logout() method.
  *  2015-05-18 : Adding remember me functionality.
+ *  2015-05-19 : Added update() method for user.
  *
  * License
  * -------
@@ -117,6 +118,16 @@ class User {
 		}
 
 		return false;
+	}
+
+	public function update($fields = array(), $id = null) {
+		if (!$id && $this->isLoggedIn()) {
+			$id = $this->data()->idUser;
+		}
+
+		if (!$this->_db->update("tblUser", "idUser", $id, $fields)) {
+			throw new Exception("Unable to insert user!");
+		}
 	}
 
 	public function exists() {

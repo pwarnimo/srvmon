@@ -2,7 +2,7 @@
  * File        : WorkerThread.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-07
- * Version     : 1.0
+ * Version     : 1.0 R1
 
  * Description : This file is part of the SRVMON AGENT.
  *               This class contains the main logic.
@@ -11,6 +11,7 @@
  * ---------
  *  2015-05-07 : Created class.
  *  2015-05-15 : Preparing v1.0.
+ *	2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------
@@ -75,9 +76,14 @@ public class WorkerThread extends Thread {
 		
 		_services = XMLMngr.getInstance().getServicesFromDirector(_host_id);
 		
-		for (int i = 0; i < _services.size(); i++) {
-			ServiceCheck.executeCheck(_services.get(i));
-			XMLMngr.getInstance().updateService(_host_id, _services.get(i));
+		if (_services.size() != 0) {
+			for (int i = 0; i < _services.size(); i++) {
+				ServiceCheck.executeCheck(_services.get(i));
+				XMLMngr.getInstance().updateService(_host_id, _services.get(i));
+			}
+		}
+		else {
+			_logger.warning("WORKER> No services defined for this host!");
 		}
 		
 		_logger.info("WORKER> Thread execution finished!");

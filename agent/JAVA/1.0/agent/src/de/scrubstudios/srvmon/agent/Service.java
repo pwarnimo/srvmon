@@ -2,7 +2,7 @@
  * File        : Service.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-05
- * Version     : 1.0
+ * Version     : 1.0 R1
  * Description : This file is part of the SRVMON agent.
  *               This class defines a service check.
  *
@@ -11,6 +11,7 @@
  *  2015-05-09 : Created class.
  *  2015-05-11 : Added Javadoc comments.
  *  2015-05-15 : Preparing version 1.0.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------

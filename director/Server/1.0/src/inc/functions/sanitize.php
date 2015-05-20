@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-07 : Created file.
  *  2015-05-11 : Added phpDocumentor comments.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------

@@ -2,7 +2,7 @@
  * File        : SQLTypeEnum.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-13
- * Version     : 1.1
+ * Version     : 1.1 R1
 
  * Description : This file is part of the SRVMON director.
  *               Enum definition for SQL data types.
@@ -10,6 +10,7 @@
  * Changelog
  * ---------
  *  2015-05-13 : Created class.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------

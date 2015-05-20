@@ -10,6 +10,7 @@
  * ---------
  *  2015-05-07 : Created file.
  *  2015-05-11 : Added phpDocumentor comments.
+ *  2015-05-20 : Final bugfixes + Adding comments.
  *
  * License information
  * -------------------
@@ -29,12 +30,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * The following array with the key "config" is used for the
+ * configuration of this web application. Currently only the SQL
+ * server properties are stored in this array but more values 
+ * will be inserted in future versions. The values can be edited
+ * manually in this file or edited using the setup.php script.
+ */
 $GLOBALS["config"] = array(
 	"mysql" => array(
-		"host"   => "127.0.0.1",
-		"user"   => "sqlusr",
-		"pass"   => "q1w2e3!",
-		"dbname" => "srvmon"
+		"host"   => "CHANGE-ME-1",
+		"user"   => "CHANGE-ME-2",
+		"pass"   => "CHANGE-ME-3",
+		"dbname" => "CHANGE-ME-4"
 	)
 );
 
@@ -48,4 +56,5 @@ spl_autoload_register(function($class) {
 	require_once "inc/classes/" . $class . ".class.php";
 });
 
+// Include input sanitization functions.
 require_once "inc/functions/sanitize.php";

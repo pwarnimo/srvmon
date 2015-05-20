@@ -11,15 +11,16 @@
  * ### Description
  *  
  * This class is used to perform multiple database operations. This class
- * should only be created by the getInstance() method. This has the 
- * advantage that the whole PHP application uses the same database instance
- * and also prevent unnecessary database connections.
+ * is only created once by the getInstance() method. This has the advantage 
+ * that the whole PHP application uses the same database instance and also 
+ * prevent unnecessary database connections.
  *  
  * ### List of changes
  *  
  * *	2015-05-07 : Created file.
  * *	2015-05-08 : Added functions action() and get().
  * *	2015-05-11 : Adding comments + cleanup. Adding phpDocumentor comments.
+ * *	2015-05-20 : Final bugfixing + Adding comments.
  *  
  * ### License
  *  

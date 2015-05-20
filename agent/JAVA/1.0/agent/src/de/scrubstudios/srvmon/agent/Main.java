@@ -2,7 +2,7 @@
  * File        : Main.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-05
- * Version     : 1.0
+ * Version     : 1.0 R1
  * Description : This file is part of the SRVMON agent.
  *               This class contains the main logic.
  *
@@ -12,6 +12,7 @@
  *  2015-05-11 : Added test functions.
  *               Added Javadoc.
  *  2015-05-15 : Preparing agent 1.0.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------
@@ -51,7 +52,16 @@ import de.scrubstudios.srvmon.agent.WorkerThread;
  * @version 1.0
  */
 public class Main {
+	/** Host ID for the current agent. */
 	private static int _host_id = 0;
+	
+	/**
+	 * This method prints out the version of the agent.
+	 */
+	private static void printVersion() {
+		System.out.println("SRVMON AGENT 1.0 R1\nCopyright (C) 2015  Pol Warnimont\nThe SRVMON AGENT comes with ABSOLUTELY NO WARRANTY!");
+	}
+	
 	/**
 	 * Main method of the class.
 	 * The program will enter in an endless loop. Every 300*1000 seconds, a 
@@ -62,14 +72,14 @@ public class Main {
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			if (args[0].equals("-v")) {
-				System.out.println("SRVMON AGENT 0.5");
-				System.out.println("Copyright (C) 2015  Pol Warnimont");
-				System.out.println("The SRVMON AGENT comes with ABSOLUTELY NO WARRANTY!");
+				printVersion();
 			}
 		}
 		else {
+			printVersion();
+			
 			Logger logger = Logger.getLogger("SRVMON-AGENT");		
-			logger.info("Agent has started.");
+			logger.info("MAIN> Agent has started.");
 			
 			File f = new File("config.properties");
 			
@@ -87,18 +97,37 @@ public class Main {
 					e1.printStackTrace();
 				}
 				
-				logger.info("MAIN> Using the SRVMON DIRECTOR SERVER with the URL: " + prop.getProperty("director.url"));
-				logger.info("MAIN> The check interval has been set to " + prop.getProperty("agent.interval") + " seconds.");
-				
-				while (true) {
-					logger.info("MAIN> Invoking thread...");
-					new WorkerThread(_host_id).start();
-					logger.info("MAIN> Sleeping...");
-					try {
-						Thread.sleep(Integer.parseInt(prop.getProperty("agent.interval")) * 1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				switch (_host_id) {
+					case -3:
+						logger.warning("MAIN> An exception has occured on the SQL server!");
+						
+						break;
+					case -4:
+						logger.warning("MAIN> A database warning has occured!");
+						
+						break;
+					case -5:
+						logger.warning("MAIN> The current host does not exists in the database!");
+						
+						break;
+						
+					default:
+						logger.info("MAIN> Using the SRVMON DIRECTOR SERVER with the URL: " + prop.getProperty("director.url"));
+						logger.info("MAIN> The check interval has been set to " + prop.getProperty("agent.interval") + " seconds.");
+						
+						while (true) {
+							logger.info("MAIN> Invoking thread...");
+							new WorkerThread(_host_id).start();
+							logger.info("MAIN> Sleeping...");
+							try {
+								Thread.sleep(Integer.parseInt(prop.getProperty("agent.interval")) * 1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								break;
+							}
+						}
+						
+						break;
 				}
 			}
 			else {

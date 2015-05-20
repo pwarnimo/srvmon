@@ -2,7 +2,7 @@
  * File        : WorkerThread.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-05
- * Version     : 1.1
+ * Version     : 1.1 R1
 
  * Description : This file is part of the SRVMON director.
  *               This class implements a worker thread which checks all 
@@ -15,6 +15,7 @@
  *  2015-05-07 : Finalized director updater.
  *  2015-05-12 : Starting v1.1.
  *  2015-05-13 : Modified run() method to use new DBng class.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------
@@ -56,14 +57,14 @@ import java.util.logging.Logger;
  */
 public class WorkerThread extends Thread {
 	/** Message logger. */
-	private Logger logger;
+	private Logger _logger;
 	
 	/** 
 	 * Constructor for the worked thread. 
 	 * The constructor will initialize the logger for this class.
 	 */
 	public WorkerThread() {
-		logger = Logger.getLogger("SRVMON-DIRECTOR");
+		_logger = Logger.getLogger("SRVMON-DIRECTOR");
 	}
 	
 	/** 
@@ -72,7 +73,7 @@ public class WorkerThread extends Thread {
 	 * host status is then determined and updated.
 	 */
 	public void run() {
-		logger.info("WORKER> Executing thread...");
+		_logger.info("WORKER> Executing thread...");
 		
 		DBng db0 = DBng.getInstance();
 		
@@ -82,7 +83,7 @@ public class WorkerThread extends Thread {
 				
 				while (res.next()) {
 					if (InetAddress.getByName(res.getString("dtIPAddress")).isReachable(2000)) {
-						logger.info("WORKER> " + res.getString("dtHostname") + " (" + res.getString("dtIPAddress") + ") is reachable.");
+						_logger.info("WORKER> " + res.getString("dtHostname") + " (" + res.getString("dtIPAddress") + ") is reachable.");
 						
 						ArrayList<QueryParam> params = new ArrayList<>();
 						
@@ -91,7 +92,7 @@ public class WorkerThread extends Thread {
 						db0.query("CALL setSystemStatus(?, TRUE, @err)", params);
 					}
 					else {
-						logger.warning("WORKER> " + res.getString("dtHostname") + " (" + res.getString("dtIPAddress") + ") is unreachable!");
+						_logger.warning("WORKER> " + res.getString("dtHostname") + " (" + res.getString("dtIPAddress") + ") is unreachable!");
 						
 						ArrayList<QueryParam> params = new ArrayList<>();
 						
@@ -106,9 +107,9 @@ public class WorkerThread extends Thread {
 			}
 		}
 		else {
-			logger.warning("WORKER> A database error has occured!");
+			_logger.warning("WORKER> A database error has occured!");
 		}
 		
-		logger.info("WORKER> Thread execution finished.");
+		_logger.info("WORKER> Thread execution finished.");
 	}
 }

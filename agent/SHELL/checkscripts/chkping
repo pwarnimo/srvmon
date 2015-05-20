@@ -3,7 +3,7 @@
 # Script      : chkping
 # Author(s)   : Pol Warnimont
 # Create date : 2015-04-27
-# Version     : 0.9
+# Version     : 1.0 R1
 #
 # Description : A SRVMON check script - Check if gateway is reachable
 #

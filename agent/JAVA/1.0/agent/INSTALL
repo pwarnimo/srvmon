@@ -1,5 +1,5 @@
-How to install the SRVMON AGENT
--------------------------------
+SRVMON AGENT V1.0 R1 - INSTALLATION GUIDE
+-----------------------------------------
 
 (This installation is for the Debian package)
 
@@ -43,7 +43,7 @@ A sample init script for the agent can be found in the sample
 directory.
 
 For any questions regarding the SRVMON AGENT please send an 
-e-mail to the mantainer of the project:
+e-mail to the maintainer of the project:
 
 	<pwarnimo(at)gmail(dot)com>
 		or use

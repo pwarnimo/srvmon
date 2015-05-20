@@ -12,6 +12,7 @@
  *  2015-05-09 : Adding methods for retrieving and updating services.
  *  2015-05-11 : Reworked everything.
  *  2015-05-14 : Added function for getting server ID.
+ *  2015-05-20 : Final bugfixing + commenting code.
  *  
  * License information
  * -------------------
@@ -30,7 +31,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-	
+
+// This include loads all the settings for this web application
 require_once "inc/init.php";
 
 /*
@@ -40,9 +42,12 @@ require_once "inc/init.php";
  * If no POST data has been received, the default output will be the
  * server version. Else, the XML from the clients will be parsed and the
  * appropriate action will be executed.
+ *
+ * Please note that the current server version (1.0) needs the PHP option
+ * always_populate_raw_post_data set to -1.
  */
 if (file_get_contents('php://input') == NULL) {
-	echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 1.0<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
+	echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 1.0 R1<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
 }
 else {
 	/*
@@ -52,7 +57,7 @@ else {
 	$xml0 = new XML();
 	$xml = simplexml_load_string(file_get_contents('php://input'));
 
-	$action = $xml->message[0]["action"];
+	$action = escape($xml->message[0]["action"]);
 
 	/*
 	 * After we know the action, we can then select the case for each 
@@ -64,7 +69,7 @@ else {
 		 * a host.
 		 */
 		case "getServices":
-			$hostid = $xml->message[0]["hid"];
+			$hostid = escape($xml->message[0]["hid"]);
 
 			$xmlres = $xml0->sendServicesXML($hostid);
 		break;
@@ -74,8 +79,8 @@ else {
 		 * check.
 		 */
 		case "getServiceData":
-			$hostid = $xml->message[0]["hid"];
-			$serviceid = $xml->message[0]["sid"];
+			$hostid = escape($xml->message[0]["hid"]);
+			$serviceid = escape($xml->message[0]["sid"]);
 
 			$xmlres = $xml0->sendServiceResultsXML($hostid, $serviceid);
 		break;
@@ -85,16 +90,20 @@ else {
 		 * and also store the service check output in the database.
 		 */
 		case "updateServiceData":
-			$hostid = $xml->message[0]["hid"];
-			$serviceid = $xml->message[0]["sid"];
-			$val = $xml->message[0]["val"];
-			$message = $xml->message[0]["msg"];
+			$hostid = escape($xml->message[0]["hid"]);
+			$serviceid = escape($xml->message[0]["sid"]);
+			$val = escape($xml->message[0]["val"]);
+			$message = escape($xml->message[0]["msg"]);
 
 			$xmlres = $xml0->updateServiceXML($hostid, $serviceid, $val, $message);
 		break;
 
+		/*
+		 * The action getHostID return the ID to the agent host. The ID is
+		 * fetched from the database by using the agent hosts hostname.
+		 */
 		case "getHostID":
-			$hostname = $xml->message[0]["hostname"];
+			$hostname = escape($xml->message[0]["hostname"]);
 			
 			$xmlres = $xml0->sendHostID($hostname);
 		break;

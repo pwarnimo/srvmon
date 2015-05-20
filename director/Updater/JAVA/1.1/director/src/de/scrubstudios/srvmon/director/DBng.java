@@ -2,7 +2,7 @@
  * File        : DBng.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-12
- * Version     : 1.1
+ * Version     : 1.1 R1
 
  * Description : This file is part of the SRVMON director.
  *               This class is used for the database connection.
@@ -11,6 +11,7 @@
  * ---------
  *  2015-05-12 : Created class.
  *  2015-05-13 : Modified query() method.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------

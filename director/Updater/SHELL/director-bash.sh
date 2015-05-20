@@ -3,7 +3,7 @@
 # Script      : director-bash.sh
 # Author(s)   : Pol Warnimont
 # Create date : 2015-04-24
-# Version     : 1.0
+# Version     : 1.0 R1
 #
 # Description : A simple director script for the SRVMON monitoring suite.
 #

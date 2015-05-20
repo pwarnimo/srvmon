@@ -3,7 +3,7 @@
 # Script      : agent-bash.sh
 # Author(s)   : Pol Warnimont
 # Create date : 2015-04-24
-# Version     : 0.9
+# Version     : 1.0 R1
 #
 # Description : A service checks scheduler script
 #
@@ -11,6 +11,7 @@
 # ---------
 #  2015-04-24 : Created script.
 #  2015-04-30 : Changed license to AGPLv3.
+#  2015-05-20 : Prepared for R1.
 #
 # License information
 # -------------------
@@ -49,11 +50,8 @@ function cleanUp {
 }
 
 function showVersion {
-  echo "SRVMON AGENT (agent-bash.sh) VERSION 0.9 (C) 2015 Pol Warnimont"
-  echo "SRVMON AGENT comes with ABSOLUTELY NO WARRANTY; for details"
-  echo "type 'show w'. This is free software, and you are welcome"
-  echo "to redistribute it under certain conditions; type 'show c'"
-  echo "for details."
+  echo "SRVMON AGENT (agent-bash.sh) VERSION 1.0 R1 (C) 2015 Pol Warnimont"
+  echo "SRVMON AGENT comes with ABSOLUTELY NO WARRANTY"
 }
 
 if [ $1 == "-v" ]

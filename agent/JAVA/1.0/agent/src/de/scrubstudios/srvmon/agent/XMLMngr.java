@@ -2,7 +2,7 @@
  * File        : XMLMngr.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-07
- * Version     : 0.1
+ * Version     : 1.0 R1
 
  * Description : This file is part of the SRVMON AGENT.
  *               This class is used to generate XML data.
@@ -13,6 +13,7 @@
  *  2015-05-11 : Added methods for retrieving and updating services.
  *               Added Javadoc comments.
  *  2015-05-15 : Preparing v1.0.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *
  * License information
  * -------------------

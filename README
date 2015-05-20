@@ -6,18 +6,18 @@ SRVMON SERVER MONITORING SUITE
  *** Version 1.0 (R1) expected around May/June 2015.
 
  *** CURRENT VERSIONS : 
- *** Part              Version   Status        Priority
+ *** Part              Version   Status         Priority
  *** SRVMON DB
- ***   -DB SQL         1.1       Bugfixing     Freeze
- ***   -ROUTINES       1.1       Bugfixing     Freeze
+ ***   -DB SQL         1.1       R1 Ready       Freeze
+ ***   -ROUTINES       1.1       R1 Ready       Freeze
  *** SRVMON DIRECTOR
- ***   -UPDATER        1.1       R1 Ready      Freeze
- ***   -SERVER         1.0       Bugfixing     Freeze
- *** SRVMON AGENT      1.0       R1 Ready      Freeze
- *** SRVMON WEBUI      0.5       Development   High
- *** SRVMON DESKTOP    0.1       Paused        Low
- *** ANDROID CLIENT    ?.?       Planning      Low
- *** IOS CLIENT        ?.?       Maybe         None
+ ***   -UPDATER        1.1       R1 Ready       Freeze
+ ***   -SERVER         1.0       R1 OK!         Freeze
+ *** SRVMON AGENT      1.0       R1 Ready       Freeze
+ *** SRVMON WEBUI      0.5       R1 Development High
+ *** SRVMON DESKTOP    ?.?       R2 Planned     Low
+ *** ANDROID CLIENT    ?.?       R2 Planned     Low
+ *** IOS CLIENT        ?.?       R3 Maybe       None
 
  *** OVERALL SUITE VERSION = 0.8 (NOT ready for R1)
 

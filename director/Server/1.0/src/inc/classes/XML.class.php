@@ -20,6 +20,7 @@
  * *	2015-05-09 : Adding methods sendService() + getServiceResults() + updateService.
  *	*	2015-05-11 : Reworked class. Adding phpDocumentor comments.
  * *	2015-05-14 : Added function for retrieving host ID.
+ * *	2015-05-20 : Final bugfixing + Adding comments.
  *  
  * ### License
  *  
@@ -125,9 +126,9 @@ class XML {
 				$service = $xml->createElement("service");
 
 				$sid = $xml->createAttribute("sid");
-				$sid->value = $result->idService;
+				$sid->value = escape($result->idService);
 				$cmd = $xml->createAttribute("cmd");
-				$cmd->value = $result->dtCheckCommand;
+				$cmd->value = escape($result->dtCheckCommand);
 
 				$service->appendChild($sid);
 				$service->appendChild($cmd);
@@ -172,9 +173,9 @@ class XML {
 			$result = $this->_db->first();
 
 			$sid = $xml->createAttribute("sid");
-			$sid->value = $result->idService;
+			$sid->value = escape($result->idService);
 			$val = $xml->createAttribute("value");
-			$val->value = $result->dtValue;
+			$val->value = escape($result->dtValue);
 
 			$service->appendChild($sid);
 			$service->appendChild($val);
@@ -220,19 +221,23 @@ class XML {
 
 		return $xml->saveXML();
 	}
-	
+
+	/**
+	 * Get the agent host ID.
+	 *
+	 * This method is used to get the host ID for a agent host. The
+	 * ID will be determined by the hostname.
+	 *
+	 * @param String $hostname Hostname of the agent host.
+	 * @return String Returns the XML document as a string.
+	 */
 	public function sendHostID($hostname) {
 		$xml = $this->createNewXMLMessage("getHostID", $hostname);
 		$msg = $xml->getElementsByTagName("message")[0];
 
-		
-
-		//$this->_db->query("SELECT getServerID(?) AS idServer", array($hostname));
-		//$this->_db->query("SELECT idServer FROM tblServer WHERE dtHostname LIKE ?", $hostname);
-
 		if (!$this->_db->query("SELECT getServerID(?) AS idServer", array($hostname))->error()) {
 			$result = $this->_db->first();
-			$hostid = $result->idServer;
+			$hostid = escape($result->idServer);
 
 			$hid = $xml->createAttribute("hostid");
 			$hid->value = $hostid;

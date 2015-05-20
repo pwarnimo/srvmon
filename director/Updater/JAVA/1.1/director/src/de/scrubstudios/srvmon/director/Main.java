@@ -2,7 +2,7 @@
  * File        : Main.java
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-05
- * Version     : 1.1
+ * Version     : 1.1 R1
 
  * Description : This file is part of the SRVMON director.
  *               This class contains the main logic.
@@ -14,6 +14,7 @@
  *  2015-05-08 : Added javadoc.
  *  2015-05-12 : Starting version 1.1.
  *  2015-05-13 : Bugfixing.
+ *  2015-05-20 : Final bugfixing + Adding comments.
  *  
  *
  * License information
@@ -50,6 +51,13 @@ import java.util.logging.Logger;
  */
 public class Main {
 	/**
+	 * This method prints out the current version of the application.
+	 */
+	private static void printVersion() {
+		System.out.println("SRVMON DIRECTOR - UPDATER V1.1 R1\nCopyright (C)  Pol Warnimont\nThe SRVMON DIRECTOR UPDATER comes with ABSOLUTELY NO WARRANTY!");
+	}
+	
+	/**
 	 * The main method enters a while loop which will run until the
 	 * program execution is canceled. Inside the loop, a new worker
 	 * thread will be created every 5 minutes (300*1000s). If the
@@ -61,12 +69,12 @@ public class Main {
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			if (args[0].equals("-v")) {
-				System.out.println("SRVMON DIRECTOR - UPDATER 1.1");
-				System.out.println("Copyright (C) 2015  Pol Warnimont");
-				System.out.println("The SRVMON DIRECTOR UPDATER comes with ABSOLUTELY NO WARRANTY!");
+				printVersion();
 			}
 		}
 		else {
+			printVersion();
+			
 			Logger logger = Logger.getLogger("SRVMON-DIRECTOR");		
 			logger.info("Updater v1.1 has started.");
 			

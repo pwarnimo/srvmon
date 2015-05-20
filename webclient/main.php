@@ -12,6 +12,7 @@
  *  2015-04-24 : Create file.
  *  2015-04-30 : Added license and header.
  *  2015-05-06 : Reworking structure.
+ *  2015-05-20 : Updating page to use new login system.
  *
  * License
  * -------
@@ -30,6 +31,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once "inc/init.php";
+
+$user = new User();
 ?>
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
@@ -63,10 +68,6 @@
 		<?php
 			include "inc/settings/dbconfig.inc.php";
 			include "inc/whitelists/whitelist.inc.php";
-
-			function __autoload($class_name) {
-				require_once "inc/classes/" . $class_name . ".class.php";
-			}
 		?>
 
 		<!--[if lt IE 8]>
@@ -82,6 +83,10 @@
 						<span class="icon-bar"></span>
 					</button>
 					<a class="navbar-brand" href="#">SRVMON WebUI 0.5</a>
+					<p class="navbar-text">Signed in as <?php echo $user->data()->dtName . " " . $user->data()->dtSurname; ?></p>
+				</div>	
+				<div class="navbar-collapse collapse">
+					<button id="btnLogout" type="button" class="btn btn-default navbar-btn btn-sm navbar-right"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
 				</div>
 			</div>
 		</nav>

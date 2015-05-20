@@ -36,4 +36,5 @@ $user = new User();
 
 $user->logout();
 
+Session::flash("logout", "You are now logged out!");
 Redirect::to("index.php");

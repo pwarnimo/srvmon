@@ -132,31 +132,22 @@ body {
 	background-image: url("../images/nav-arr-blu.png");
 }
 
+.testtable tbody tr:nth-child(odd) {
+	background-color : #F6F6F6;
+}
+
+.testtable tbody tr {
+}
+
 .testtable tbody td {
-	border : 1px solid #ccc;
-	/*font-size: 0.9em;*/
-	/*border-top: 1px solid #000;
-	border-right: 1px solid #000;*/
-	text-align: center;
 }
 
 .testtable tbody tr:hover {
-	background-color: #FFFFCC;
+	background-color: #337ab7;
+	color: #fff;
 }
 
 .testtable thead th {
-	/*border: 1px solid #ccc;*/
-	border-bottom: 2px solid #ccc;
-	border-right: 1px solid #ccc;
-	border-left: 1px solid #ccc;
-	/*font-size: 0.9em;*/
-	padding-top: 15px;
-	padding-bottom: 5px;
-	text-align: center;
-	/*background-color: #428bca;
-	color: #fff;*/
-	font-weight: normal;
-	font-style: italic;
 }
 
 #dtable {

@@ -30,20 +30,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-	echo <<< PAGE
-		<div class="page-header">
-			<h1>Servers <small>SRVMON UI</a></small></h1>
-		</div>
 
-		<div id="tableview">
-			<table id="dataServers" class="testtable" width="100%">
-				<thead>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
+if (!$user->isLoggedIn()) {
+	Session::flash("index", "You are not logged in!");
+	Redirect::to("index.php");
+}
 
-		<script src="js/pages/servers.js"></script>
+echo <<< PAGE
+	<div class="page-header">
+		<h1>Servers <small>SRVMON UI</a></small></h1>
+	</div>
+
+	<div id="tableview">
+		<table id="dataServers" class="testtable" width="100%">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+
+	<script src="js/pages/servers.js"></script>
 PAGE;
-?>

@@ -15,6 +15,7 @@
  *  2015-05-16 : Worked on the login system.
  *  2015-05-17 : Worked on the login system.
  *  2015-05-18 : Adding remember me functionality.
+ *  2015-05-20 : Finalizing login system.
  *
  * License
  * -------
@@ -65,9 +66,15 @@
 		<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 	</head>
 	<body>
+		<p>Please input your login credentials.</p>
 		<?php
-			// Testing BEGIN
-			echo "<pre style=\"color:#f00;\">DEBUG</pre>";
+			if (Session::exists("index")) {
+				echo "<p class=\"bg-danger\">" . Session::flash("index") . "</p>";
+			}
+
+			if (Session::exists("logout")) {
+				echo "<p class=\"bg-success\">" . Session::flash("logout") . "</p>";
+			}
 
 			if (Input::exists()) {
 				if (Token::check(Input::get("token"))) {
@@ -84,8 +91,7 @@
 						$login = $user->login(Input::get("dtUsername"), Input::get("dtPassword"), $remember);
 
 						if ($login) {
-							Redirect::to("test.php");
-							//echo "<p>" . Session::get(Config::get("session/session_name")) . "</p>";
+							Redirect::to("main.php");
 						}
 					}
 					else {
@@ -95,9 +101,6 @@
 					}
 				}
 			}
-
-			echo "<pre style=\"color:#f00;\">DEBUG</pre>";
-			// Testing END
 		?>
 
 		<!--[if lt IE 8]>

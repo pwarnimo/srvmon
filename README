@@ -8,16 +8,16 @@ SRVMON SERVER MONITORING SUITE
  *** CURRENT VERSIONS : 
  *** Part              Version   Status         Priority
  *** SRVMON DB
- ***   -DB SQL         1.1       R1 Ready       Freeze
- ***   -ROUTINES       1.1       R1 Ready       Freeze
+ ***   -DB SQL         1.1       R1 Finalization Freeze
+ ***   -ROUTINES       1.1       R1 Finalization Freeze
  *** SRVMON DIRECTOR
- ***   -UPDATER        1.1       R1 Ready       Freeze
- ***   -SERVER         1.0       R1 OK!         Freeze
- *** SRVMON AGENT      1.0       R1 Ready       Freeze
- *** SRVMON WEBUI      0.5       R1 Development High
- *** SRVMON DESKTOP    ?.?       R2 Planned     Low
- *** ANDROID CLIENT    ?.?       R2 Planned     Low
- *** IOS CLIENT        ?.?       R3 Maybe       None
+ ***   -UPDATER        1.1       R1 Finalization Freeze
+ ***   -SERVER         1.0       R1 Finished!    Freeze
+ *** SRVMON AGENT      1.0       R1 Finished!    Freeze
+ *** SRVMON WEBUI      0.5       R1 Development  High
+ *** SRVMON DESKTOP    ?.?       R2 Planned      Low
+ *** ANDROID CLIENT    ?.?       R2 Planned      Low
+ *** IOS CLIENT        ?.?       R3 Maybe        None
 
  *** OVERALL SUITE VERSION = 0.8 (NOT ready for R1)
 

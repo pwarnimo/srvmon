@@ -1,7 +1,31 @@
 SRVMON AGENT V1.0 R1 - INSTALLATION GUIDE
 -----------------------------------------
 
-(This installation is for the Debian package)
+This document will guide you through the installation process of
+the SRVMON AGENT. You can either use the provided package to 
+install the agent or manually install the agent.
+
+Package Installation
+--------------------
+
+A Debian package has been provided for the AGENT. The package
+will set up the necessary directories and files for the SRVMON
+AGENT. To install the package, simply run the following command 
+as root:
+
+	dpkg -i deb/srvmon-agent_1.0-R1
+
+After the installation is finished, you have to edit the 
+configuration file of the AGENT with your values. A sample
+configuration will be generated after the installation of the
+package. To run the AGENT simple use the init script:
+
+	/etc/init.d/srvmon-agent start
+
+The logs will be written to /var/log/srvmon/agent.log.
+
+Manual Installation
+-------------------
 
 * Prerequisites *
 
@@ -31,16 +55,32 @@ will be created.
 
 * Running the program *
 
+Before you run the program, you need to create some directories
+for the AGENT:
+
+	mkdir /etc/srvmon
+	mkdir /var/log/srvmon
+	mkdir /usr/share/srvmon
+	mkdir /usr/share/srvmon/jar
+	mkdir /usr/share/srvmon/checkscripts
+
 The executable .jar file for the program can be found in the dist
-directory under the name srvmon-agent.jar. To run the program
-simply use the following command:
+directory under the name srvmon-agent.jar. Please copy the file
+to the /usr/share/srvmon/jar directory. The checkscripts must be
+copied into the /usr/share/srvmon/checkscripts directory.
 
-	java -jar srvmon-agent.jar
+You can now copy the wrapper and init script to the apropriate
+directories:
 
-* Etc *
+	cp sample/srvmon-agent_WRAPPER /usr/sbin/srvmon-agent
+	cp sample/srvmon-agent_INIT /etc/init.d/srvmon-agent
 
-A sample init script for the agent can be found in the sample
-directory.
+When you start the AGENT for the first time, a sample config file
+will be generated and must be edited before you start the AGENT
+again.
+
+QUESTIONS
+---------
 
 For any questions regarding the SRVMON AGENT please send an 
 e-mail to the maintainer of the project:

@@ -13,6 +13,7 @@
  *               Added Javadoc.
  *  2015-05-15 : Preparing agent 1.0.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *
  * License information
  * -------------------
@@ -81,14 +82,14 @@ public class Main {
 			Logger logger = Logger.getLogger("SRVMON-AGENT");		
 			logger.info("MAIN> Agent has started.");
 			
-			File f = new File("config.properties");
+			File f = new File("/etc/srvmon/agent.properties");
 			
 			Properties prop = new Properties();
 			
 			if (f.exists()) {	
 				InputStream in = null;
 				try {
-					in = new FileInputStream(f.getName());
+					in = new FileInputStream("/etc/srvmon/agent.properties");
 					
 					prop.load(in);
 					
@@ -137,9 +138,9 @@ public class Main {
 				OutputStream out = null;
 				
 				try {
-					out = new FileOutputStream(f.getName());
+					out = new FileOutputStream("/etc/srvmon/agent.properties");
 
-					prop.setProperty("director.url", "http://127.0.0.1/srvmon-server/");
+					prop.setProperty("director.url", "http://change.me/director/");
 					prop.setProperty("agent.interval", "300");
 					prop.setProperty("agent.hostname", InetAddress.getLocalHost().getHostName());
 					

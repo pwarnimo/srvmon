@@ -12,6 +12,7 @@
  *  2015-05-12 : Created class.
  *  2015-05-13 : Modified query() method.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *
  * License information
  * -------------------
@@ -53,7 +54,7 @@ import com.mysql.jdbc.Statement;
  * in the lib folder. This class uses the singleton pattern so that
  * only one instance of this class is created. This has the advantage
  * of preventing the creation of unnecessary database connections.
- * @author pwarnimo
+ * @author Pol Warnimont
  * @version 1.1
  */
 public class DBng {
@@ -75,7 +76,7 @@ public class DBng {
 	 */
 	private DBng() {
 		try {
-			InputStream in = new FileInputStream("config.properties");
+			InputStream in = new FileInputStream("/etc/srvmon/director.properties");
 			Properties prop = new Properties();
 			
 			prop.load(in);

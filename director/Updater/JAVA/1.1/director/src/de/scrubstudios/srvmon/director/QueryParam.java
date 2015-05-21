@@ -11,6 +11,7 @@
  * ---------
  *  2015-05-13 : Created class.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *
  * License information
  * -------------------
@@ -38,7 +39,7 @@ package de.scrubstudios.srvmon.director;
  * class, the query() method of the DBng class knows which type of
  * parameter should be bound to the query. The parameter types are
  * defined in an enum.
- * @author pwarnimo
+ * @author Pol Warnimont
  * @version 1.1
  */
 public class QueryParam {

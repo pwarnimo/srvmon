@@ -11,6 +11,7 @@
  * ---------
  *  2015-05-13 : Created class.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *
  * License information
  * -------------------
@@ -37,7 +38,7 @@ package de.scrubstudios.srvmon.director;
  * This enumerator defines the available data types for the SQL database.
  * The enumerator in the QueryParam class. This ensures that the right
  * data types are used when preparing the query.
- * @author pwarnimo
+ * @author Pol Warnimont
  * @version 1.1
  */
 public enum SQLTypeEnum {

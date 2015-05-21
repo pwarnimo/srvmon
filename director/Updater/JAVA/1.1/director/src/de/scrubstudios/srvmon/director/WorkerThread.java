@@ -16,6 +16,7 @@
  *  2015-05-12 : Starting v1.1.
  *  2015-05-13 : Modified run() method to use new DBng class.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *
  * License information
  * -------------------

@@ -8,10 +8,10 @@ SRVMON SERVER MONITORING SUITE
  *** CURRENT VERSIONS : 
  *** Part              Version   Status         Priority
  *** SRVMON DB
- ***   -DB SQL         1.1       R1 Finalization Freeze
+ ***   -DB SQL         1.1       R1 Finished!    Freeze
  ***   -ROUTINES       1.1       R1 Finalization Freeze
  *** SRVMON DIRECTOR
- ***   -UPDATER        1.1       R1 Finalization Freeze
+ ***   -UPDATER        1.1       R1 Finished!    Freeze
  ***   -SERVER         1.0       R1 Finished!    Freeze
  *** SRVMON AGENT      1.0       R1 Finished!    Freeze
  *** SRVMON WEBUI      0.5       R1 Development  High

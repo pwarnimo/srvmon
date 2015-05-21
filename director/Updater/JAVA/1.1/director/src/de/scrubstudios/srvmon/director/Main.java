@@ -15,6 +15,7 @@
  *  2015-05-12 : Starting version 1.1.
  *  2015-05-13 : Bugfixing.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *  
  *
  * License information
@@ -46,7 +47,7 @@ import java.util.logging.Logger;
 
 /**
  * Main class for the SRVMON DIRECTOR - UPDATER.
- * @author pwarnimo
+ * @author Pol Warnimont
  * @version 1.1
  */
 public class Main {
@@ -78,10 +79,10 @@ public class Main {
 			Logger logger = Logger.getLogger("SRVMON-DIRECTOR");		
 			logger.info("Updater v1.1 has started.");
 			
-			File f = new File("config.properties");
+			File f = new File("/etc/srvmon/director.properties");
 			
 			if (f.exists()) {
-				logger.info("The file settings.properties exists. Continuing...");
+				logger.info("The file director.properties exists. Continuing...");
 				
 				try {
 					while (true) {
@@ -95,13 +96,13 @@ public class Main {
 				}
 			}
 			else {
-				logger.warning("The config.properties file is non existent!");
+				logger.warning("The director.properties file is non existent!");
 				logger.info("A sample configuration has been created. Please insert your values!");
 				
 				Properties prop = new Properties();
 				
 				try {
-					OutputStream out = new FileOutputStream(f.getName());
+					OutputStream out = new FileOutputStream("/etc/srvmon/director.properties");
 					
 					prop.setProperty("db.hostname", "127.0.0.1");
 					prop.setProperty("db.username", "username");

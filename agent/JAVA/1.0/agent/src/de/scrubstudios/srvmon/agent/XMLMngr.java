@@ -14,6 +14,7 @@
  *               Added Javadoc comments.
  *  2015-05-15 : Preparing v1.0.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *
  * License information
  * -------------------
@@ -37,7 +38,6 @@ package de.scrubstudios.srvmon.agent;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,11 +119,10 @@ public class XMLMngr {
 		
 		URL url;
         HttpURLConnection connection = null;
-        File f = new File("config.properties");
         Properties prop = new Properties();
         
         try {
-        	InputStream in = new FileInputStream(f.getName());
+        	InputStream in = new FileInputStream("/etc/srvmon/agent.properties");
         	prop.load(in);
             url = new URL(prop.getProperty("director.url"));
 
@@ -297,7 +296,7 @@ public class XMLMngr {
 	/**
 	 * This method updates the service check values on the director server.
 	 * @param hostid ID for this agent host.
-	 * @param service Currect executed service.
+	 * @param service Current executed service.
 	 */
 	public void updateService(int hostid, Service service) {
 		_logger.info("XMLMNGR> Updating service " + service.getCmd() + ".");

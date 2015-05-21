@@ -12,6 +12,7 @@
  *  2015-05-07 : Created class.
  *  2015-05-15 : Preparing for v1.0.
  *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
  *
  * License information
  * -------------------

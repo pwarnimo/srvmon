@@ -39,7 +39,8 @@ if (!$user->isLoggedIn()) {
 $mngr = new ServerMngr();
 
 $mngr->getServerFromDB(-1, false);
-echo $mngr->serverToJSON();
+echo $mngr->serverToJSON(8);
+echo $mngr->getOS();
 
 echo <<< PAGE
 	<!--<div class="page-header">

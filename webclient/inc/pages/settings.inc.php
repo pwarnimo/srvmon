@@ -27,19 +27,24 @@ if (DB::getInstance()->query("SELECT dtCaption, dtValue FROM tblSetting WHERE dt
 
 		switch ($val->dtCaption) {
 			case "dbversion":
-				echo "<p>Database Version " . $val->dtValue . " " . $update . "</p>";
+				echo "<div class=\"row\"><div class=\"col-md-9\"><p>Database Version " . $val->dtValue . "</p></div><div class=\"col-md-3\"><p>" . $update . "</p></div></div>";
+				//echo "<p>Database Version " . $val->dtValue . " " . $update . "</p>";
 			break;
 			case "webuiversion":
-				echo "<p>WebUI Version " . $val->dtValue . " " . $update . "</p>";
+				echo "<div class=\"row\"><div class=\"col-md-9\"><p>WebUI Version " . $val->dtValue . "</p></div><div class=\"col-md-3\"><p>" . $update . "</p></div></div>";
+				//echo "<p>WebUI Version " . $val->dtValue . " " . $update . "</p>";
 			break;
 			case "agentversion":
-				echo "<p>Agent Version " . $val->dtValue . " " . $update . "</p>";
+				echo "<div class=\"row\"><div class=\"col-md-9\"><p>Agent Version " . $val->dtValue . "</p></div><div class=\"col-md-3\"><p>" . $update . "</p></div></div>";
+				//echo "<p>Agent Version " . $val->dtValue . " " . $update . "</p>";
 			break;
 			case "updaterversion":
-				echo "<p>Director Updater Version " . $val->dtValue . " " . $update . "</p>";
+				echo "<div class=\"row\"><div class=\"col-md-9\"><p>Director Updater Version " . $val->dtValue . "</p></div><div class=\"col-md-3\"><p>" . $update . "</p></div></div>";
+				//echo "<p>Director Updater Version " . $val->dtValue . " " . $update . "</p>";
 			break;
 			case "serverversion":
-				echo "<p>Director Server Version " . $val->dtValue . " " . $update . "</p>";
+				echo "<div class=\"row\"><div class=\"col-md-9\"><p>Director Server Version " . $val->dtValue . "</p></div><div class=\"col-md-3\"><p>" . $update . "</p></div></div>";
+				//echo "<p>Director Server Version " . $val->dtValue . " " . $update . "</p>";
 			break;
 		}
 	}

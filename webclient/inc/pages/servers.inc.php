@@ -36,8 +36,13 @@ if (!$user->isLoggedIn()) {
 	Redirect::to("index.php");
 }
 
+$mngr = new ServerMngr();
+
+$mngr->getServerFromDB(-1, false);
+echo $mngr->serverToJSON();
+
 echo <<< PAGE
-	<div class="page-header">
+	<!--<div class="page-header">
 		<h1>Servers <small>SRVMON UI</a></small></h1>
 	</div>
 
@@ -48,7 +53,7 @@ echo <<< PAGE
 			<tbody>
 			</tbody>
 		</table>
-	</div>
+	</div>-->
 
 	<script src="js/pages/servers.js"></script>
 PAGE;

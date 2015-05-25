@@ -6,6 +6,8 @@ if (!$user->isLoggedIn()) {
 	Redirect::to("index.php");
 }
 
+//print_r(UserMngr::getUsers());
+
 echo <<< PAGE
 	<div class="page-header">
 		<h1>User management <small>SRVMON UI</a></small></h1>
@@ -35,6 +37,6 @@ echo <<< PAGE
 		</div>
 	</div>
 	
-	<script src="js/pages/settings.js"></script>
+	<script src="js/pages/users.js"></script>
 PAGE;
 ?>

@@ -13,16 +13,16 @@
 		public function getOS($id = -1) {
 			if (!$this->_db->query("CALL getOS(?, @err)", array($id))->error()) {
 				if ($this->_db->rowCount() === 1) {
-					return json_encode($this->_db->first());
+					return $this->_db->first();
 				}
 				else {
 					$arrReturn = array();
 
 					foreach($this->_db->results() as $result) {
-						array_push($arrReturn, $result);
+						//$arrReturn, $result;
 					}
 
-					return json_encode($arrReturn);
+					return $arrReturn;
 				}
 			}
 
@@ -41,19 +41,13 @@
 
 		public function getServerFromDB($id = -1, $format = false) {
 			if (!$this->_db->query("CALL getServer(?, ?, @err)", array($id, $format))->error()) {
+				$arrTmp = array();
+
 				foreach ($this->_db->results() as $server) {
-					$this->_servers[$server->idServer] = new Server(
-						$server->idServer,
-						$server->dtHostname,
-						$server->dtIPAddress,
-						$server->dtDescription,
-						$server->fiType,
-						$server->fiOS,
-						$server->fiHardware,
-						$server->dtEnabled,
-						$server->fiResponsible
-					);
+					array_push($arrTmp, $server);
 				}
+
+				return $arrTmp;
 			}
 		}
 

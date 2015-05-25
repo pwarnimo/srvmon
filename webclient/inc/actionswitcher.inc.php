@@ -29,13 +29,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-	include "settings/dbconfig.inc.php";
+	//include "settings/dbconfig.inc.php";
 	
-	function __autoload($class_name) {
+	/*function __autoload($class_name) {
 		require_once "classes/" . $class_name . ".class.php";
-	}
+	}*/
 
-	$action = filter_input(INPUT_GET, "action");
+	//$action = filter_input(INPUT_GET, "action");
+
+require_once "init.php";
+
+$action = Input::get("action");
 
 	switch ($action) {
 		case "getServers" :

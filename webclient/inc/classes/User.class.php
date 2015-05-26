@@ -64,7 +64,6 @@ class User {
 
 	public function create($fields = array()) {
 		if (!$this->_db->query("CALL addUser(?,?,?,?,?,?,@id)", $fields)->error()) {
-			die(">>" . $this->_db->error());
 			throw new Exception("Unable to add the user!");
 		}
 	}

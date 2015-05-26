@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SQLUSR=""
-SQLPW=""
-DBNAME=""
+SQLUSR="sqlusr"
+SQLPW="q1w2e3!"
+DBNAME="srvmon"
 
 echo "Loading all stored routines into DB . . ."
 

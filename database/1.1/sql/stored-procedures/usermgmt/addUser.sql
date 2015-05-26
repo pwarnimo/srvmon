@@ -57,6 +57,8 @@ CREATE PROCEDURE addUser(
 	IN  pEmail     VARCHAR(255),
 	IN  pRole      MEDIUMINT,
 	IN  pTelephone VARCHAR(255),
+	IN  pName		VARCHAR(255),
+	IN  pSurname	VARCHAR(255),
 	OUT pID        MEDIUMINT
 )
 BEGIN
@@ -91,7 +93,7 @@ BEGIN
 		ROLLBACK;
 	END;
 
-	SET @qry = "INSERT INTO tblUser (dtUsername, dtHash, dtSalt, dtEmail, fiRole, dtTelephone) VALUES (?,?,?,?,?,?)";
+	SET @qry = "INSERT INTO tblUser (dtUsername, dtHash, dtSalt, dtEmail, fiRole, dtTelephone, dtName, dtSurname) VALUES (?,?,?,?,?,?,?,?)";
 
 	START TRANSACTION;
 		SET @p1 = pUsername;

@@ -26,9 +26,9 @@ function getServicesForServer(ID, format) {
 
 	$.ajax({
 		type : "POST",
-		url : "inc/actionswitcher.inc.php?action=getServicesForServer",
+		url : "actionswitcher.php?action=getService&sid=-1",
 		data : {
-			sid : ID,
+			hid : ID,
 			format : format
 		},
 		statusCode : {
@@ -110,9 +110,9 @@ function getServerData(ID, format) {
 
 	$.ajax({
 		type : "POST",
-		url : "inc/actionswitcher.inc.php?action=getServer",
+		url : "actionswitcher.php?action=getServer",
 		data : {
-			sid : ID,
+			id : ID,
 			format : format
 		},
 		statusCode : {

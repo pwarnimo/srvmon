@@ -1,40 +1,17 @@
 <?php
 	class ServicesMngr {
-		private $dbh;
+		public static function getServicesForServer($sid = -1, $format = 0, $hid) {
+			if (!DB::getInstance()->query("CALL getServicesForServer(?,?,?,@err)", array($hid, $sid, $format))->error()) {
+				$arrTmp = array();
 
-		public function __construct() {
-			$dsn = dbtype . ":dbname=" . database . ";host=" . hostname;
-
-			try {
-				$this->dbh = new PDO($dsn, username, password);
-			}
-			catch(PDOException $e) {
-				echo "PDO has encountered an error: " + $e->getMessage();
-				die();
-			}
-		}
-
-		public function getServicesForServer($sid, $format) {
-			$qry = "CALL getServicesForServer(:sid, -1, :format, @err)";
-
-			try {
-				$stmt = $this->dbh->prepare($qry);
-
-				$stmt->bindValue(":sid", $sid);
-				$stmt->bindValue(":format", $format);
-
-				if ($stmt->execute()) {
-					$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-					return json_encode($res);
+				foreach (DB::getInstance()->results() as $service) {
+					array_push($arrTmp, $service);
 				}
-				else {
-					return json_encode($false);
-				}
+
+				return $arrTmp;
 			}
-			catch(PDOException $e) {
-				echo "PDO has encountered an error: " + $e->getMessage();
-			}
+
+			return false;
 		}
 	}
 ?>

@@ -68,21 +68,6 @@
 	<body>
 		<p>Please input your login credentials.</p>
 		<?php
-
-			$salt = Hash::salt(32);
-
-			echo $salt;
-
-			$user = new User();			
-			$user->create(array(
-				"pwarnimo",
-				Hash::make("db8fgt82dg1.2.3", $salt),
-				$salt,
-				"pwarnimo@gmail.com",
-				1,
-				"88888"
-			));
-
 			if (Session::exists("index")) {
 				echo "<p class=\"bg-danger\">" . Session::flash("index") . "</p>";
 			}

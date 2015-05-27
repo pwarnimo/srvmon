@@ -39,7 +39,21 @@
 		public function getType() {
 		}
 
-		public function getServerFromDB($id = -1, $format = false) {
+		public static function getServerFromDB($id = -1, $format = false) {
+			if (!DB::getInstance()->query("CALL getServer(?,?,@err)", array($id, $format))->error()) {
+				$arrTmp = array();
+
+				foreach (DB::getInstance()->results() as $server) {
+					array_push($arrTmp, $server);
+				}
+
+				return $arrTmp;
+			}
+
+			return false;
+		}
+
+		/*public function getServerFromDB($id = -1, $format = false) {
 			if (!$this->_db->query("CALL getServer(?, ?, @err)", array($id, $format))->error()) {
 				$arrTmp = array();
 
@@ -49,7 +63,7 @@
 
 				return $arrTmp;
 			}
-		}
+		}*/
 
 		public function serverToJSON($id = -1) {
 			if ($id === -1) {

@@ -23,7 +23,7 @@ function populateServersTable() {
 	console.log("Loading servers...");
 	$.ajax({
 		type : "POST",
-		url : "inc/actionswitcher.inc.php?action=getServers",
+		url : "actionswitcher.php?action=getServer&id=-1&format=1",
 		statusCode : {
 			404 : function() {
 				console.log("actionswitcher.inc.php not found!");

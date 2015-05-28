@@ -16,5 +16,9 @@ if (Input::exists("get")) {
 		case "getService":
 			echo json_encode(ServicesMngr::getServicesForServer(Input::get("sid"), Input::get("format"), Input::get("hid")));
 		break;
+
+		case "getUsers":
+			echo json_encode(UserMngr::getUsers());
+		break;
 	}
 }

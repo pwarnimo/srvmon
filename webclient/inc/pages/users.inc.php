@@ -18,7 +18,7 @@ echo <<< PAGE
 			<div class="panel panel-primary">
 				<div class="panel-heading">User list</div>
 				<div class="panel-body">
-					<table>
+					<table id="dataUsers" class="testtable" width="100%">
 						<thead>
 						</thead>
 						<tbody>

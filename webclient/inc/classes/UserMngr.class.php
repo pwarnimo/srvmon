@@ -1,9 +1,7 @@
 <?php
 class UserMngr {
 	public static function getUsers() {
-		//$db = DB::getInstance();
-
-		if (!DB::getInstance()->query("SELECT * FROM tblUser")->error()) {
+		if (!DB::getInstance()->query("SELECT idUser, dtUsername, dtEmail, fiRole, dtTelephone, dtName, dtSurname FROM tblUser")->error()) {
 			$arrTmp = array();
 			$users = DB::getInstance()->results();
 

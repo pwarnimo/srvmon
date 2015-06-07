@@ -56,12 +56,14 @@ $user = new User();
 			}
 		</style>
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css">
 		<link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
 		<link rel="stylesheet" href="css/main.css">
 
 		<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 		<script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 	</head>
 	<body>

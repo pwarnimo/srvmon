@@ -24,9 +24,16 @@ function populateUserTable() {
 			var result = JSON.parse(data);
 			var tHtml = "";
 
+			//idUser, dtUsername, dtEmail, fiRole, dtTelephone, dtName, dtSurname FROM tblUser
+
 			for (var i = 0; i < result.length; i++) {
 				tHtml += "<tr id=\"" + result[i]["idUser"] + "\"><td><input type=\"checkbox\" id=\"" + result[i]["idUser"] + "\"></td>" +
-					"<td>" + result[i]["dtUsername"] + "</td></tr>";
+					"<td>" + result[i]["dtUsername"] + "</td>" + 
+					"<td>" + result[i]["dtEmail"] + "</td>" +
+					"<td>" + result[i]["fiRole"] + "</td>" +
+					"<td>" + result[i]["dtTelephone"] + "</td>" +
+					"<td>" + result[i]["dtName"] + "</td>" +
+					"<td>" + result[i]["dtSurname"] + "</td></tr>";
 
 				$("#dataUsers tbody").html(tHtml);
 
@@ -36,7 +43,33 @@ function populateUserTable() {
 					}
 				});
 
-				oTable = $("#dataUsers")
+				oTable = $("#dataUsers").dataTable({
+					"bAutoWidth" : false,
+					"aoColumns" : [
+						{
+							"sTitle" : "<input type=\"checkbox\" id=\"checkAll\">",
+							"sWidth" : "16px"
+						},
+						{
+							"sTitle" : "Username"
+						},
+						{
+							"sTitle" : "E-Mail"
+						},
+						{
+							"sTitle" : "Role"
+						},
+						{
+							"sTitle" : "Telephone"
+						},
+						{
+							"sTitle" : "Name"
+						},
+						{
+							"sTitle" : "Surname"
+						}
+					]
+				});
 			}
 		}
 	});

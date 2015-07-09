@@ -2,7 +2,7 @@
 | Routine     : getServicesForServer
 | Author(s)   : Pol Warnimont <pwarnimo@gmail.com>
 | Create date : 2015-04-21
-| Version     : 1.1 R1
+| Version     : 1.2 R1
 | 
 | Description : Display data of a service for a server.
 |
@@ -28,6 +28,7 @@
 |  2015-04-29 : Modified procedure for DB 1.0.1.
 |  2015-04-30 : Changed license to AGPLv3.
 |  2015-05-05 : Using prepared statements.
+|  2015-07-09 : Adding field dtParameter to output.
 |
 | License information
 | -------------------
@@ -67,8 +68,8 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR sqlwarning SET l_errcode = -4;
   
 	CASE pFRMT
-   	WHEN 0 THEN SET @FIELDS = "SR.idService, dtCaption, dtDescription, dtCheckCommand, dtValue, dtScriptOutput, dtLastCheckTS";
-   	WHEN 1 THEN SET @FIELDS = "SR.idService, dtCheckCommand";
+   	WHEN 0 THEN SET @FIELDS = "SR.idService, dtCaption, dtDescription, dtCheckCommand, dtParameters, dtChecksum, dtValue, dtScriptOutput, dtLastCheckTS";
+   	WHEN 1 THEN SET @FIELDS = "SR.idService, dtCheckCommand, dtParameters, dtChecksum";
    	WHEN 2 THEN SET @FIELDS = "SR.idService, dtValue";
 	END CASE;
 

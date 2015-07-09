@@ -116,7 +116,7 @@ class XML {
 	public function sendServicesXML($hostid) {
 		$xml = $this->createNewXMLMessage("getServices", $hostid);
 
-		$msg = $xml->getElementsByTagName("message")[0];
+		$msg = $xml->getElementsByTagName("message")->item(0);
 
 		if (!$this->_db->query("CALL getServicesForServer(?,-1,1,@err)", array($hostid))->error()) {
 			$stat = $xml->createAttribute("qrystatus");
@@ -129,9 +129,12 @@ class XML {
 				$sid->value = escape($result->idService);
 				$cmd = $xml->createAttribute("cmd");
 				$cmd->value = escape($result->dtCheckCommand);
+				$param = $xml->createAttribute("param");
+				$param->value = escape($result->dtParameters);
 
 				$service->appendChild($sid);
 				$service->appendChild($cmd);
+				$service->appendChild($param);
 
 				$msg->appendChild($service);
 			}
@@ -162,7 +165,7 @@ class XML {
 	public function sendServiceResultsXML($hostid, $serviceid) {
 		$xml = $this->createNewXMLMessage("getServices", $hostid, array("sid" => $serviceid));
 		
-		$msg = $xml->getElementsByTagName("message")[0];
+		$msg = $xml->getElementsByTagName("message")->item(0);
 
 		if (!$this->_db->query("CALL getServicesForServer(?,?,2,@err)", array($hostid, $serviceid))->error()) {
 			$stat = $xml->createAttribute("qrystatus");
@@ -206,7 +209,7 @@ class XML {
 	public function updateServiceXML($hostid, $serviceid, $value, $chkOutput) {
 		$xml = $this->createNewXMLMessage("updateService", $hostid, array("sid" => $serviceid));
 		
-		$msg = $xml->getElementsByTagName("message")[0];
+		$msg = $xml->getElementsByTagName("message")->item(0);
 
 		if (!$this->_db->query("CALL updateServerServiceStatus(?,?,?,?,@err)", array($hostid, $serviceid, $value, $chkOutput))->error()) {
 			$stat = $xml->createAttribute("qrystatus");
@@ -233,7 +236,7 @@ class XML {
 	 */
 	public function sendHostID($hostname) {
 		$xml = $this->createNewXMLMessage("getHostID", $hostname);
-		$msg = $xml->getElementsByTagName("message")[0];
+		$msg = $xml->getElementsByTagName("message")->item(0);
 
 		if (!$this->_db->query("SELECT getServerID(?) AS idServer", array($hostname))->error()) {
 			$result = $this->_db->first();
@@ -245,6 +248,71 @@ class XML {
 			$stat->value = "0";
 
 			$msg->appendChild($hid);
+		}
+		else {
+			$stat = $xml->createAttribute("qrystatus");
+			$stat->value = "1";
+		}
+
+		$msg->appendChild($stat);
+
+		return $xml->saveXML();
+	}
+	
+	public function sendError($action, $hostid, $code) {
+		$xml = $this->createNewXMLMessage($action, $hostid, array("error" => $code));
+
+		return $xml->saveXML();
+	}
+
+	public function sendOfflineServers() {
+		$xml = $this->createNewXMLMessage("getOfflineServers", -1);
+
+		$msg = $xml->getElementsByTagName("message")->item(0);
+		$stat = $xml->createAttribute("qrystatus");
+
+		if (!DB::getInstance()->query("SELECT idServer, dtHostname, dtIPAddress, FROM tblServer WHERE dtEnabled = FALSE")->error()) {
+			if (DB::getInstance()->rowCount() > 0) {
+				foreach (DB::getInstance()->results() as $result) {
+					$server = $xml->createElement("server");
+
+					foreach ($result as $param => $val) {
+						$tmpAttr = $xml->createAttribute($param);
+						$tmpAttr->value = escape($val);
+
+						$server->appendChild($tmpAttr);
+					}
+
+					$msg->appendChild($server);
+				}
+				
+				$stat->value = "0";
+			}
+			else {
+				$stat->value = "2";
+			}
+		}
+		else {
+			$stat->value = "1";
+		}
+
+		$msg->appendChild($stat);
+
+		return $xml->saveXML();
+	}
+
+	public function sendServiceChecksum($hostid, $serviceid) {
+		$xml = $this->createNewXMLMessage("sendServiceChecksum", $hostid, array("sid" => $serviceid));
+		
+		$msg = $xml->getElementsByTagName("message")->item(0);
+	
+		if (!DB::getInstance()->query("SELECT dtChecksum FROM tblServer_has_tblService WHERE idServer = ? AND idService = ?", array($hostid, $serviceid))->error()) {
+			$checksum = $xml->createAttribute("checksum");
+			$checksum->value = escape(DB::getInstance()->first()->dtChecksum);
+			$stat = $xml->createAttribute("qrystatus");
+			$stat->value = "0";
+
+			$msg->appendChild($checksum);
 		}
 		else {
 			$stat = $xml->createAttribute("qrystatus");

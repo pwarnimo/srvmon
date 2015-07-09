@@ -2,7 +2,7 @@
 /* File        : index.php
  * Author(s)   : Pol Warnimont
  * Create date : 2015-05-07
- * Version     : 1.0
+ * Version     : 1.1
  *
  * Description : Waits for XML input from the agents and returns the data.
  *
@@ -13,6 +13,7 @@
  *  2015-05-11 : Reworked everything.
  *  2015-05-14 : Added function for getting server ID.
  *  2015-05-20 : Final bugfixing + commenting code.
+ *  2015-07-08 : Adding AES encryption support.
  *  
  * License information
  * -------------------
@@ -47,7 +48,7 @@ require_once "inc/init.php";
  * always_populate_raw_post_data set to -1.
  */
 if (file_get_contents('php://input') == NULL) {
-	echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 1.0 R1<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
+	echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 1.1 R1 with AES support<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
 }
 else {
 	/*
@@ -55,58 +56,79 @@ else {
 	 * appropriate action in the XML node tree.
 	 */
 	$xml0 = new XML();
-	$xml = simplexml_load_string(file_get_contents('php://input'));
+	//$xml = simplexml_load_string(file_get_contents('php://input'));
+	$xml = simplexml_load_string(Encryptor::decryptData(Config::get("encryption/masterkey"), file_get_contents("php://input")));
 
-	$action = escape($xml->message[0]["action"]);
+	$username = escape($xml->message[0]["username"]);
+	$password = escape($xml->message[0]["password"]);
 
-	/*
-	 * After we know the action, we can then select the case for each 
-	 * action.
-	 */
-	switch ($action) {
-		/*
-		 * The action getServices will retrieve all available services for
-		 * a host.
-		 */
-		case "getServices":
-			$hostid = escape($xml->message[0]["hid"]);
+	$user = new User();
 
-			$xmlres = $xml0->sendServicesXML($hostid);
-		break;
+	if ($user->checkUser($username, $password)) {
+		$action = escape($xml->message[0]["action"]);
 
 		/*
-		 * The action getServiceData will retrieve the value of a service
-		 * check.
+		 * After we know the action, we can then select the case for each 
+		 * action.
 		 */
-		case "getServiceData":
-			$hostid = escape($xml->message[0]["hid"]);
-			$serviceid = escape($xml->message[0]["sid"]);
+		switch ($action) {
+			/*
+			 * The action getServices will retrieve all available services for
+			 * a host.
+			 */
+			case "getServices":
+				$hostid = escape($xml->message[0]["hid"]);
 
-			$xmlres = $xml0->sendServiceResultsXML($hostid, $serviceid);
-		break;
+				$xmlres = $xml0->sendServicesXML($hostid);
+			break;
+
+			/*
+			 * The action getServiceData will retrieve the value of a service
+			 * check.
+			 */
+			case "getServiceData":
+				$hostid = escape($xml->message[0]["hid"]);
+				$serviceid = escape($xml->message[0]["sid"]);
+
+				$xmlres = $xml0->sendServiceResultsXML($hostid, $serviceid);
+			break;
 		
-		/*
-		 * The action updateServiceData will update the service for a host
-		 * and also store the service check output in the database.
-		 */
-		case "updateServiceData":
-			$hostid = escape($xml->message[0]["hid"]);
-			$serviceid = escape($xml->message[0]["sid"]);
-			$val = escape($xml->message[0]["val"]);
-			$message = escape($xml->message[0]["msg"]);
+			/*
+			 * The action updateServiceData will update the service for a host
+			 * and also store the service check output in the database.
+			 */
+			case "updateServiceData":
+				$hostid = escape($xml->message[0]["hid"]);
+				$serviceid = escape($xml->message[0]["sid"]);
+				$val = escape($xml->message[0]["val"]);
+				$message = escape($xml->message[0]["msg"]);
 
-			$xmlres = $xml0->updateServiceXML($hostid, $serviceid, $val, $message);
-		break;
+				$xmlres = $xml0->updateServiceXML($hostid, $serviceid, $val, $message);
+			break;
 
-		/*
-		 * The action getHostID return the ID to the agent host. The ID is
-		 * fetched from the database by using the agent hosts hostname.
-		 */
-		case "getHostID":
-			$hostname = escape($xml->message[0]["hostname"]);
+			/*
+			 * The action getHostID return the ID to the agent host. The ID is
+			 * fetched from the database by using the agent hosts hostname.
+			 */
+			case "getHostID":
+				$hostname = escape($xml->message[0]["hostname"]);
 			
-			$xmlres = $xml0->sendHostID($hostname);
-		break;
+				$xmlres = $xml0->sendHostID($hostname);
+			break;
+
+			case "getChecksum":
+				$hostid = escape($xml->message[0]["hid"]);
+				$serviceid = escape($xml->message[0]["sid"]);
+
+				$xmlres = $xml0->sendServiceChecksum($hostid, $serviceid);
+				//return $xmlres;
+			break;
+		}
+	}
+	else {
+		$action = escape($xml->message[0]["action"]);
+
+		$xmlres = $xml0->sendError($action, -1, 0);
 	}
 
 	/*
@@ -114,5 +136,5 @@ else {
 	 * HTML will be generated.
 	 */
 	Header("Content-type: type/xml");
-	echo $xmlres;
+	echo Encryptor::encryptData(Config::get("encryption/masterkey"), $xmlres);
 }

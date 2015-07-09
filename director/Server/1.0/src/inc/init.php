@@ -39,10 +39,13 @@
  */
 $GLOBALS["config"] = array(
 	"mysql" => array(
-		"host"   => "CHANGE-ME-1",
-		"user"   => "CHANGE-ME-2",
-		"pass"   => "CHANGE-ME-3",
-		"dbname" => "CHANGE-ME-4"
+		"host"   => "127.0.0.1",
+		"user"   => "sqlusr",
+		"pass"   => "q1w2e3!",
+		"dbname" => "srvmon"
+	),
+	"encryption" => array(
+		"masterkey" => "89u43frä-ü420q"
 	)
 );
 

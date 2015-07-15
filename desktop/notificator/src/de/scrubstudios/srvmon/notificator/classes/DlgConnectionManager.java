@@ -5,6 +5,10 @@
  */
 package de.scrubstudios.srvmon.notificator.classes;
 
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+
 /**
  *
  * @author pwarnimo
@@ -17,6 +21,12 @@ public class DlgConnectionManager extends javax.swing.JDialog {
     public DlgConnectionManager(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        Dimension windowSize = getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+        
+        setLocation(centerPoint.x - windowSize.width / 2, centerPoint.y - windowSize.height / 2);
     }
 
     /**
@@ -63,10 +73,16 @@ public class DlgConnectionManager extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(153, 153, 153)));
 
+        jButton1.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/ok-x16.png"))); // NOI18N
         jButton1.setText(bundle.getString("DlgConnectionManager.jButton1.text")); // NOI18N
 
+        btnApply.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        btnApply.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/apply-x16.png"))); // NOI18N
         btnApply.setText(bundle.getString("DlgConnectionManager.btnApply.text")); // NOI18N
 
+        jButton3.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/cancel-x16.png"))); // NOI18N
         jButton3.setText(bundle.getString("DlgConnectionManager.jButton3.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -95,8 +111,12 @@ public class DlgConnectionManager extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DlgConnectionManager.jPanel2.border.title"))); // NOI18N
 
+        jButton4.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/add-x16.png"))); // NOI18N
         jButton4.setText(bundle.getString("DlgConnectionManager.jButton4.text")); // NOI18N
 
+        jButton5.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/remove-x16.png"))); // NOI18N
         jButton5.setText(bundle.getString("DlgConnectionManager.jButton5.text")); // NOI18N
 
         jLabel2.setText(bundle.getString("DlgConnectionManager.jLabel2.text")); // NOI18N
@@ -168,7 +188,7 @@ public class DlgConnectionManager extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jButton5))

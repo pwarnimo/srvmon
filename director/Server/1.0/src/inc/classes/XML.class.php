@@ -333,8 +333,15 @@ class XML {
 			$stat = $xml->createAttribute("qrystatus");
 			$stat->value = 0;
 
-			foreach (DB::getInstance()->results() as $server) {
+			foreach (DB::getInstance()->results() as $key => $server) {
 				$serverElement = $xml->createElement("server");
+
+				/*$tmpAttr = $xml->createAttribute($key);
+				$tmpAttr->value = escape($server);
+
+				$serverElement->appendChild($tmpAttr);
+
+				$msg->appendChild($serverElement);*/
 
 				$hid = $xml->createAttribute("hid");
 				$hid->value = escape($server->idServer);
@@ -344,11 +351,26 @@ class XML {
 				$ipaddress->value = escape($server->dtIPAddress);
 				$enabled = $xml->createAttribute("enabled");
 				$enabled->value = escape($server->dtEnabled);
+				$os = $xml->createAttribute("os");
+				$os->value = escape($server->dtOS);
+				$type = $xml->createAttribute("type");
+				$type->value = escape($server->dtType);
+				$responsible = $xml->createAttribute("responsible");
+				$responsible->value = escape($server->dtResponsible);
+				$model = $xml->createAttribute("model");
+				$model->value = escape($server->dtModel);
+				$manufacturer = $xml->createAttribute("manufacturer");
+				$manufacturer->value = escape($server->dtManufacturer);
 
 				$serverElement->appendChild($hid);
 				$serverElement->appendChild($hostname);
 				$serverElement->appendChild($ipaddress);
 				$serverElement->appendChild($enabled);
+				$serverElement->appendChild($os);
+				$serverElement->appendChild($type);
+				$serverElement->appendChild($responsible);
+				$serverElement->appendChild($model);
+				$serverElement->appendChild($manufacturer);
 
 				$msg->appendChild($serverElement);
 			}

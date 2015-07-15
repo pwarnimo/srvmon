@@ -45,7 +45,7 @@ $GLOBALS["config"] = array(
 		"dbname" => "srvmon"
 	),
 	"encryption" => array(
-		"masterkey" => "89u43frä-ü420q"
+		"masterkey" => "1DCFE6F852819FE3"
 	)
 );
 

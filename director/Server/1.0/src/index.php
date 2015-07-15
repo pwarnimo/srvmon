@@ -48,7 +48,7 @@ require_once "inc/init.php";
  * always_populate_raw_post_data set to -1.
  */
 if (file_get_contents('php://input') == NULL) {
-	echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 1.1 R1 with AES support<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
+	echo "<img src=\"img/srvmon.png\" style=\"float:left; padding-right:10px;\"><pre>SRVMON DIRECTOR - SERVER 1.1 DEV with AES support<br>Copyright &copy; 2015  Pol Warnimont<br>The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!<br><br>Waiting for input . . .</pre>";
 }
 else {
 	/*
@@ -122,6 +122,10 @@ else {
 
 				$xmlres = $xml0->sendServiceChecksum($hostid, $serviceid);
 				//return $xmlres;
+			break;
+
+			case "getServerList":
+				$xmlres = $xml0->sendServerList();
 			break;
 		}
 	}

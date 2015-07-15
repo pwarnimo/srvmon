@@ -21,6 +21,7 @@
  *	*	2015-05-11 : Reworked class. Adding phpDocumentor comments.
  * *	2015-05-14 : Added function for retrieving host ID.
  * *	2015-05-20 : Final bugfixing + Adding comments.
+ * *  2015-07-13 : Adding additional functions.
  *  
  * ### License
  *  
@@ -317,6 +318,44 @@ class XML {
 		else {
 			$stat = $xml->createAttribute("qrystatus");
 			$stat->value = "1";
+		}
+
+		$msg->appendChild($stat);
+
+		return $xml->saveXML();
+	}
+
+	public function sendServerList() {
+		$xml = $this->createNewXMLMessage("getServerList", -1);
+		$msg = $xml->getElementsByTagName("message")->item(0);
+
+		if (!DB::getInstance()->query("CALL getServer(-1,true,@err)", array())->error()) {
+			$stat = $xml->createAttribute("qrystatus");
+			$stat->value = 0;
+
+			foreach (DB::getInstance()->results() as $server) {
+				$serverElement = $xml->createElement("server");
+
+				$hid = $xml->createAttribute("hid");
+				$hid->value = escape($server->idServer);
+				$hostname = $xml->createAttribute("hostname");
+				$hostname->value = escape($server->dtHostname);
+				$ipaddress = $xml->createAttribute("ipaddr");
+				$ipaddress->value = escape($server->dtIPAddress);
+				$enabled = $xml->createAttribute("enabled");
+				$enabled->value = escape($server->dtEnabled);
+
+				$serverElement->appendChild($hid);
+				$serverElement->appendChild($hostname);
+				$serverElement->appendChild($ipaddress);
+				$serverElement->appendChild($enabled);
+
+				$msg->appendChild($serverElement);
+			}
+		}
+		else {
+			$stat = $xml->createAttribute("qrystatus");
+			$stat->value = 1;
 		}
 
 		$msg->appendChild($stat);

@@ -49,21 +49,23 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/scrubstudios/srvmon/notificator/resources/Bundle");
+        
         frmMain = new MainFrame();
         
         frmMain.setStatusText("Busy...");
         frmMain.setVisible(true);
-        frmMain.addStatusMessage("SRVMON NOTIFICATOR is initializing...");
+        frmMain.addStatusMessage(bundle.getString("StatusMsg.Init"));
         // INIT...
         
         File f = new File("notificator.properties");
         Properties prop = new Properties();
         
         if (f.exists()) {
-            frmMain.addStatusMessage("Loading preferences from config file...");
+            frmMain.addStatusMessage(bundle.getString("StatusMsg.LoadingCfg"));
         }
         else {
-            frmMain.addStatusMessage("Config file is missing, generating new file...");
+            frmMain.addStatusMessage(bundle.getString("StatusMsg.MissingCfg"));
             
             // TEMP
             
@@ -125,13 +127,15 @@ public class Main {
         
         trayMain.setPopupMenu(mmTray);
         
+        frmMain.setTrayIcon(trayMain);
+        
         // INIT...
         
         trayMain.displayMessage("SRVMON NOTIFICATOR", "Welcome to the SRVMON NOTIFICATOR v0.1", TrayIcon.MessageType.INFO);
         
         //trayMain.setImage(createImage("../icons/warning-x22.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         
-        frmMain.addStatusMessage("NOTIFICATOR is ready for operations.");
+        frmMain.addStatusMessage(bundle.getString("StatusMsg.Ready"));
         frmMain.setStatusText("Ready!");
         
         //***

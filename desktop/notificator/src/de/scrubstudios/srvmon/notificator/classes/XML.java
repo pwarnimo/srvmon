@@ -53,6 +53,8 @@ public class XML {
     
     private MainFrame frmMain;
     
+    private java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/scrubstudios/srvmon/notificator/resources/Bundle");
+    
     private XML(MainFrame parent) {
         frmMain = parent;
     }
@@ -84,7 +86,7 @@ public class XML {
     }
     
     private String performPostRequest(String xmlData) {
-        frmMain.addStatusMessage("XML : Sending request to the DIRECTOR server...");
+        frmMain.addStatusMessage(bundle.getString("StatusMsg.SendRequest"));
         frmMain.setStatusText("Busy...");
         
         try {
@@ -139,7 +141,7 @@ public class XML {
     }
     
     public ArrayList<Service> getServices(int hostID) {
-        frmMain.addStatusMessage("XML : Getting services for the host with the ID " + hostID + "...");
+        frmMain.addStatusMessage(String.format(bundle.getString("StatusMsg.GetServices"), hostID));
         frmMain.setStatusText("Busy...");
         
         ArrayList<Service> tmpServices = new ArrayList<>();
@@ -186,7 +188,7 @@ public class XML {
             
             switch (eMessage.getAttribute("qrystatus")) {
                 case "0":
-                    frmMain.addStatusMessage("XML : Query successfully executed on the server, parsing data...");
+                    frmMain.addStatusMessage(bundle.getString("StatusMsg.QueryOK"));
                     
                     NodeList nList = doc.getElementsByTagName("service");
                     
@@ -200,31 +202,31 @@ public class XML {
                         }
                     }
                     
-                    frmMain.addStatusMessage("XML : Command complete!");
+                    frmMain.addStatusMessage(bundle.getString("StatusMsg.CommandOK"));
                     frmMain.setStatusText("Idle");
                     
                     return tmpServices;
                     
                 case "1":
                     if (eMessage.getAttribute("error").equals("0")) {
-                        frmMain.addStatusMessage("XML : Your user credentials are invalid!");
+                        frmMain.addStatusMessage(bundle.getString("StatusMsg.InvalidUser"));
                         frmMain.setStatusText("Error encountered!");
                     }
                     else {
-                        frmMain.addStatusMessage("XML : The query has failed on the server!");
+                        frmMain.addStatusMessage(bundle.getString("StatusMsg.QueryFailed"));
                         frmMain.setStatusText("Error encountered!");
                     }
                     
                     break;
                     
                 case "2":
-                    frmMain.addStatusMessage("XML : The current host has no services defined!");
+                    frmMain.addStatusMessage(bundle.getString("StatusMsg.NoServices"));
                     frmMain.setStatusText("Idle");
                     
                     break;
                     
                 default:
-                    frmMain.addStatusMessage("XML : An unknown error has occured!");
+                    frmMain.addStatusMessage(bundle.getString("StatusMsg.UnknownError"));
                     frmMain.setStatusText("Error encountered!");
             }
         } catch (ParserConfigurationException | TransformerConfigurationException ex) {
@@ -239,7 +241,7 @@ public class XML {
     }
     
     public ArrayList<Server> getServers() {
-        frmMain.addStatusMessage("XML : Getting list of servers from the DIRECTOR...");
+        frmMain.addStatusMessage(bundle.getString("StatusMsg.getServers"));
         frmMain.setStatusText("Busy...");
         
         ArrayList<Server> tmpServers = new ArrayList<>();
@@ -277,7 +279,7 @@ public class XML {
             Element eMessage = (Element)nlistMessage.item(0);
             
             if (eMessage.getAttribute("qrystatus").equals("0")) {
-                frmMain.addStatusMessage("XML : Query successfully executed on the server, parsing data...");
+                frmMain.addStatusMessage(bundle.getString("StatusMsg.QueryOK"));
                 
                 NodeList nList = doc.getElementsByTagName("server");
                 
@@ -302,18 +304,18 @@ public class XML {
                     }
                 }
                 
-                frmMain.addStatusMessage("XML : Command complete!");
+                frmMain.addStatusMessage(bundle.getString("StatusMsg.CommandOK"));
                 frmMain.setStatusText("Idle");
                 
                 return tmpServers;
             }
             else {
                 if (eMessage.getAttribute("error").equals("0")) {
-                    frmMain.addStatusMessage("XML : Your user credentials are invalid!");
+                    frmMain.addStatusMessage(bundle.getString("StatusMsg.InvalidUser"));
                     frmMain.setStatusText("Error encountered!");
                 }
                 else {
-                    frmMain.addStatusMessage("XML : The query has failed on the server!");
+                    frmMain.addStatusMessage(bundle.getString("StatusMsg.QueryFailed"));
                     frmMain.setStatusText("Error encountered!");
                 }
             }

@@ -64,11 +64,7 @@ public class DlgConnectionManager extends javax.swing.JDialog {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/scrubstudios/srvmon/notificator/resources/DlgConMngr"); // NOI18N
         setTitle(bundle.getString("DlgConnectionManager.title")); // NOI18N
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        jList1.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(jList1);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(153, 153, 153)));
@@ -119,16 +115,20 @@ public class DlgConnectionManager extends javax.swing.JDialog {
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/remove-x16.png"))); // NOI18N
         jButton5.setText(bundle.getString("DlgConnectionManager.jButton5.text")); // NOI18N
 
+        jLabel2.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel2.setText(bundle.getString("DlgConnectionManager.jLabel2.text")); // NOI18N
 
+        jLabel3.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel3.setText(bundle.getString("DlgConnectionManager.jLabel3.text")); // NOI18N
 
         jTextField1.setText(bundle.getString("DlgConnectionManager.jTextField1.text")); // NOI18N
 
         jTextField2.setText(bundle.getString("DlgConnectionManager.jTextField2.text")); // NOI18N
 
+        jLabel4.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel4.setText(bundle.getString("DlgConnectionManager.jLabel4.text")); // NOI18N
 
+        jLabel5.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel5.setText(bundle.getString("DlgConnectionManager.jLabel5.text")); // NOI18N
 
         jPasswordField1.setText(bundle.getString("DlgConnectionManager.jPasswordField1.text")); // NOI18N
@@ -137,6 +137,7 @@ public class DlgConnectionManager extends javax.swing.JDialog {
 
         jTextField3.setText(bundle.getString("DlgConnectionManager.jTextField3.text")); // NOI18N
 
+        jLabel6.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel6.setText(bundle.getString("DlgConnectionManager.jLabel6.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -162,7 +163,7 @@ public class DlgConnectionManager extends javax.swing.JDialog {
                             .addComponent(jTextField3)
                             .addComponent(jTextField1)
                             .addComponent(jTextField2)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                            .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                             .addComponent(jPasswordField2))))
                 .addContainerGap())
         );
@@ -188,7 +189,7 @@ public class DlgConnectionManager extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jButton5))

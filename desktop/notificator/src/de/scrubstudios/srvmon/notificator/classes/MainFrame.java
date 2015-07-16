@@ -6,11 +6,15 @@
 package de.scrubstudios.srvmon.notificator.classes;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.TrayIcon;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 
@@ -21,6 +25,8 @@ import javax.swing.ListModel;
 public class MainFrame extends javax.swing.JFrame {
     private static Date date = new Date();
     private ArrayList<Server> servers = new ArrayList<>();
+    private TrayIcon trayMain;
+    private java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/scrubstudios/srvmon/notificator/resources/Bundle");
     
     /**
      * Creates new form MainFrame
@@ -30,6 +36,23 @@ public class MainFrame extends javax.swing.JFrame {
         
         lbServers.setModel(new DefaultListModel());
         lbServices.setModel(new DefaultListModel());
+    }
+    
+    protected static Image createImage(String path, String description) {
+        URL imageURL = Main.class.getResource(path);
+        
+        if (imageURL == null) {
+            System.out.println("Resource not found!");
+            
+            return null;
+        }
+        else {
+            return (new ImageIcon(imageURL, description)).getImage();
+        }
+    }
+    
+    public void setTrayIcon(TrayIcon trayMain) {
+        this.trayMain = trayMain;
     }
 
     public void addStatusMessage(String message) {
@@ -58,6 +81,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void loadServer(int id) {
         Server tmpServer = servers.get(id);
         
+        int cntOK = 0;
+        int cntWarning = 0;
+        int cntCritical = 0;
+        int cntPending = 0;
+        int cntTimeout = 0;
+        
         lblHostname.setText(tmpServer.getHostname());
         lblHardware.setText(tmpServer.getManufacturer() + " " + tmpServer.getModel());
         lblResponsible.setText(tmpServer.getResponsible());
@@ -78,35 +107,65 @@ public class MainFrame extends javax.swing.JFrame {
             
             switch (tmpService.getValue()) {
                 case 0:
-                    status = "OK";
+                    status = bundle.getString("ServiceStatus.OK");
+                    cntOK++;
                     
                     break;
                     
                 case 1:
-                    status = "WARNING";
+                    status = bundle.getString("ServiceStatus.Warning");
+                    trayMain.displayMessage(servers.get(id).getHostname(), String.format(bundle.getString("ServiceStatus.ChangedWarning"), tmpService.getCaption()), TrayIcon.MessageType.WARNING);
+                    cntWarning++;
                     
                     break;
                     
                 case 2:
-                    status = "CRITICAL";
+                    status = bundle.getString("ServiceStatus.Critical");
+                    trayMain.displayMessage(servers.get(id).getHostname(), String.format(bundle.getString("ServiceStatus.ChangedCritical"), tmpService.getCaption()), TrayIcon.MessageType.ERROR);
+                    cntCritical++;
                     
                     break;
                     
                 case 3:
-                    status = "TIMEOUT";
+                    status = bundle.getString("ServiceStatus.Timeout");;
+                    trayMain.displayMessage(servers.get(id).getHostname(), String.format(bundle.getString("ServiceStatus.ChangedTimeout"), tmpService.getCaption()), TrayIcon.MessageType.ERROR);
+                    cntTimeout++;
                     
                     break;
                     
                 case 4:
-                    status = "PENDING";
+                    status = bundle.getString("ServiceStatus.Pending");
+                    trayMain.displayMessage(servers.get(id).getHostname(), String.format(bundle.getString("ServiceStatus.ChangedPending"), tmpService.getCaption()), TrayIcon.MessageType.INFO);
+                    cntPending++;
                     
                     break;
                     
                 default:
-                    status = "UNKNOWN";
+                    status = bundle.getString("ServiceStatus.Unkown");
             }
             
             listModel.addElement("(" + status + ") " + tmpService.getCaption() + " \"" + tmpService.getDescription() + "\" = " + tmpService.getScriptOutput());
+        }
+        
+        int errMax = Math.max(cntOK, Math.max(cntWarning, Math.max(cntCritical, Math.max(cntTimeout, cntPending))));
+            
+        if (errMax == cntOK) {
+            trayMain.setImage(createImage("../icons/ok-x16.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntWarning) {
+            trayMain.setImage(createImage("../icons/warning-x22.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntCritical) {
+            trayMain.setImage(createImage("../icons/critical-x16.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntTimeout) {
+            trayMain.setImage(createImage("../icons/timeout-x16.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntPending) {
+            trayMain.setImage(createImage("../icons/pending-x16.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else {
+            trayMain.setImage(createImage("../icons/unknown-x16.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         }
     }
     
@@ -178,6 +237,11 @@ public class MainFrame extends javax.swing.JFrame {
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mmiConnectActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButton1);
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/disconnect-x16.png"))); // NOI18N
@@ -207,6 +271,11 @@ public class MainFrame extends javax.swing.JFrame {
         jButton3.setFocusable(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mmiHideActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButton3);
         jToolBar1.add(jSeparator3);
 
@@ -216,6 +285,11 @@ public class MainFrame extends javax.swing.JFrame {
         jButton4.setFocusable(false);
         jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mmiPrefsActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButton4);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(153, 153, 153)));
@@ -345,6 +419,11 @@ public class MainFrame extends javax.swing.JFrame {
         mmiRefresh.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         mmiRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/refresh-x16.png"))); // NOI18N
         mmiRefresh.setText(bundle.getString("MainFrame.mmiRefresh.text")); // NOI18N
+        mmiRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
         mmiView.add(mmiRefresh);
 
         mmiHide.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
@@ -365,6 +444,11 @@ public class MainFrame extends javax.swing.JFrame {
         mmiPrefs.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         mmiPrefs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/preferences-x16.png"))); // NOI18N
         mmiPrefs.setText(bundle.getString("MainFrame.mmiPrefs.text")); // NOI18N
+        mmiPrefs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mmiPrefsActionPerformed(evt);
+            }
+        });
         mmiEdit.add(mmiPrefs);
 
         mmMain.add(mmiEdit);
@@ -453,8 +537,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -496,6 +580,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void mmiHideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mmiHideActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_mmiHideActionPerformed
+
+    private void mmiPrefsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mmiPrefsActionPerformed
+        DlgSettings dlgSettings = new DlgSettings(this, true);
+        
+        dlgSettings.setVisible(true);
+    }//GEN-LAST:event_mmiPrefsActionPerformed
 
     /**
      * @param args the command line arguments

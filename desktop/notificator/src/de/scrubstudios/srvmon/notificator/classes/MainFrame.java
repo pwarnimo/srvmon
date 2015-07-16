@@ -29,6 +29,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         
         lbServers.setModel(new DefaultListModel());
+        lbServices.setModel(new DefaultListModel());
     }
 
     public void addStatusMessage(String message) {
@@ -50,6 +51,10 @@ public class MainFrame extends javax.swing.JFrame {
         //listModel.addElement("test");
     }
     
+    /*private void refreshServicesForServer(int hostID) {
+        
+    }*/
+    
     private void loadServer(int id) {
         Server tmpServer = servers.get(id);
         
@@ -63,6 +68,45 @@ public class MainFrame extends javax.swing.JFrame {
         }
         else {
             pnlStatus.setBackground(Color.red);
+        }
+        
+        DefaultListModel listModel = (DefaultListModel)lbServices.getModel();
+        
+        for (int i = 0; i < servers.get(id).getServices().size(); i++) {
+            Service tmpService = servers.get(id).getServices().get(i);
+            String status = "UNDEF";
+            
+            switch (tmpService.getValue()) {
+                case 0:
+                    status = "OK";
+                    
+                    break;
+                    
+                case 1:
+                    status = "WARNING";
+                    
+                    break;
+                    
+                case 2:
+                    status = "CRITICAL";
+                    
+                    break;
+                    
+                case 3:
+                    status = "TIMEOUT";
+                    
+                    break;
+                    
+                case 4:
+                    status = "PENDING";
+                    
+                    break;
+                    
+                default:
+                    status = "UNKNOWN";
+            }
+            
+            listModel.addElement("(" + status + ") " + tmpService.getCaption() + " \"" + tmpService.getDescription() + "\" = " + tmpService.getScriptOutput());
         }
     }
     
@@ -85,14 +129,13 @@ public class MainFrame extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         lblStatus = new javax.swing.JLabel();
+        lblDirector = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         edtLog = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         lbServers = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         lblHostname = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         pnlStatus = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -101,6 +144,9 @@ public class MainFrame extends javax.swing.JFrame {
         lblHardware = new javax.swing.JLabel();
         lblType = new javax.swing.JLabel();
         lblResponsible = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lbServices = new javax.swing.JList();
         mmMain = new javax.swing.JMenuBar();
         mmiFile = new javax.swing.JMenu();
         mmiConnect = new javax.swing.JMenuItem();
@@ -108,7 +154,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mmiQuit = new javax.swing.JMenuItem();
         mmiView = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mmiRefresh = new javax.swing.JMenuItem();
         mmiHide = new javax.swing.JMenuItem();
         mmiEdit = new javax.swing.JMenu();
         mmiPrefs = new javax.swing.JMenuItem();
@@ -177,19 +223,25 @@ public class MainFrame extends javax.swing.JFrame {
         lblStatus.setFont(new java.awt.Font("Droid Sans", 0, 10)); // NOI18N
         lblStatus.setText(bundle.getString("MainFrame.lblStatus.text")); // NOI18N
 
+        lblDirector.setFont(new java.awt.Font("Droid Sans", 0, 10)); // NOI18N
+        lblDirector.setText(bundle.getString("MainFrame.lblDirector.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(lblStatus)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblDirector))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblStatus))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStatus)
+                    .addComponent(lblDirector)))
         );
 
         edtLog.setBackground(new java.awt.Color(51, 51, 51));
@@ -199,6 +251,7 @@ public class MainFrame extends javax.swing.JFrame {
         edtLog.setRows(5);
         jScrollPane1.setViewportView(edtLog);
 
+        lbServers.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         lbServers.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Not Connected" };
             public int getSize() { return strings.length; }
@@ -212,24 +265,6 @@ public class MainFrame extends javax.swing.JFrame {
         lblHostname.setFont(new java.awt.Font("Droid Sans", 1, 14)); // NOI18N
         lblHostname.setForeground(new java.awt.Color(0, 153, 153));
         lblHostname.setText(bundle.getString("MainFrame.lblHostname.text")); // NOI18N
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Caption", "Output", "Status"
-            }
-        ));
-        jScrollPane3.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("MainFrame.jTable1.columnModel.title0")); // NOI18N
-            jTable1.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("MainFrame.jTable1.columnModel.title1")); // NOI18N
-            jTable1.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("MainFrame.jTable1.columnModel.title2")); // NOI18N
-        }
 
         jLabel3.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel3.setText(bundle.getString("MainFrame.jLabel3.text")); // NOI18N
@@ -267,6 +302,12 @@ public class MainFrame extends javax.swing.JFrame {
         lblResponsible.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         lblResponsible.setText(bundle.getString("MainFrame.lblResponsible.text")); // NOI18N
 
+        jLabel2.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        jLabel2.setText(bundle.getString("MainFrame.jLabel2.text")); // NOI18N
+
+        lbServices.setFont(new java.awt.Font("Droid Sans Mono", 0, 14)); // NOI18N
+        jScrollPane3.setViewportView(lbServices);
+
         mmiFile.setText(bundle.getString("MainFrame.mmiFile.text")); // NOI18N
         mmiFile.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
 
@@ -301,14 +342,19 @@ public class MainFrame extends javax.swing.JFrame {
         mmiView.setText(bundle.getString("MainFrame.mmiView.text")); // NOI18N
         mmiView.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
 
-        jMenuItem1.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/refresh-x16.png"))); // NOI18N
-        jMenuItem1.setText(bundle.getString("MainFrame.jMenuItem1.text")); // NOI18N
-        mmiView.add(jMenuItem1);
+        mmiRefresh.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        mmiRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/refresh-x16.png"))); // NOI18N
+        mmiRefresh.setText(bundle.getString("MainFrame.mmiRefresh.text")); // NOI18N
+        mmiView.add(mmiRefresh);
 
         mmiHide.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         mmiHide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/view-x16.png"))); // NOI18N
         mmiHide.setText(bundle.getString("MainFrame.mmiHide.text")); // NOI18N
+        mmiHide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mmiHideActionPerformed(evt);
+            }
+        });
         mmiView.add(mmiHide);
 
         mmMain.add(mmiView);
@@ -346,33 +392,37 @@ public class MainFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblHostname)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pnlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6))
-                                .addGap(33, 33, 33)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblResponsible)
-                                    .addComponent(lblType)
-                                    .addComponent(lblHardware))))
-                        .addContainerGap())))
+                                    .addComponent(lblHostname)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel6))
+                                        .addGap(33, 33, 33)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblResponsible)
+                                            .addComponent(lblType)
+                                            .addComponent(lblHardware)))
+                                    .addComponent(jLabel2))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,7 +430,6 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(pnlStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -402,8 +451,10 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(lblResponsible))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -423,6 +474,7 @@ public class MainFrame extends javax.swing.JFrame {
        refreshServerList();
        //test
        loadServer(0);
+       lblDirector.setText("Connected");
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -440,6 +492,10 @@ public class MainFrame extends javax.swing.JFrame {
         
         frmAbout.setVisible(true);
     }//GEN-LAST:event_mmiAboutActionPerformed
+
+    private void mmiHideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mmiHideActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_mmiHideActionPerformed
 
     /**
      * @param args the command line arguments
@@ -484,11 +540,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -496,9 +552,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JList lbServers;
+    private javax.swing.JList lbServices;
+    private javax.swing.JLabel lblDirector;
     private javax.swing.JLabel lblHardware;
     private javax.swing.JLabel lblHostname;
     private javax.swing.JLabel lblResponsible;
@@ -514,6 +571,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem mmiHide;
     private javax.swing.JMenuItem mmiPrefs;
     private javax.swing.JMenuItem mmiQuit;
+    private javax.swing.JMenuItem mmiRefresh;
     private javax.swing.JMenu mmiView;
     private javax.swing.JPanel pnlStatus;
     // End of variables declaration//GEN-END:variables

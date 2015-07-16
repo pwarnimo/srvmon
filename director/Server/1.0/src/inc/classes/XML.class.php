@@ -336,13 +336,6 @@ class XML {
 			foreach (DB::getInstance()->results() as $key => $server) {
 				$serverElement = $xml->createElement("server");
 
-				/*$tmpAttr = $xml->createAttribute($key);
-				$tmpAttr->value = escape($server);
-
-				$serverElement->appendChild($tmpAttr);
-
-				$msg->appendChild($serverElement);*/
-
 				$hid = $xml->createAttribute("hid");
 				$hid->value = escape($server->idServer);
 				$hostname = $xml->createAttribute("hostname");
@@ -373,6 +366,62 @@ class XML {
 				$serverElement->appendChild($manufacturer);
 
 				$msg->appendChild($serverElement);
+			}
+		}
+		else {
+			$stat = $xml->createAttribute("qrystatus");
+			$stat->value = 1;
+		}
+
+		$msg->appendChild($stat);
+
+		return $xml->saveXML();
+	}
+
+	public function sendFullServicesForHost($hostid) {
+		$xml = $this->createNewXMLMessage("getServerList", -1);
+      $msg = $xml->getElementsByTagName("message")->item(0);
+
+      if (!DB::getInstance()->query("CALL getServicesForServer(?,-1,0,@err)", array($hostid))->error()) {
+			if (DB::getInstance()->rowCount() > 0) {
+				$stat = $xml->createAttribute("qrystatus");
+				$stat->value = 0;
+
+				foreach (DB::getInstance()->results() as $service) {
+					$serviceElement = $xml->createElement("service");
+
+					$serviceID = $xml->createAttribute("sid");
+					$serviceID->value = escape($service->idService);
+					$caption = $xml->createAttribute("caption");
+					$caption->value = escape($service->dtCaption);
+					$description = $xml->createAttribute("description");
+					$description->value = escape($service->dtDescription);
+					$checkCommand = $xml->createAttribute("checkCommand");
+					$checkCommand->value = escape($service->dtCheckCommand);
+					$params = $xml->createAttribute("params");
+					$params->value = escape($service->dtParameters);
+					$value = $xml->createAttribute("value");
+					$value->value = escape($service->dtValue);
+					$scriptOutput = $xml->createAttribute("scriptOutput");
+					$scriptOutput->value = escape($service->dtScriptOutput);
+					$lastCheck = $xml->createAttribute("lastCheck");
+					$lastCheck->value = escape($service->dtLastCheckTS);
+
+					$serviceElement->appendChild($serviceID);
+					$serviceElement->appendChild($caption);
+					$serviceElement->appendChild($description);
+					$serviceElement->appendChild($checkCommand);
+					$serviceElement->appendChild($params);
+					$serviceElement->appendChild($value);
+					$serviceElement->appendChild($scriptOutput);
+					$serviceElement->appendChild($lastCheck);
+
+					$msg->appendChild($serviceElement);
+				}
+			}
+			else {
+				$stat = $xml->createAttribute("qrystatus");
+				$stat->value = 2;
 			}
 		}
 		else {

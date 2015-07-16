@@ -138,6 +138,106 @@ public class XML {
         return null;
     }
     
+    public ArrayList<Service> getServices(int hostID) {
+        frmMain.addStatusMessage("XML : Getting services for the host with the ID " + hostID + "...");
+        frmMain.setStatusText("Busy...");
+        
+        ArrayList<Service> tmpServices = new ArrayList<>();
+        
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+            
+            Document doc = docBuilder.newDocument();
+            Element rootElement = doc.createElement("srvmon");
+            Element message = doc.createElement("message");
+            
+            message.setAttribute("action", "getFullServiceListForHost");
+            message.setAttribute("hid", Integer.toString(hostID));
+            message.setAttribute("username", username);
+            message.setAttribute("password", password);
+            
+            rootElement.appendChild(message);
+            
+            doc.appendChild(rootElement);
+            
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            StringWriter writer = new StringWriter();
+            
+            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+            
+            String xml = writer.getBuffer().toString().replaceAll("\n|\r", "");
+            InputSource is = new InputSource(new StringReader(Crypt.decrypt(encKey, performPostRequest(Crypt.encrypt(encKey, xml)))));
+            
+            doc = docBuilder.parse(is);
+            
+            Document doc2 = doc;
+            transformer.transform(new DOMSource(doc2), new StreamResult(writer));
+            
+            String xml2 = writer.getBuffer().toString().replaceAll("\n|\r", "");
+            
+            System.out.println(xml2);
+            
+            NodeList nlistMessage = doc.getElementsByTagName("message");
+            Element eMessage = (Element)nlistMessage.item(0);
+            
+            switch (eMessage.getAttribute("qrystatus")) {
+                case "0":
+                    frmMain.addStatusMessage("XML : Query successfully executed on the server, parsing data...");
+                    
+                    NodeList nList = doc.getElementsByTagName("service");
+                    
+                    for (int i = 0; i < nList.getLength(); i++) {
+                        Node nNode = nList.item(i);
+                        
+                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eElement = (Element)nNode;
+                            
+                            tmpServices.add(new Service(Integer.valueOf(eElement.getAttribute("sid")), eElement.getAttribute("caption"), eElement.getAttribute("description"), eElement.getAttribute("checkCommand"), eElement.getAttribute("params"), Integer.parseInt(eElement.getAttribute("value")), eElement.getAttribute("scriptOutput"), eElement.getAttribute("lastCheck")));
+                        }
+                    }
+                    
+                    frmMain.addStatusMessage("XML : Command complete!");
+                    frmMain.setStatusText("Idle");
+                    
+                    return tmpServices;
+                    
+                case "1":
+                    if (eMessage.getAttribute("error").equals("0")) {
+                        frmMain.addStatusMessage("XML : Your user credentials are invalid!");
+                        frmMain.setStatusText("Error encountered!");
+                    }
+                    else {
+                        frmMain.addStatusMessage("XML : The query has failed on the server!");
+                        frmMain.setStatusText("Error encountered!");
+                    }
+                    
+                    break;
+                    
+                case "2":
+                    frmMain.addStatusMessage("XML : The current host has no services defined!");
+                    frmMain.setStatusText("Idle");
+                    
+                    break;
+                    
+                default:
+                    frmMain.addStatusMessage("XML : An unknown error has occured!");
+                    frmMain.setStatusText("Error encountered!");
+            }
+        } catch (ParserConfigurationException | TransformerConfigurationException ex) {
+            Logger.getLogger(XML.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(XML.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException | IOException ex) {
+            Logger.getLogger(XML.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
     public ArrayList<Server> getServers() {
         frmMain.addStatusMessage("XML : Getting list of servers from the DIRECTOR...");
         frmMain.setStatusText("Busy...");
@@ -195,7 +295,10 @@ public class XML {
                             enabled = false;
                         }
                         
-                        tmpServers.add(new Server(Integer.valueOf(eElement.getAttribute("hid")), eElement.getAttribute("hostname"), eElement.getAttribute("ipaddr"), eElement.getAttribute("type"), eElement.getAttribute("model"), eElement.getAttribute("manufacturer"), eElement.getAttribute("responsible"), enabled));
+                        Server tmpServer = new Server(frmMain, Integer.valueOf(eElement.getAttribute("hid")), eElement.getAttribute("hostname"), eElement.getAttribute("ipaddr"), eElement.getAttribute("type"), eElement.getAttribute("model"), eElement.getAttribute("manufacturer"), eElement.getAttribute("responsible"), enabled);
+                        
+                        tmpServer.refreshServices();
+                        tmpServers.add(tmpServer);
                     }
                 }
                 

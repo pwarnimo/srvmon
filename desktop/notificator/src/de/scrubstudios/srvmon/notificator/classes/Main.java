@@ -11,6 +11,9 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,6 +30,8 @@ import javax.swing.ImageIcon;
  * @author pwarnimo
  */
 public class Main {
+    private static MainFrame frmMain;
+    
     protected static Image createImage(String path, String description) {
         URL imageURL = Main.class.getResource(path);
         
@@ -44,7 +49,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MainFrame frmMain = new MainFrame();
+        frmMain = new MainFrame();
         
         frmMain.setStatusText("Busy...");
         frmMain.setVisible(true);
@@ -96,7 +101,23 @@ public class Main {
         final PopupMenu mmTray = new PopupMenu();
         
         MenuItem mmiHide = new MenuItem("Hide");
+        
+        mmiHide.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {                
+                frmMain.setVisible(!frmMain.isVisible());
+            }
+        
+        });
+        
         MenuItem mmiClose = new MenuItem("Quit");
+        
+        mmiClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                frmMain.dispatchEvent(new WindowEvent(frmMain, WindowEvent.WINDOW_CLOSING));
+            }
+        });
         
         mmTray.add(mmiHide);
         mmTray.addSeparator();

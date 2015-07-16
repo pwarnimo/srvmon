@@ -127,6 +127,12 @@ else {
 			case "getServerList":
 				$xmlres = $xml0->sendServerList();
 			break;
+
+			case "getFullServiceListForHost":
+				$hostid = escape($xml->message[0]["hid"]);
+
+				$xmlres = $xml0->sendFullServicesForHost($hostid);
+			break;
 		}
 	}
 	else {

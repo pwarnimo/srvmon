@@ -5,6 +5,8 @@
  */
 package de.scrubstudios.srvmon.notificator.classes;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author pwarnimo
@@ -19,7 +21,11 @@ public class Server {
     private String responsible;
     private Boolean enabled;
     
-    public Server(int hostID, String hostname, String IPAddress, String type, String model, String manufacturer, String responsible, Boolean enabled) {
+    private ArrayList<Service> services = new ArrayList<>();
+    
+    private MainFrame parent;
+    
+    public Server(MainFrame parent, int hostID, String hostname, String IPAddress, String type, String model, String manufacturer, String responsible, Boolean enabled) {
         this.hostID = hostID;
         this.hostname = hostname;
         this.IPAddress = IPAddress;
@@ -28,6 +34,10 @@ public class Server {
         this.manufacturer = manufacturer;
         this.responsible = responsible;
         this.enabled = enabled;
+    }
+    
+    public void refreshServices() {
+        services = XML.getInstance(parent).getServices(hostID);
     }
     
     public void setID(int hostID) {
@@ -92,5 +102,9 @@ public class Server {
     
     public Boolean isEnabled() {
         return enabled;
+    }
+    
+    public ArrayList<Service> getServices() {
+        return services;
     }
 }

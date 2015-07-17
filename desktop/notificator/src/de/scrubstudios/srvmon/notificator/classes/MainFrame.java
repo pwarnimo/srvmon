@@ -5,24 +5,39 @@
  */
 package de.scrubstudios.srvmon.notificator.classes;
 
+import static de.scrubstudios.srvmon.notificator.classes.Main.createImage;
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.OceanTheme;
 
 /**
  *
  * @author pwarnimo
  */
-public class MainFrame extends javax.swing.JFrame {
+public final class MainFrame extends javax.swing.JFrame {
     private static Date date = new Date();
     private ArrayList<Server> servers = new ArrayList<>();
     private TrayIcon trayMain;
@@ -35,7 +50,65 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         
         lbServers.setModel(new DefaultListModel());
-        lbServices.setModel(new DefaultListModel());
+        //lbServices.setModel(new DefaultListModel());
+        
+        setStatusText("Busy...");
+        addStatusMessage(bundle.getString("StatusMsg.Init"));
+        
+        File f = new File("notificator.properties");
+        Properties prop = new Properties();
+        
+        if (f.exists()) {
+            addStatusMessage(bundle.getString("StatusMsg.LoadingCfg"));
+        }
+        else {
+            addStatusMessage(bundle.getString("StatusMsg.MissingCfg"));
+        }
+        
+        final TrayIcon trayMain = new TrayIcon(createImage("../icons/notificatorTray.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        final SystemTray tray = SystemTray.getSystemTray();
+        
+        try {
+            tray.add(trayMain);
+        } catch (AWTException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        final PopupMenu mmTray = new PopupMenu();
+        
+        MenuItem mmiHide2 = new MenuItem("Hide");
+        
+        mmiHide2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {                
+                setVisible(!isVisible());
+            }
+        
+        });
+        
+        MenuItem mmiClose = new MenuItem("Quit");
+        
+        /*mmiClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (JOptionPane.showConfirmDialog(this, "Do you really want to close this program?", "Question", JOptionPane.YES_NO_OPTION) == 0) {
+                    System.exit(0);
+                }
+            }
+        });*/
+        
+        mmTray.add(mmiHide2);
+        mmTray.addSeparator();
+        mmTray.add(mmiClose);
+        
+        trayMain.setPopupMenu(mmTray);
+        
+        setTrayIcon(trayMain);
+        
+        trayMain.displayMessage("SRVMON NOTIFICATOR", "Welcome to the SRVMON NOTIFICATOR v0.1", TrayIcon.MessageType.INFO);
+        
+        addStatusMessage(bundle.getString("StatusMsg.Ready"));
+        setStatusText("Ready!");
     }
     
     protected static Image createImage(String path, String description) {
@@ -55,11 +128,11 @@ public class MainFrame extends javax.swing.JFrame {
         this.trayMain = trayMain;
     }
 
-    public void addStatusMessage(String message) {
+    public final void addStatusMessage(String message) {
         edtLog.append(new Timestamp(date.getTime()) + "> " + message + "\n");
     }
     
-    public void setStatusText(String message) {
+    public final void setStatusText(String message) {
         lblStatus.setText("> " + message);
     }
     
@@ -99,9 +172,11 @@ public class MainFrame extends javax.swing.JFrame {
             pnlStatus.setBackground(Color.red);
         }
         
-        DefaultListModel listModel = (DefaultListModel)lbServices.getModel();
+        //DefaultListModel listModel = (DefaultListModel)lbServices.getModel();
         
-        for (int i = 0; i < servers.get(id).getServices().size(); i++) {
+        servicePanel1.displayServices(servers.get(id).getServices());
+        
+        /*for (int i = 0; i < servers.get(id).getServices().size(); i++) {
             Service tmpService = servers.get(id).getServices().get(i);
             String status = "UNDEF";
             
@@ -166,7 +241,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
         else {
             trayMain.setImage(createImage("../icons/unknown-x16.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-        }
+        }*/
     }
     
     /**
@@ -178,13 +253,16 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jButton5 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
+        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         lblStatus = new javax.swing.JLabel();
@@ -204,8 +282,8 @@ public class MainFrame extends javax.swing.JFrame {
         lblType = new javax.swing.JLabel();
         lblResponsible = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        lbServices = new javax.swing.JList();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        servicePanel1 = new de.scrubstudios.srvmon.notificator.classes.ServicePanel();
         mmMain = new javax.swing.JMenuBar();
         mmiFile = new javax.swing.JMenu();
         mmiConnect = new javax.swing.JMenuItem();
@@ -228,6 +306,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jToolBar1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(153, 153, 153)));
         jToolBar1.setRollover(true);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/connect-x16.png"))); // NOI18N
@@ -265,6 +344,23 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton5);
 
+        buttonGroup1.add(jToggleButton1);
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/start-x16.png"))); // NOI18N
+        jToggleButton1.setText(bundle.getString("MainFrame.jToggleButton1.text")); // NOI18N
+        jToggleButton1.setFocusable(false);
+        jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jToggleButton1);
+
+        buttonGroup1.add(jToggleButton2);
+        jToggleButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/pause-x16.png"))); // NOI18N
+        jToggleButton2.setText(bundle.getString("MainFrame.jToggleButton1.text")); // NOI18N
+        jToggleButton2.setFocusable(false);
+        jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jToggleButton2);
+        jToolBar1.add(jSeparator3);
+
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/view-x16.png"))); // NOI18N
         jButton3.setText(bundle.getString("MainFrame.jButton3.text")); // NOI18N
         jButton3.setToolTipText(bundle.getString("MainFrame.jButton3.toolTipText")); // NOI18N
@@ -277,7 +373,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton3);
-        jToolBar1.add(jSeparator3);
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/preferences-x16.png"))); // NOI18N
         jButton4.setText(bundle.getString("MainFrame.jButton4.text")); // NOI18N
@@ -379,8 +474,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel2.setText(bundle.getString("MainFrame.jLabel2.text")); // NOI18N
 
-        lbServices.setFont(new java.awt.Font("Droid Sans Mono", 0, 14)); // NOI18N
-        jScrollPane3.setViewportView(lbServices);
+        jScrollPane4.setViewportView(servicePanel1);
 
         mmiFile.setText(bundle.getString("MainFrame.mmiFile.text")); // NOI18N
         mmiFile.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
@@ -486,7 +580,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 506, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(pnlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -505,7 +599,7 @@ public class MainFrame extends javax.swing.JFrame {
                                             .addComponent(lblHardware)))
                                     .addComponent(jLabel2))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane4))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -537,7 +631,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -596,22 +690,20 @@ public class MainFrame extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+        //try {
+            /*for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Metal".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+            }*/
+            
+            MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+        //} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        //    java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        //}
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
@@ -623,6 +715,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextArea edtLog;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -638,13 +731,14 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JList lbServers;
-    private javax.swing.JList lbServices;
     private javax.swing.JLabel lblDirector;
     private javax.swing.JLabel lblHardware;
     private javax.swing.JLabel lblHostname;
@@ -664,5 +758,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem mmiRefresh;
     private javax.swing.JMenu mmiView;
     private javax.swing.JPanel pnlStatus;
+    private de.scrubstudios.srvmon.notificator.classes.ServicePanel servicePanel1;
     // End of variables declaration//GEN-END:variables
 }

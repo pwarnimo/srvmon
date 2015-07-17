@@ -178,6 +178,7 @@ public final class MainFrame extends javax.swing.JFrame {
         lblHardware.setText(tmpServer.getManufacturer() + " " + tmpServer.getModel());
         lblResponsible.setText(tmpServer.getResponsible());
         lblType.setText(tmpServer.getType());
+        lblIPAddr.setText(tmpServer.getIPAddress());
         
         if (tmpServer.isEnabled()) {
             pnlStatus.setBackground(Color.green);
@@ -299,6 +300,8 @@ public final class MainFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         servicePanel1 = new de.scrubstudios.srvmon.notificator.classes.ServicePanel();
+        jLabel7 = new javax.swing.JLabel();
+        lblIPAddr = new javax.swing.JLabel();
         mmMain = new javax.swing.JMenuBar();
         mmiFile = new javax.swing.JMenu();
         mmiConnect = new javax.swing.JMenuItem();
@@ -451,7 +454,7 @@ public final class MainFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel1.setText(bundle.getString("MainFrame.jLabel1.text")); // NOI18N
 
-        lblHostname.setFont(new java.awt.Font("Droid Sans", 1, 14)); // NOI18N
+        lblHostname.setFont(new java.awt.Font("Droid Sans", 1, 18)); // NOI18N
         lblHostname.setForeground(new java.awt.Color(0, 153, 153));
         lblHostname.setText(bundle.getString("MainFrame.lblHostname.text")); // NOI18N
 
@@ -495,6 +498,12 @@ public final class MainFrame extends javax.swing.JFrame {
         jLabel2.setText(bundle.getString("MainFrame.jLabel2.text")); // NOI18N
 
         jScrollPane4.setViewportView(servicePanel1);
+
+        jLabel7.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        jLabel7.setText(bundle.getString("MainFrame.jLabel7.text")); // NOI18N
+
+        lblIPAddr.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        lblIPAddr.setText(bundle.getString("MainFrame.lblIPAddr.text")); // NOI18N
 
         mmiFile.setText(bundle.getString("MainFrame.mmiFile.text")); // NOI18N
         mmiFile.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
@@ -604,22 +613,24 @@ public final class MainFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(pnlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane4)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblHostname)
+                                    .addComponent(jLabel2)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel4)
                                             .addComponent(jLabel5)
-                                            .addComponent(jLabel6))
+                                            .addComponent(jLabel6)
+                                            .addComponent(jLabel7))
                                         .addGap(33, 33, 33)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblIPAddr)
                                             .addComponent(lblResponsible)
                                             .addComponent(lblType)
-                                            .addComponent(lblHardware)))
-                                    .addComponent(jLabel2))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane4))))
+                                            .addComponent(lblHardware))))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -648,10 +659,14 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(lblResponsible))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(lblIPAddr))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -717,18 +732,18 @@ public final class MainFrame extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        //try {
-            /*for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Metal".equals(info.getName())) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("GTK+".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
-            }*/
+            }
             
-            MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-        //} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-        //    java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        //}
+            //MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
         //</editor-fold>
         
         //</editor-fold>
@@ -755,6 +770,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -769,6 +785,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblDirector;
     private javax.swing.JLabel lblHardware;
     private javax.swing.JLabel lblHostname;
+    private javax.swing.JLabel lblIPAddr;
     private javax.swing.JLabel lblResponsible;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblType;

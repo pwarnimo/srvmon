@@ -17,6 +17,8 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -240,11 +242,13 @@ public class XML {
         return null;
     }
     
-    public ArrayList<Server> getServers() {
+    //public ArrayList<Server> getServers() {
+    public Map<String, Server> getServers() {
         frmMain.addStatusMessage(bundle.getString("StatusMsg.getServers"));
         frmMain.setStatusText("Busy...");
         
-        ArrayList<Server> tmpServers = new ArrayList<>();
+        //ArrayList<Server> tmpServers = new ArrayList<>();
+        Map<String, Server> tmpServers = new HashMap<>();
         
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
@@ -300,7 +304,8 @@ public class XML {
                         Server tmpServer = new Server(frmMain, Integer.valueOf(eElement.getAttribute("hid")), eElement.getAttribute("hostname"), eElement.getAttribute("ipaddr"), eElement.getAttribute("type"), eElement.getAttribute("model"), eElement.getAttribute("manufacturer"), eElement.getAttribute("responsible"), enabled);
                         
                         tmpServer.refreshServices();
-                        tmpServers.add(tmpServer);
+                        //tmpServers.add(tmpServer);
+                        tmpServers.put(eElement.getAttribute("hostname"), tmpServer);
                     }
                 }
                 

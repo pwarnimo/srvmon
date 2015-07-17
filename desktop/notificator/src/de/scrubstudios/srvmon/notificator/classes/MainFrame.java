@@ -21,6 +21,8 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +42,7 @@ import javax.swing.plaf.metal.OceanTheme;
 public final class MainFrame extends javax.swing.JFrame {
     private static Date date = new Date();
     private ArrayList<Server> servers = new ArrayList<>();
+    private Map<String, Server> serverList = new HashMap<>();
     private TrayIcon trayMain;
     private java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/scrubstudios/srvmon/notificator/resources/Bundle");
     
@@ -137,22 +140,33 @@ public final class MainFrame extends javax.swing.JFrame {
     }
     
     private void refreshServerList() {
-        servers = XML.getInstance(this).getServers();
+        //servers = XML.getInstance(this).getServers();
+        serverList = XML.getInstance(this).getServers();
         
         DefaultListModel listModel = (DefaultListModel)lbServers.getModel();
         
-        for (int i = 0; i < servers.size(); i++) {
-            listModel.addElement(servers.get(i).getHostname());
+        //for (Map.Entry<String, String> entry : map.entrySet())
+        for (Map.Entry<String, Server> entry : serverList.entrySet()) {
+            listModel.addElement(entry.getValue().getHostname());
         }
+        
+        /*for (int i = 0; i < servers.size(); i++) {
+            listModel.addElement(servers.get(i).getHostname());
+        }*/
         //listModel.addElement("test");
+        
+        //for (int i = 0; i < serverList.size(); i++) {
+            //listModel.addElement(serverList.get(i));
+        //}
     }
     
     /*private void refreshServicesForServer(int hostID) {
         
     }*/
     
-    private void loadServer(int id) {
-        Server tmpServer = servers.get(id);
+    private void loadServer(String hostname) {
+        //Server tmpServer = servers.get(id);
+        Server tmpServer = serverList.get(hostname);
         
         int cntOK = 0;
         int cntWarning = 0;
@@ -174,7 +188,8 @@ public final class MainFrame extends javax.swing.JFrame {
         
         //DefaultListModel listModel = (DefaultListModel)lbServices.getModel();
         
-        servicePanel1.displayServices(servers.get(id).getServices());
+        //servicePanel1.displayServices(servers.get(host).getServices());
+        servicePanel1.displayServices(serverList.get(hostname).getServices());
         
         /*for (int i = 0; i < servers.get(id).getServices().size(); i++) {
             Service tmpService = servers.get(id).getServices().get(i);
@@ -426,6 +441,11 @@ public final class MainFrame extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        lbServers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbServersMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(lbServers);
 
         jLabel1.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
@@ -651,7 +671,8 @@ public final class MainFrame extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
        refreshServerList();
        //test
-       loadServer(0);
+       //loadServer(0);
+       //loadServer("debvm");
        lblDirector.setText("Connected");
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -680,6 +701,12 @@ public final class MainFrame extends javax.swing.JFrame {
         
         dlgSettings.setVisible(true);
     }//GEN-LAST:event_mmiPrefsActionPerformed
+
+    private void lbServersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbServersMouseClicked
+        //loadServer(serverList.get(lbServers.getSelectedValue().toString()));
+        //System.out.println(lbServers.getSelectedValue());
+        loadServer(lbServers.getSelectedValue().toString());
+    }//GEN-LAST:event_lbServersMouseClicked
 
     /**
      * @param args the command line arguments

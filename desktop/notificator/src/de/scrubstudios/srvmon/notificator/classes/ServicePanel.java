@@ -45,7 +45,7 @@ public class ServicePanel extends JEditorPane {
     
     public void displayServices(ArrayList<Service> services) {
         //setText(String.format(table, "<tr><td>r</td><td>r</td><td>r</td></tr>"));
-        if (services.size() > 0) {
+        if (services != null) {
             String serviceHtml = "";
             
             for (int i = 0; i < services.size(); i++) {

@@ -139,10 +139,33 @@ public final class MainFrame extends javax.swing.JFrame {
                         serverList.get(lbServers.getSelectedValue().toString()).refreshServices();
 
                         loadServer(lbServers.getSelectedValue().toString());
+                        
+                        pnlTr.displayServices(getAllFailedServices(serverList));
                     }
                 }
-            }, 0, 5000);
+            }, 0, 10000);
         }
+    }
+
+    private Map<String, ArrayList<Service>> getAllFailedServices(Map<String, Server> servers) {
+        Map<String, ArrayList<Service>> tmpServices = new HashMap<>();
+        
+        for (Map.Entry<String, Server> entry : servers.entrySet()) {
+            if (entry.getValue().getServices() != null) {
+                ArrayList<Service> tmpArr = new ArrayList<>();
+                
+                for (int i = 0; i < entry.getValue().getServices().size(); i++) {
+                    if (entry.getValue().getServices().get(i).getValue() > 0) {
+
+                        tmpArr.add(entry.getValue().getServices().get(i));
+                    }
+                }
+                
+                tmpServices.put(entry.getKey(), tmpArr);
+            }
+        }
+        
+        return tmpServices;
     }
     
     protected static Image createImage(String path, String description) {
@@ -223,7 +246,8 @@ public final class MainFrame extends javax.swing.JFrame {
         //servicePanel1.displayServices(servers.get(host).getServices());
         servicePanel1.displayServices(serverList.get(hostname).getServices());
         
-        /*for (int i = 0; i < servers.get(id).getServices().size(); i++) {
+        //for (int i = 0; i < servers.get(id).getServices().size(); i++) {
+        /*for (lbServer)
             Service tmpService = servers.get(id).getServices().get(i);
             String status = "UNDEF";
             
@@ -265,8 +289,6 @@ public final class MainFrame extends javax.swing.JFrame {
                 default:
                     status = bundle.getString("ServiceStatus.Unkown");
             }
-            
-            listModel.addElement("(" + status + ") " + tmpService.getCaption() + " \"" + tmpService.getDescription() + "\" = " + tmpService.getScriptOutput());
         }
         
         int errMax = Math.max(cntOK, Math.max(cntWarning, Math.max(cntCritical, Math.max(cntTimeout, cntPending))));

@@ -15,6 +15,8 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URL;
@@ -24,6 +26,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -45,6 +49,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private Map<String, Server> serverList = new HashMap<>();
     private TrayIcon trayMain;
     private java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/scrubstudios/srvmon/notificator/resources/Bundle");
+    private Timer timer = new Timer();
     
     /**
      * Creates new form MainFrame
@@ -91,6 +96,8 @@ public final class MainFrame extends javax.swing.JFrame {
         
         MenuItem mmiClose = new MenuItem("Quit");
         
+        //mmiConnect.doClick();
+        
         /*mmiClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -110,8 +117,32 @@ public final class MainFrame extends javax.swing.JFrame {
         
         trayMain.displayMessage("SRVMON NOTIFICATOR", "Welcome to the SRVMON NOTIFICATOR v0.1", TrayIcon.MessageType.INFO);
         
+        final TrayPanel pnlTr = new TrayPanel();
+        
+        trayMain.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                pnlTr.setVisible(!pnlTr.isVisible());
+            }
+        });
+        
         addStatusMessage(bundle.getString("StatusMsg.Ready"));
         setStatusText("Ready!");
+        
+        if (f.exists()) {
+            refreshServerList();
+        
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (lbServers.getSelectedIndex() > -1) {
+                        serverList.get(lbServers.getSelectedValue().toString()).refreshServices();
+
+                        loadServer(lbServers.getSelectedValue().toString());
+                    }
+                }
+            }, 0, 5000);
+        }
     }
     
     protected static Image createImage(String path, String description) {
@@ -270,6 +301,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -347,6 +379,11 @@ public final class MainFrame extends javax.swing.JFrame {
         jButton2.setFocusable(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButton2);
         jToolBar1.add(jSeparator2);
 
@@ -663,10 +700,10 @@ public final class MainFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(lblIPAddr))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -678,9 +715,26 @@ public final class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mmiConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mmiConnectActionPerformed
-        DlgConnectionManager dlgConMngr = new DlgConnectionManager(this, true);
+        /*DlgConnectionManager dlgConMngr = new DlgConnectionManager(this, true);
         
-        dlgConMngr.setVisible(true);
+        dlgConMngr.setVisible(true);*/
+        
+        DlgConnect dlgConnection = new DlgConnect(this, true);
+        
+        dlgConnection.setVisible(true);
+        
+        refreshServerList();
+        
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (lbServers.getSelectedIndex() > -1) {
+                    serverList.get(lbServers.getSelectedValue().toString()).refreshServices();
+                    
+                    loadServer(lbServers.getSelectedValue().toString());
+                }
+            }
+        }, 0, 5000);
     }//GEN-LAST:event_mmiConnectActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -723,6 +777,15 @@ public final class MainFrame extends javax.swing.JFrame {
         loadServer(lbServers.getSelectedValue().toString());
     }//GEN-LAST:event_lbServersMouseClicked
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        DefaultListModel listModel = (DefaultListModel) lbServers.getModel();
+        
+        listModel.removeAllElements();
+        servicePanel1.displayServices(null);
+        
+        timer.cancel();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -758,6 +821,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JTextArea edtLog;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

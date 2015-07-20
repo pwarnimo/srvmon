@@ -73,7 +73,7 @@ public final class MainFrame extends javax.swing.JFrame {
             addStatusMessage(bundle.getString("StatusMsg.MissingCfg"));
         }
         
-        final TrayIcon trayMain = new TrayIcon(createImage("../icons/notificatorTray.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        final TrayIcon trayMain = new TrayIcon(createImage("/de/scrubstudios/srvmon/notificator/icons/notificatorTray.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         final SystemTray tray = SystemTray.getSystemTray();
         
         try {
@@ -143,7 +143,7 @@ public final class MainFrame extends javax.swing.JFrame {
                         pnlTr.displayServices(getAllFailedServices(serverList));
                     }
                 }
-            }, 0, 10000);
+            }, 0, 60000);
         }
     }
 
@@ -756,7 +756,7 @@ public final class MainFrame extends javax.swing.JFrame {
                     loadServer(lbServers.getSelectedValue().toString());
                 }
             }
-        }, 0, 5000);
+        }, 0, 60000);
     }//GEN-LAST:event_mmiConnectActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

@@ -5,10 +5,12 @@
  */
 package de.scrubstudios.srvmon.notificator.classes;
 
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+//import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+//import com.sun.org.apache.xml.internal.security.utils.Base64;
+//import org.apache.commons.codec.binary.Base64;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -16,6 +18,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -31,8 +34,12 @@ public class Crypt {
             
             cipher.init(Cipher.ENCRYPT_MODE, keySpec);
             encryptedData = cipher.doFinal(data.getBytes());
+
+            byte[] encr64 = Base64.encodeBase64(encryptedData);
             
-            return Base64.encode(encryptedData);
+            //System.out.println(new String(encr64));
+            
+            return new String(encr64);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(Crypt.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -48,10 +55,14 @@ public class Crypt {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             
             cipher.init(Cipher.DECRYPT_MODE, keySpec);
-            decryptedData = cipher.doFinal(Base64.decode(data));
+            //decryptedData = cipher.doFinal(Base64.decode(data));
+            
+            decryptedData = cipher.doFinal(Base64.decodeBase64(data));
+            
+            //return new String(decryptedData);
             
             return new String(decryptedData);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | Base64DecodingException ex) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(Crypt.class.getName()).log(Level.SEVERE, null, ex);
         }
         

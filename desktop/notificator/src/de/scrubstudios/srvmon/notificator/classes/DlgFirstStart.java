@@ -5,18 +5,27 @@
  */
 package de.scrubstudios.srvmon.notificator.classes;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author pwarnimo
  */
 public class DlgFirstStart extends javax.swing.JDialog {
-
+    private Properties prop = new Properties();
+    
     /**
      * Creates new form DlgFirstStart
      */
     public DlgFirstStart(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -35,7 +44,7 @@ public class DlgFirstStart extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tbpFirstStart = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -47,10 +56,10 @@ public class DlgFirstStart extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jTextField3 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        edtDirectorURL = new javax.swing.JTextField();
+        edtPassword = new javax.swing.JPasswordField();
+        edtUsername = new javax.swing.JTextField();
+        edtEncKey = new javax.swing.JPasswordField();
         jLabel11 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
@@ -61,6 +70,7 @@ public class DlgFirstStart extends javax.swing.JDialog {
         jCheckBox3 = new javax.swing.JCheckBox();
         jSlider1 = new javax.swing.JSlider();
         jCheckBox4 = new javax.swing.JCheckBox();
+        jLabel15 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -104,10 +114,21 @@ public class DlgFirstStart extends javax.swing.JDialog {
         jButton1.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/previous-x16.png"))); // NOI18N
         jButton1.setText(bundle.getString("DlgFirstStart.jButton1.text")); // NOI18N
+        jButton1.setEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/next-x16.png"))); // NOI18N
         jButton2.setText(bundle.getString("DlgFirstStart.jButton2.text")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/scrubstudios/srvmon/notificator/icons/cancel-x16.png"))); // NOI18N
@@ -137,7 +158,7 @@ public class DlgFirstStart extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
+        tbpFirstStart.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel3.setText(bundle.getString("DlgFirstStart.jLabel3.text")); // NOI18N
@@ -166,7 +187,7 @@ public class DlgFirstStart extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(bundle.getString("DlgFirstStart.jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
+        tbpFirstStart.addTab(bundle.getString("DlgFirstStart.jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel5.setText(bundle.getString("DlgFirstStart.jLabel5.text")); // NOI18N
@@ -185,6 +206,9 @@ public class DlgFirstStart extends javax.swing.JDialog {
 
         jLabel10.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel10.setText(bundle.getString("DlgFirstStart.jLabel10.text")); // NOI18N
+        jLabel10.setEnabled(false);
+
+        jTextField1.setEditable(false);
 
         jLabel11.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel11.setText(bundle.getString("DlgFirstStart.jLabel11.text")); // NOI18N
@@ -203,19 +227,19 @@ public class DlgFirstStart extends javax.swing.JDialog {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(69, 69, 69)
-                        .addComponent(jTextField2))
+                        .addComponent(edtDirectorURL))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(132, 132, 132)
-                        .addComponent(jPasswordField2))
+                        .addComponent(edtPassword))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(128, 128, 128)
-                        .addComponent(jTextField3))
+                        .addComponent(edtUsername))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(107, 107, 107)
-                        .addComponent(jPasswordField1))
+                        .addComponent(edtEncKey))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -235,25 +259,25 @@ public class DlgFirstStart extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(edtDirectorURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(edtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(edtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(edtEncKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(bundle.getString("DlgFirstStart.jPanel4.TabConstraints.tabTitle"), jPanel4); // NOI18N
+        tbpFirstStart.addTab(bundle.getString("DlgFirstStart.jPanel4.TabConstraints.tabTitle"), jPanel4); // NOI18N
 
         jLabel12.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jLabel12.setText(bundle.getString("DlgFirstStart.jLabel12.text")); // NOI18N
@@ -276,6 +300,9 @@ public class DlgFirstStart extends javax.swing.JDialog {
         jCheckBox4.setFont(new java.awt.Font("Droid Sans", 0, 12)); // NOI18N
         jCheckBox4.setText(bundle.getString("DlgFirstStart.jCheckBox4.text")); // NOI18N
 
+        jLabel15.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel15.setText(bundle.getString("DlgFirstStart.jLabel15.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -285,7 +312,7 @@ public class DlgFirstStart extends javax.swing.JDialog {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                         .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,7 +321,8 @@ public class DlgFirstStart extends javax.swing.JDialog {
                             .addComponent(jCheckBox2)
                             .addComponent(jLabel12)
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jCheckBox1))
+                            .addComponent(jCheckBox1)
+                            .addComponent(jLabel15))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -315,12 +343,14 @@ public class DlgFirstStart extends javax.swing.JDialog {
                 .addComponent(jCheckBox3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBox4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(bundle.getString("DlgFirstStart.jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
+        tbpFirstStart.addTab(bundle.getString("DlgFirstStart.jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
 
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Droid Sans Mono", 0, 12)); // NOI18N
@@ -339,7 +369,7 @@ public class DlgFirstStart extends javax.swing.JDialog {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab(bundle.getString("DlgFirstStart.jPanel6.TabConstraints.tabTitle"), jPanel6); // NOI18N
+        tbpFirstStart.addTab(bundle.getString("DlgFirstStart.jPanel6.TabConstraints.tabTitle"), jPanel6); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -347,20 +377,74 @@ public class DlgFirstStart extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+            .addComponent(tbpFirstStart, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1)
+                .addComponent(tbpFirstStart, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (tbpFirstStart.getSelectedIndex() >= 0 && tbpFirstStart.getSelectedIndex() <= 2) {
+            switch (tbpFirstStart.getSelectedIndex()) {
+                case 1:
+                    prop.setProperty("director.url", edtDirectorURL.getText());
+                    prop.setProperty("notificator.username", edtUsername.getText());
+                    prop.setProperty("notificator.password", String.copyValueOf(edtPassword.getPassword()));
+                    prop.setProperty("notificator.enckey", String.copyValueOf(edtEncKey.getPassword()));
+                    
+                    break;
+                    
+                /*case 4:
+                    {
+                        try {
+                            prop.store(new FileOutputStream(System.getProperty("user.home") + "/.config/notificator.properties"), null);
+                        } catch (IOException ex) {
+                            Logger.getLogger(DlgFirstStart.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    
+                    this.dispose();*/
+            }
+            
+            tbpFirstStart.setSelectedIndex(tbpFirstStart.getSelectedIndex() + 1);
+            
+            jButton1.setEnabled(true);
+            
+            if (tbpFirstStart.getSelectedIndex() + 1 == 4) {
+                jButton2.setText("Finish");
+            }
+        }
+        else {
+            try {
+                prop.store(new FileOutputStream(System.getProperty("user.home") + "/.config/notificator.properties"), null);
+            } catch (IOException ex) {
+                Logger.getLogger(DlgFirstStart.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            this.dispose();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        //if (tbpFirstStart.getSelectedIndex() >= 0 && tbpFirstStart.getSelectedIndex() <= 2) {
+            tbpFirstStart.setSelectedIndex(tbpFirstStart.getSelectedIndex() - 1);
+            
+            jButton2.setText("Next");
+            
+            if (tbpFirstStart.getSelectedIndex() - 1 == -1) {
+                jButton1.setEnabled(false);
+            }
+        //}
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -405,6 +489,10 @@ public class DlgFirstStart extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField edtDirectorURL;
+    private javax.swing.JPasswordField edtEncKey;
+    private javax.swing.JPasswordField edtPassword;
+    private javax.swing.JTextField edtUsername;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -418,6 +506,7 @@ public class DlgFirstStart extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -432,14 +521,10 @@ public class DlgFirstStart extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider jSlider1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTabbedPane tbpFirstStart;
     // End of variables declaration//GEN-END:variables
 }

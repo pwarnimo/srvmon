@@ -69,7 +69,7 @@ public class XML {
             InputStream in = null;
             
             try {
-                in = new FileInputStream("notificator.properties");
+                in = new FileInputStream(System.getProperty("user.home") +  "/.config/notificator.properties");
                 
                 prop.load(in);
                 
@@ -177,13 +177,6 @@ public class XML {
             InputSource is = new InputSource(new StringReader(Crypt.decrypt(encKey, performPostRequest(Crypt.encrypt(encKey, xml)))));
             
             doc = docBuilder.parse(is);
-            
-            Document doc2 = doc;
-            transformer.transform(new DOMSource(doc2), new StreamResult(writer));
-            
-            String xml2 = writer.getBuffer().toString().replaceAll("\n|\r", "");
-            
-            System.out.println(xml2);
             
             NodeList nlistMessage = doc.getElementsByTagName("message");
             Element eMessage = (Element)nlistMessage.item(0);

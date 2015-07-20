@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class DlgConnect extends javax.swing.JDialog {
     private void applySettings() {
-        File f = new File("notificator.properties");
+        File f = new File(System.getProperty("user.home") + "/.config/notificator.properties");
         Properties prop = new Properties();
         
         try {
@@ -53,7 +53,11 @@ public class DlgConnect extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
-        File f = new File("notificator.properties");
+        //final JDialog d = new JDialog();
+        //setSize(200,200);
+        setLocationRelativeTo(null);
+        
+        File f = new File(System.getProperty("user.home") + "/.config/notificator.properties");
         
         if (f.exists()) {
             Properties prop = new Properties();

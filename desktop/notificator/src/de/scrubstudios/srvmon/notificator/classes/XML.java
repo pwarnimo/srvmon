@@ -192,8 +192,17 @@ public class XML {
                         
                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element eElement = (Element)nNode;
+                            Service tmpService = new Service(Integer.valueOf(eElement.getAttribute("sid")), eElement.getAttribute("caption"), eElement.getAttribute("description"), eElement.getAttribute("checkCommand"), eElement.getAttribute("params"), Integer.parseInt(eElement.getAttribute("value")), eElement.getAttribute("scriptOutput"), eElement.getAttribute("lastCheck"));
                             
-                            tmpServices.add(new Service(Integer.valueOf(eElement.getAttribute("sid")), eElement.getAttribute("caption"), eElement.getAttribute("description"), eElement.getAttribute("checkCommand"), eElement.getAttribute("params"), Integer.parseInt(eElement.getAttribute("value")), eElement.getAttribute("scriptOutput"), eElement.getAttribute("lastCheck")));
+                            //tmpService.setNotified(Boolean.parseBoolean(eElement.getAttribute("notified")));
+                            if (eElement.getAttribute("notified").equals("0")) {
+                                tmpService.setNotified(false);
+                            }
+                            else {
+                                tmpService.setNotified(true);
+                            }
+                            
+                            tmpServices.add(tmpService);
                         }
                     }
                     

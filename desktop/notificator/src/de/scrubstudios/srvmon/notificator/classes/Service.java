@@ -18,6 +18,7 @@ public class Service {
     private int value;
     private String scriptOutput;
     private String lastCheck;
+    private boolean notified = false;
     
     public Service(int serviceID, String caption, String description, String checkCommand, String parameters, int value, String scriptOutput, String lastCheck) {
         this.serviceID = serviceID;
@@ -62,6 +63,10 @@ public class Service {
         this.lastCheck = lastCheck;
     }
     
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
+    
     public int getID() {
         return serviceID;
     }
@@ -92,5 +97,9 @@ public class Service {
     
     public String getLastCheck() {
         return lastCheck;
+    }
+    
+    public boolean isNotified() {
+        return notified;
     }
 }

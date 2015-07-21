@@ -45,30 +45,56 @@ import javax.swing.plaf.metal.OceanTheme;
  * @author pwarnimo
  */
 public final class MainFrame extends javax.swing.JFrame {
-    private static Date date = new Date();
     private ArrayList<Server> servers = new ArrayList<>();
     private Map<String, Server> serverList = new HashMap<>();
+    private Map<String, Service> servicesList = new HashMap<>();
     private TrayIcon trayMain;
     private java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/scrubstudios/srvmon/notificator/resources/Bundle");
     private Timer timer = new Timer();
+    
+    private void initNotificator() {
+        lbServers.setModel(new DefaultListModel());
+        
+        addStatusMessage(bundle.getString("StatusMsg.Init"));
+        setStatusText("Busy...");
+        
+        File f = new File(System.getProperty("user.home") + "/.config/notificator.properties");
+        
+        if (!f.exists()) {
+            DlgFirstStart dlgFS = new DlgFirstStart(this, true);
+        }
+        
+        final TrayIcon trayMain = new TrayIcon(createImage("/de/scrubstudios/srvmon/notificator/icons/srvnc.png", "").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        final SystemTray traySys = SystemTray.getSystemTray();
+        
+        try {
+            traySys.add(trayMain);
+            setTrayIcon(trayMain);
+ 
+            trayMain.displayMessage("SRVMON Notificator", "Welcome to the SRVMON Notificator 0.9! Please note that this is currently a BETA release!", TrayIcon.MessageType.INFO);
+        } catch (AWTException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        initNotificator();
         
-        lbServers.setModel(new DefaultListModel());
+        //lbServers.setModel(new DefaultListModel());
         //lbServices.setModel(new DefaultListModel());
         
-        setStatusText("Busy...");
+        /*setStatusText("Busy...");
         addStatusMessage(bundle.getString("StatusMsg.Init"));
         
         /*DlgFirstStart dlgFS = new DlgFirstStart(this, true);
         
         dlgFS.setVisible(true);*/
         
-        File f = new File(System.getProperty("user.home") + "/.config/notificator.properties");
+        /*File f = new File(System.getProperty("user.home") + "/.config/notificator.properties");
         Properties prop = new Properties();
         
         if (f.exists()) {
@@ -112,7 +138,7 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         });*/
         
-        mmTray.add(mmiHide2);
+        /*mmTray.add(mmiHide2);
         mmTray.addSeparator();
         mmTray.add(mmiClose);
         
@@ -149,25 +175,110 @@ public final class MainFrame extends javax.swing.JFrame {
                     }
                 }
             }, 0, 60000);
-        }
+        }*/
     }
 
     private Map<String, ArrayList<Service>> getAllFailedServices(Map<String, Server> servers) {
         Map<String, ArrayList<Service>> tmpServices = new HashMap<>();
+        
+        int cntOK = 0;
+        int cntWarning = 0;
+        int cntCritical = 0;
+        int cntPending = 0;
+        int cntTimeout = 0;
         
         for (Map.Entry<String, Server> entry : servers.entrySet()) {
             if (entry.getValue().getServices() != null) {
                 ArrayList<Service> tmpArr = new ArrayList<>();
                 
                 for (int i = 0; i < entry.getValue().getServices().size(); i++) {
-                    if (entry.getValue().getServices().get(i).getValue() > 0) {
-
+                    //if (entry.getValue().getServices().get(i).getValue() > 0) {
                         tmpArr.add(entry.getValue().getServices().get(i));
-                    }
+                        
+                        switch (entry.getValue().getServices().get(i).getValue()) {
+                            case 0:
+                                if (entry.getValue().getServices().get(i).isNotified()) {
+                                    System.out.println("OK -> " + i);
+                                    trayMain.displayMessage(entry.getKey(), "RECOVERY", TrayIcon.MessageType.INFO);
+                                    //entry.getValue().getServices().get(i).setNotified(false);
+                                }
+                                
+                                //cntOK++;
+                                    
+                                break;
+                                
+                            case 1:
+                                if (!entry.getValue().getServices().get(i).isNotified()) {
+                                    System.out.println("WARNING -> " + i);
+                                    trayMain.displayMessage(entry.getKey(), String.format(bundle.getString("ServiceStatus.ChangedWarning"), entry.getValue().getServices().get(i).getCaption()), TrayIcon.MessageType.WARNING);
+                                    //entry.getValue().getServices().get(i).setNotified(true);
+                                }
+                                    
+                                cntWarning++;
+                                
+                                break;
+                                
+                            case 2:
+                                if (!entry.getValue().getServices().get(i).isNotified()) {
+                                    System.out.println("CRITICAL -> " + i);
+                                    trayMain.displayMessage(entry.getKey(), String.format(bundle.getString("ServiceStatus.ChangedCritical"), entry.getValue().getServices().get(i).getCaption()), TrayIcon.MessageType.ERROR);
+                                    //entry.getValue().getServices().get(i).setNotified(true);
+                                }
+                                
+                                cntCritical++;
+                                
+                                break;
+                                
+                            case 3:
+                                if (!entry.getValue().getServices().get(i).isNotified()) {
+                                    System.out.println("TIMEOUT -> " + i);
+                                    trayMain.displayMessage(entry.getKey(), String.format(bundle.getString("ServiceStatus.ChangedTimeout"), entry.getValue().getServices().get(i).getCaption()), TrayIcon.MessageType.ERROR);
+                                    //entry.getValue().getServices().get(i).setNotified(true);
+                                }
+                                
+                                cntTimeout++;
+                                    
+                                break;
+                                
+                            case 4:
+                                if (!entry.getValue().getServices().get(i).isNotified()) {
+                                    System.out.println("PENDING -> " + i);
+                                    trayMain.displayMessage(entry.getKey(), String.format(bundle.getString("ServiceStatus.ChangedPending"), entry.getValue().getServices().get(i).getCaption()), TrayIcon.MessageType.INFO);
+                                    //entry.getValue().getServices().get(i).setNotified(true);
+                                }
+                                
+                                cntPending++;
+                                
+                                break;
+                        }
+                        
+                        
+                    //}
                 }
                 
                 tmpServices.put(entry.getKey(), tmpArr);
             }
+        }
+        
+        int errMax = Math.max(cntOK, Math.max(cntWarning, Math.max(cntCritical, Math.max(cntTimeout, cntPending))));
+            
+        if (errMax == cntOK) {
+            trayMain.setImage(createImage("/de/scrubstudios/srvmon/notificator/icons/srvok.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntWarning) {
+            trayMain.setImage(createImage("/de/scrubstudios/srvmon/notificator/icons/srvwarn.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntCritical) {
+            trayMain.setImage(createImage("/de/scrubstudios/srvmon/notificator/icons/srvcrit.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntTimeout) {
+            trayMain.setImage(createImage("/de/scrubstudios/srvmon/notificator/icons/srvtimeout.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else if (errMax == cntPending) {
+            trayMain.setImage(createImage("/de/scrubstudios/srvmon/notificator/icons/srvpending.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        }
+        else {
+            trayMain.setImage(createImage("../icons/unknown-x16.png", "Tray Icon").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         }
         
         return tmpServices;
@@ -191,6 +302,7 @@ public final class MainFrame extends javax.swing.JFrame {
     }
 
     public final void addStatusMessage(String message) {
+        Date date = new Date();
         edtLog.append(new Timestamp(date.getTime()) + "> " + message + "\n");
     }
     
@@ -438,6 +550,11 @@ public final class MainFrame extends javax.swing.JFrame {
         jToggleButton1.setFocusable(false);
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jToggleButton1);
 
         buttonGroup1.add(jToggleButton2);
@@ -446,6 +563,11 @@ public final class MainFrame extends javax.swing.JFrame {
         jToggleButton2.setFocusable(false);
         jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jToggleButton2);
         jToolBar1.add(jSeparator3);
 
@@ -754,17 +876,6 @@ public final class MainFrame extends javax.swing.JFrame {
         dlgConnection.setVisible(true);
         
         refreshServerList();
-        
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (lbServers.getSelectedIndex() > -1) {
-                    serverList.get(lbServers.getSelectedValue().toString()).refreshServices();
-                    
-                    loadServer(lbServers.getSelectedValue().toString());
-                }
-            }
-        }, 0, 60000);
     }//GEN-LAST:event_mmiConnectActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -816,6 +927,37 @@ public final class MainFrame extends javax.swing.JFrame {
         
         timer.cancel();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void getCurrentServices() {
+        for (Map.Entry<String, Server> entry : serverList.entrySet()) {
+            entry.getValue().refreshServices();
+        }
+    }
+    
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        trayMain.setImage(createImage("/de/scrubstudios/srvmon/notificator/icons/srvok.png", "").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getCurrentServices();
+                getAllFailedServices(serverList);
+                
+                /*if (lbServers.getSelectedIndex() > -1) {
+                    serverList.get(lbServers.getSelectedValue().toString()).refreshServices();
+                }*/
+            }
+        }, 0, 30000);
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        trayMain.setImage(createImage("/de/scrubstudios/srvmon/notificator/icons/srvnc.png", "").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        
+        //tt.cancel();
+        timer.cancel();
+        timer.purge();
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
      * @param args the command line arguments

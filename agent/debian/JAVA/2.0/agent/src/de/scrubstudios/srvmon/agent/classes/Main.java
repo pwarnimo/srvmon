@@ -1,8 +1,39 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * File        : Main.java
+ * Author(s)   : Pol Warnimont
+ * Create date : 2015-05-05
+ * Version     : 2.0 P1
+ * Description : This file is part of the SRVMON agent.
+ *               This class contains the main logic.
+ *
+ * Changelog
+ * ---------
+ *  2015-05-09 : Created class.
+ *  2015-05-11 : Added test functions.
+ *               Added Javadoc.
+ *  2015-05-15 : Preparing agent 1.0.
+ *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-05-21 : Finalized R1.
+ *  2015-07-23 : Completely reworking agent.
+ *
+ * License information
+ * -------------------
+ *  Copyright (C) 2015  Pol Warnimont
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package de.scrubstudios.srvmon.agent.classes;
 
 import java.io.File;
@@ -19,20 +50,30 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author pwarnimo
+/** 
+ * Main class for the SRVMON AGENT.
+ * @author Pol Warnimont
+ * @version 2.0
  */
 public class Main {
+    /** Host ID for the current agent. */
     private static int hostid = 0;
-    private static ResourceBundle lang = ResourceBundle.getBundle("de/scrubstudios/srvmon/agent/resource/Lang");
+    /** Resource bundle for the multi-language support. */
+    private static final ResourceBundle lang = ResourceBundle.getBundle("de/scrubstudios/srvmon/agent/resource/Lang");
     
+    /**
+     * This method prints out the version of the agent.
+     */
     private static void printVersion() {
         System.out.println(lang.getString("Agent.Version"));
     }
     
     /**
-     * @param args the command line arguments
+     * Main method of the class.
+     * The program will enter in an endless loop. Every 300*1000 milliseconds, a 
+     * thread will be executed which will perform the service checks. The check 
+     * interval can be defined by the user in the config file.
+     * @param args Command line arguments. If -v -> return version.
      */
     public static void main(String[] args) {
         if (args.length > 0) {

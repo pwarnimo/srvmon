@@ -25,6 +25,16 @@ SRVMON SERVER MONITORING SUITE
  *** ANDROID CLIENT     0.1       P1 Development  Medium
  *** IOS CLIENT         ?.?       P2 Planning     None
 
+ *** Priorities explained:
+ *** -Planning    : Project is currently being planned.
+ *** -Draft       : Draft release is being published.
+ *** -Development : Project is currently being implemented.
+ *** -Finalizing  : Project is being finalized for the release.
+ *** -Incoming    : Project packages are being created.
+ *** -Released    : Project is ready for the production environment.
+ 
+ *** First release will be SRVMON Suite 1.0 P1. ETA is 07th August 2015.
+ 
 About
 -----
 

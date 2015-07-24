@@ -1,0 +1,135 @@
+SRVMON DIRECTOR SERVER V1.1 P1 - INSTALLATION GUIDE
+===================================================
+
+* Introduction *
+
+This guide will help you to setup the SRVMON Director Server on your 
+computer. Please note that this guide is intended for the Debian
+release.
+
+* Prerequisites *
+
+Before you begin please perform a system update of your installation to
+make sure that you have the newest packages installed:
+
+	sudo apt-get update
+	sudo apt-get upgrade
+
+Please make sure that you have the following packages installed on your 
+system:
+
+	Name                  Version         Architecture
+	=====================-===============-===============
+	apache2               2.4.10-10       amd64
+	php5                  5.6.7+dfsg-1    all
+	php5-mysql            5.6.7+dfsg-1    amd64
+
+It is also important that the SRVMON database is installed and 
+initialized on the system. If not please refer to the installation
+manual for the database.
+
+If you want to generate the documentation for the source code, you will
+need to install the phpDocumentor. This can be easily done with 
+PHP-PEAR:
+	
+	pear channel-discover pear.phpdoc.org
+	pear install phpdoc/phpDocumentor
+
+To generate the documentation use the following command:
+
+	phpdoc -d src/ -t doc
+
+The documentation will be created into the doc folder.
+
+* Installation *
+
+ ** Install from repostitories
+
+The easiest way to install the server is by using the repositories for
+the SRVMON project. Please import the GPG key for the repositories by
+using the commands below as root:
+
+	wget -O - http://debian.scrubstudios.de/apt/conf/scrubstudios.gpg.key|apt-key add -
+
+After the key has been imported, you can now add the repository by
+creating a new file in the /etc/apt/sources.list.d/ called "srvmon.list".
+Insert the following string inside the file:
+
+If using Debian 7.x Wheezy :
+	deb http://debian.scrubstudios.de/apt/debian wheezy main
+
+If using Debian 8.x Jessie :
+	deb http://debian.scrubstudios.de/apt/debian wheezy main
+
+You now have to refresh the package lists and then you can install
+the server with the following commands:
+
+	apt-get update
+	apt-get install srvmon-director-server
+
+After the package has been installed, the automatic setup script will
+launch.
+
+ ** Automatic setup
+
+If you want to automatically setup the DIRECTOR SERVER, you only have
+to execute the setup.sh script in the project directory. Please make
+sure that you have the appropriate user rights and that the 
+destination web root is writable for your user. You could also
+execute the script as root, but this is not advised. Please follow
+the onscreen instructions until the setup has finished.
+
+ ** Manual setup
+
+Simply copy all the files from the project directory to your webserver
+root:
+
+	Ex.: rsync -azP src/ /var/www/vhost/srvmon/
+
+After the files have been copied to your web root, you then have to
+modify the init.php file according to your database configuration:
+
+	vim <webroot>/inc/init.php
+
+Find the section below and modify it to your needs:
+	
+	...
+	$GLOBALS["config"] = array(
+		"mysql" => array(
+			"host"   => "<IP of DB server>",
+			"user"   => "<DB username>",
+			"pass"   => "<DB user password>",
+			"dbname" => "<DB name>"
+		)
+	);
+	...
+
+I will not go into detail on how to configure a virtual host on
+Apache2. If you want to do this, please consult the documentation for
+Apache2.
+
+If everything has been installed correctly, the web application will 
+display the following text when you visit the url:
+
+	SRVMON DIRECTOR - SEVER 1.1 P1 with AES support
+	Copyright (C) 2015  Pol Warnimont
+	The SRVMON DIRECTOR SERVER comes with ABSOLUTELY NO WARRANTY!
+
+	Waiting for input . . .
+
+Please note that the current agents do not support HTTPS connections.
+This will be changes in the next project release (SRVMON R2).
+
+* Etc *
+
+For any questions regarding the SRVMON DIRECTOR SERVER, please send
+an e-mail to the maintainer of the project:
+
+	<pwarnimo(at)gmail(dot)com>
+		or use
+	https://github.com/pwarnimo/srvmon/issues
+
+The source for this project can be found on GitHub:
+
+	https://github.com/pwarnimo/srvmon
+	https://pwarnimo.github.io/srvmon

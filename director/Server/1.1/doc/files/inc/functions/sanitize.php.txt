@@ -1,0 +1,46 @@
+<?php
+/* File        : sanitize.php
+ * Author(s)   : Pol Warnimont
+ * Create date : 2015-05-07
+ * Version     : 1.1
+ *
+ * Description : This file contains data sanitizing functions.
+ *
+ * Changelog
+ * ---------
+ *  2015-05-07 : Created file.
+ *  2015-05-11 : Added phpDocumentor comments.
+ *  2015-05-20 : Final bugfixing + Adding comments.
+ *  2015-07-24 : Preparing for package release.
+ *
+ * License information
+ * -------------------
+ *  Copyright (C) 2015  Pol Warnimont
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Remove unwanted characters.
+ *
+ * This function removes unwanted characters from the input string $string
+ * and also checks if the charset is UTF-8.
+ *
+ * @param String $string Input which should be checked.
+ * @return String Returns sanitized input.
+ */
+function escape($string) {
+	return htmlentities($string, ENT_QUOTES, "UTF-8");
+}
+

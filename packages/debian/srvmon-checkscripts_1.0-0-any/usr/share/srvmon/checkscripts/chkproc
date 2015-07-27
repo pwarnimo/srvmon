@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# Script      : chkproc
+# Author(s)   : Pol Warnimont
+# Create date : 2015-04-27
+# Version     : 1.0 R1
+#
+# Description : A check script for SRVMON - Check process count
+#
+# Changelog
+# ---------
+#  2015-04-27 : Created script.
+#  2015-04-30 : Changed license to AGPLv3.
+#  2015-05-26 : Modified script.
+#
+# License
+# -------
+#  Copyright (C) 2015  Pol Warnimont
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+
+if [ $# -eq 2 ]
+then
+	PROCCOUNT=`ps aux | wc -l`
+
+	if [ $PROCCOUNT -ge $2 ]
+	then
+		OUTPUT="$PROCCOUNT running processes (>$2)!"
+		EXCODE=2
+	elif [ $PROCCOUNT -ge $1 ]
+	then
+		OUTPUT="$PROCCOUNT running processes (>$1)!"
+		EXCODE=1
+	else
+		OUTPUT="Process count Ok ($PROCCOUNT)."
+		EXCODE=0
+	fi
+
+	echo "$EXCODE;$OUTPUT;$PROCCOUNT;$1;$2"
+	exit $EXCODE
+else
+	echo "Syntax error!"
+	echo "Usage: $0 <warning count> <critical count>"
+	echo "Ex.:   $0 200 300"
+	echo ""
+	echo "Copyright (C) 2015  Pol Warnimont"
+	echo "This script ($0) comes with ABSOLUTELY NO WARRANTY!"
+fi

@@ -1,0 +1,9 @@
+Package: srvmon-agent
+Version: 2.0-1
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: openjdk-7-jre (>= 7u79-2.5.5-1~deb), srvmon-checkscripts (>= 1.0-0)
+Maintainer: Pol Warnimont <pwarnimo@gmail.com>
+Description: SRVMON Agent
+ A SRVMON plugin executor and scheduler.

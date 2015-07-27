@@ -1,0 +1,9 @@
+Package: srvmon-database
+Version: 1.3-2
+Section: base
+Priority: optional
+Architecture: all
+Depends: mariadb-server (>= 5.5.44) | mysql-server (>= 5.5)
+Maintainer: Pol Warnimont <pwarnimo@gmail.com>
+Description: SRVMON Director Server
+ A status checker for the SRVMON Project.

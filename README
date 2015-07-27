@@ -94,7 +94,6 @@ the webinterface only that it is a standalone application. I created the
 application only to show you that it is possible to create multiple user
 interfaces for this suite because all the main logic happens in the
 database. The Desktop Client is written in Java for easy porting.
-* Not yet decided if I use C++ w/ QT or Java...
 
 Why?
 ----
@@ -125,9 +124,9 @@ As operating system for the webinterface, director and agents, I used
 the following:
 
 	* Debian 7.8 Wheezy
-	* Debian 8.0 Wheezy
+	* Debian 8.0 Jessie
 	* CentOS 6.0
-	* Arch Linux
+	* Rasbpian
 
 For the development of the project, I used Debian 7.8 & 8.0. The code
 has been mostly created with vim. For the Java updater and agents I
@@ -153,13 +152,3 @@ to create guides for the other OSes as well.
 The agents can run on Unix,Unix-like and Microsoft Windows systems.
 (It should be possible to port it on other, more exotic systems...)
 * Windows support is currently non-existent but planned... :-)
-
-The agents should run on every system which supports Java and the SQL
-connector for Java. The service scripts that I use are simple shell
-scripts.
-
-NOTE: You are not required to use the agent component. It is also 
-      possible to write an own agent in a shell script as long as it
-      supports a connection to the database. The only thing that the
-      agent does, is scheduling the service checks and executing the
-      stored procedures in the database.

@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-# This is a wrapper for the SRVMON AGENT.
-# Copyright (C) 2015  Pol Warnimont
-# The SRVMON AGENT comes with ABSOLUTELY NO WARRANTY!
-
-exec java -jar /usr/share/srvmon/jar/srvmon-agent.jar &>> /var/log/srvmon/agent.log

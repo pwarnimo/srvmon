@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-# This is a wrapper for the SRVMON DIRECTOR UPDATER.
-# Copyright (C) 2015  Pol Warnimont
-# The SRVMON DIRECTOR UPDATER comes with ABSOLUTELY NO WARRANTY!
-
-exec java -jar /usr/share/srvmon/jar/srvmon-updater.jar &>> /var/log/srvmon/director.log

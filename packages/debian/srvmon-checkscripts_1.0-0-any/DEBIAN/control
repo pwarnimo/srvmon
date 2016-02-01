@@ -1,8 +1,0 @@
-Package: srvmon-checkscripts
-Version: 1.0-0
-Section: base
-Priority: optional
-Architecture: all
-Maintainer: Pol Warnimont <pwarnimo@gmail.com>
-Description: SRVMON Checkscripts
- Checkscripts for the SRVMON Agent.

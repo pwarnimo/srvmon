@@ -41,7 +41,7 @@ echo ""
 
 echo "I will now begin to copy the database..."
 
-mysql -u$dbusername -p$dbpassword $dbname < sql/db/srvmon-1.3.sql
+mysql -u$dbusername -p$dbpassword $dbname < sql/db/srvmon-1.3-1.sql
 mysql -u$dbusername -p$dbpassword $dbname < sql/dump/srvmon-data-1.3.sql
 
 tools/loadroutines.sh

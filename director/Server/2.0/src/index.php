@@ -1,4 +1,37 @@
 <?php
+/*
+ * File        : index.php
+ * Author(s)   : Pol Warnimont
+ * Create date : 2016-02-02
+ * Version     : 2.0 A1
+ * Description : This file is part of the SRVMON Director Server.
+ *               This is a "Quick and Dirty" iplementation of the
+ *               server using the Phalcon framework with the REST
+ *               API.
+ *
+ * Changelog
+ * ---------
+ *  2016-02-02 : Created file.
+ *
+ * License information
+ * -------------------
+ *  Copyright (C) 2016  Pol Warnimont
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 use Phalcon\Loader;
 use Phalcon\Mvc\Micro;
 use Phalcon\Di\FactoryDefault;
@@ -220,6 +253,38 @@ $app->put("/api/servers/{id:[0-9]+}/disable", function ($id) use ($app) {
 
 	return $response;
 });
+
+$app->post("/api/servers/scanstatus", function () use ($app) {
+	$status = Servers::updateState();
+
+	$response = new Response();
+
+	if ($status == true) {
+		$response->setJsonContent(
+			array(
+				"status" => "OK"
+			)
+		);
+	}
+	else {
+		$response->setStatusCode(409, "Conflict");
+
+		$response->setJsonContent(
+			array(
+				"status" => "FAILED"
+			)
+		);
+	}
+
+	return $response;
+});
+
+// SERVICE MGMT
+
+$app->get("/api/servers/{id:[0-9]+}/services", function ($id) use ($app) {
+	
+});
+
 /*---*/
 
 $app->notFound(function () use ($app) {

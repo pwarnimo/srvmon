@@ -1,25 +1,24 @@
 SRVMON SERVER MONITORING SUITE
 ------------------------------
 
- *** This suite is currently being prepared for the first Release.
- *** Version 1.0 (P1) will be available soon.
+ *** Version 2.0 (P1) will be available soon.
  
  *** Beta packages are available under the following repositories:
  *** -DEBIAN WHEEZY : deb http://debian.scrubstudios.de/apt/debian wheezy main
  *** -DEBIAN JESSIE : deb http://debian.scrubstudios.de/apt/debian jessie main
- *** -OPENSUSE 13.2 : Setup ongoing
+ *** -OPENSUSE 42.1 : Setup ongoing
  *** -ARCH LINUX    : Setup ongoing
  *** -FEDORA        : Setup ongoing
 
  *** CURRENT VERSIONS : 
  *** Part               Version   Status          Priority
  *** SRVMON DB
- ***   -DB SQL          1.3       P1 Finalizing   Freeze
- ***   -ROUTINES        1.1       P1 Finalizing   Freeze
+ ***   -DB SQL          1.3-1     P1 Finalizing   High
+ ***   -ROUTINES        1.3       P1 Finalizing   High
  *** SRVMON DIRECTOR
- ***   -UPDATER         1.2       P1 Incoming     Freeze
- ***   -SERVER          1.0       P1 Incoming     Freeze
- *** SRVMON AGENT       2.0       P1 Incoming     Freeze
+ ***   -UPDATER         ---       P1 Scratched    Low
+ ***   -SERVER          2.0       P1 Development  High
+ *** SRVMON AGENT       3.0       P1 Development  High
  *** SRVMON WEBUI       0.5       P1 Development  High
  *** SRVMON NOTIFICATOR 0.9       P1 Development  High
  *** ANDROID CLIENT     0.1       P2 Development  Medium
@@ -33,7 +32,7 @@ SRVMON SERVER MONITORING SUITE
  *** -Incoming    : Project packages are being created.
  *** -Released    : Project is ready for the production environment.
  
- *** First release will be SRVMON Suite 1.0 P1. ETA is 07th August 2015.
+ *** First release will be SRVMON Suite 2.0 P1. ETA is 1st July 2016.
  
 About
 -----
@@ -56,6 +55,8 @@ which can be used to control the data of the database.
 
 Director (<basedir>/director)
 --------
+
+* The usage of the updater program is depracated and will be romoved.
 
 The next part is the SRVMON director. The directory also has 2 parts.
 The first part is the UPDATER which runs on the database server. The

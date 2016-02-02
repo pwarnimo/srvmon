@@ -1,11 +1,11 @@
 <?php
 /*
- * File        : Servers.php
+ * File        : ServersHaveServices.php
  * Author(s)   : Pol Warnimont
  * Create date : 2016-02-02
  * Version     : 2.0 A1
  * Description : This file is part of the SRVMON Director Server.
- *               This is a "Quick and Dirty" iplementation of the
+ *               This is a "Quick and Dirty" iplementation of thr
  *               server using the Phalcon framework with the REST
  *               API.
  *
@@ -34,42 +34,42 @@
 
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Message;
-use Phalcon\Mvc\Model\Validator\Uniqueness;
-use Phalcon\Mvc\Model\Validator\InclusionIn;
+use Phalcon\Mvc\Model\Validator\StringLength;
 
-class Servers extends Model {
-	public function validation() {
-		$this->validate(
-			new InclusionIn(
+public ServersHaveServices extends Model {
+	public function validate() {
+		$this->validator(
+			new StringLength(
 				array(
-					"field" => "dtEnabled",
-					"domain" => array(
-						"0",
-						"1"
-					)
+					"field" => "dtScriptOutput",
+					"max" => 255,
+					"min" => 1,
+					"messageMaximum" => "Message to long (>255)!",
+					"messageMinimum" => "Message to small (<1)!"
+				),
+				array(
+					"field" => "dtChecksum",
+					"max" => 255,
+					"min" => 32,
+					"messageMaximum" => "Checksum to long (>255)!",
+					"messageMinimum" => "Checksum to small (<32)!"
+				),
+				array(
+					"field" => "dtNotificationStatus",
+					"max" => 45,
+					"min" => 1,
+					"messageMaximum" => "Notification status to long (>45)!",
+					"messageMinimum" => "Notification status to small (<1)!"
 				)
 			)
 		);
 
-		if ($this->validationHasFailed() == true) {
-			return false;
+		if ($this->dtValue < 0 || $this->dtValue > 4) {
+			$this->appendMessage(new Message("Illegal value (x>=0 && x <= 4)!"));
 		}
 	}
 
 	public function getSource() {
-		return "tblServer";
-	}
-
-	public static function updateState() {
-		$server = new Servers();
-
-		$success = $server->getReadConnection()->update(
-			"tblServer",
-			array("dtEnabled"),
-			array("0"),
-			"dtLastCheckTS < (NOW() - INTERVAL 5 MINUTE)"
-		); 
-
-		return $success;
+		return "tblServer_has_tblService";
 	}
 }

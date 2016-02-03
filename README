@@ -16,7 +16,7 @@ SRVMON SERVER MONITORING SUITE
  ***   -DB SQL          1.3-1     P1 Finalizing   High
  ***   -ROUTINES        1.3       P1 Finalizing   High
  *** SRVMON DIRECTOR
- ***   -UPDATER         ---       P1 Scratched    Low
+ ***   -UPDATER         ---       -- Scratched    None
  ***   -SERVER          2.0       P1 Development  High
  *** SRVMON AGENT       3.0       P1 Development  High
  *** SRVMON WEBUI       0.5       P1 Development  High
@@ -58,14 +58,20 @@ Director (<basedir>/director)
 
 * The usage of the updater program is depracated and will be romoved.
 
-The next part is the SRVMON director. The directory also has 2 parts.
-The first part is the UPDATER which runs on the database server. The
-UPDATER then fetches a list of the available hosts from the database and
-checks if the hosts are reachable. The second part of the director is
-the SERVER, which is used to receive the XML data from the AGENTS.
-The UPDATER is written in Java and the SERVER is written in PHP.
-* A director Shell script is available for testing (director-bash.sh).
-* An updater written in C is planned (Just because I can :-)).
+N The next past is the SRVMON director. The director is a web application
+N which uses the PHP Slim framework and implements a REST API. The server
+N receives the data from the agents and then executes the apropriate
+N action. The data is exchanged via JSON requests. The director server
+N is written in PHP.
+
+X The next part is the SRVMON director. The directory also has 2 parts.
+X The first part is the UPDATER which runs on the database server. The
+X UPDATER then fetches a list of the available hosts from the database and
+X checks if the hosts are reachable. The second part of the director is
+X the SERVER, which is used to receive the XML data from the AGENTS.
+X The UPDATER is written in Java and the SERVER is written in PHP.
+X * A director Shell script is available for testing (director-bash.sh).
+X * An updater written in C is planned (Just because I can :-)).
 
 Agent (<basedir>/agent)
 -----
@@ -76,9 +82,8 @@ execute the check commands on the host. The agent can execute multiple
 check commands which can be defined in the database. A service could be
 a simple shell script which checks the CPU usage. The agent would then
 periodically execute the script and send the output to the DIRECTOR
-server using XML data. The agent is written in Java.
+server using JSON data. The agent is written in C++ with t55.
 * An agent Shell script is available for testing (agent-bash.sh)
-* An agent written in C is planned (Just because I can :-)).
 
 Web UI (<basedir>/webclient)
 ------

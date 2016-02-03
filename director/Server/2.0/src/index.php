@@ -6,12 +6,13 @@
  * Version     : 2.0 A1
  * Description : This file is part of the SRVMON Director Server.
  *               This is a "Quick and Dirty" iplementation of the
- *               server using the Phalcon framework with the REST
+ *               server using the Slim framework with the REST
  *               API.
  *
  * Changelog
  * ---------
  *  2016-02-02 : Created file.
+ *  2016-02-03 : Switching to Slim framework.
  *
  * License information
  * -------------------
@@ -31,274 +32,204 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+require_once "inc/init.php";
+require "vendor/autoload.php";
 
-use Phalcon\Loader;
-use Phalcon\Mvc\Micro;
-use Phalcon\Di\FactoryDefault;
-use Phalcon\Db\Adapter\Pdo\Mysql as PdoMysql;
-use Phalcon\Http\Response;
+$app = new \Slim\Slim();
 
-$loader = new Loader();
-
-$loader->registerDirs(
-	array(
-		__DIR__ . "/models/"
-	)
-)->register();
-
-$di = new FactoryDefault();
-
-$di->set("db", function () {
-	return new PdoMysql(
-		array(
-			"host" => "localhost",
-			"username" => "srvmonusr",
-			"password" => "q1w2e3!",
-			"dbname" => "srvmon"
-		)
-	);
+$app->get("/", function () {
+	echo json_encode("Hello there!");
 });
 
-$app = new Micro($di);
+/* SERVER FUNCS */
+$app->get("/servers", "getServers");
+$app->get("/servers/:id", "getServer");
+$app->put("/servers/:id/setstatus", "setServerStatus");
+$app->put("/servers/:id/children/disablechecks", "disableChildrenChecks");
+$app->put("/servers/setfailedsystems", "setFailedSystems");
+$app->put("/servers/:hid/services/:sid/update", "updateServiceOfServer");
+$app->get("/servers/:hid/services", "getAllServicesForServer");
+$app->get("/servers/:hid/services/:sid", "getServiceForServer");
 
-$app->get('/', function () {
-	$response = new Response();
+/* GENERAL FUNCS */
+$app->get("/version", "showVersion");
 
-	$response->setJsonContent(
-		array(
-			"status" => "IDLE",
-			"version" => "Director Server 2.0 A1"
-		)
-	);
+$app->run();
 
-	return $response;
-});
+//***********************
 
-/*---*/
-
-$app->get("/api/servers", function () use ($app) {
-	$phql = "SELECT * FROM Servers";
-	$servers = $app->modelsManager->executeQuery($phql);
-
-	$data = array();
-	foreach ($servers as $server) {
-		$data[] = array(
-			"idServer" => $server->idServer,
-			"dtHostname" => $server->dtHostname,
-			"dtIPAddress" => $server->dtIPAddress,
-			"dtEnabled" => $server->dtEnabled
-		);
-	}
-
-	echo json_encode($data);
-});
-
-$app->get("/api/servers/search/{name}", function ($name) use ($app) {
-	$phql = "SELECT * FROM Servers WHERE dtHostname LIKE :name:";
-	$servers = $app->modelsManager->executeQuery(
-		$phql,
-		array(
-			"name" => "%" . $name . "%"
-		)
-	);
-
-	$data = array();
-	foreach ($servers as $server) {
-		$data[] = array(
-			"idServer" => $server->idServer,
-			"dtHostname" => $server->dtHostname,
-			"dtIPAddress" => $server->dtIPAddress,
-			"dtEnabled" => $server->dtEnabled
-		);
-	}
-
-	echo json_encode($data);
-});
-
-$app->get("/api/servers/{hostname}/getid", function ($hostname) use ($app) {
-	$phql = "SELECT idServer FROM Servers WHERE dtHostname = :hostname:";
-	$server = $app->modelsManager->executeQuery(
-		$phql,
-		array(
-			"hostname" => $hostname
-		)
-	)->getFirst();
-	
-	$response = new Response();
-
-	if ($server == false) {
-		$response->setJsonContent(
+function getServers() {
+	if (!DB::getInstance()->doQuery("CALL getServer(-1,TRUE,@err)")->error()) {
+		echo json_encode(
 			array(
-				"status" => "-1"
+				"status" => "OK",
+				"servers" => DB::getInstance()->results()
 			)
 		);
 	}
 	else {
-		$response->setJsonContent(
+		echo json_encode(
 			array(
-				"status" => "1",
-				"id" => $server->idServer
+				"status" => "QUERYFAIL"
 			)
 		);
 	}
+}
 
-	return $response;
-});
-
-$app->get("/api/servers/{id:[0-9]+}", function ($id) use ($app) {
-	$phql = "SELECT * FROM Servers WHERE idServer = :id:";
-	$server = $app->modelsManager->executeQuery(
-		$phql,
-		array(
-			"id" => $id
-		)
-	)->getFirst();
-
-	$response = new Response();
-
-	if ($server == false) {
-		$response->setJsonContent(
+function getServer($id) {
+	if (!DB::getInstance()->doQuery("CALL getServer(?,TRUE,@err)", array($id))->error()) {
+		echo json_encode(
 			array(
-				"status" => "-1"
+				"status" => "OK",
+				"server" => DB::getInstance()->first()
 			)
 		);
 	}
 	else {
-		$response->setJsonContent(
+		echo json_encode(
 			array(
-				"status" => "1",
-				"data" => array(
-					"idServer" => $server->idServer,
-					"dtHostname" => $server->dtHostname,
-					"dtIPAddress" => $server->dtIPAddress,
-					"dtEnabled" => $server->dtEnabled
+				"status" => "QUERYFAIL"
+			)
+		);
+	}
+}
+
+function setServerStatus($id) {
+	$request = \Slim\Slim::getInstance()->request();	
+	$data = json_decode($request->getBody());
+
+	//print_r($data);
+	//Create new input validation methods
+	//This method is only temporary!
+
+	if ($data->state == 0 || $data->state == 1) {
+		if (!DB::getInstance()->doQuery("CALL setSystemStatus(?,?,@err)", array($id, $data->state))->error()) {
+			echo json_encode(
+				array(
+					"status" => "OK"
 				)
-			)
-		);
-	}
-
-	return $response;
-});
-
-$app->put("/api/servers/{id:[0-9]+}/enable", function ($id) use ($app) {
-	$phql = "UPDATE Servers SET dtEnabled = 1 WHERE idServer = :id:";
-	$status = $app->modelsManager->executeQuery(
-		$phql,
-		array(
-			"id" => $id
-		)
-	);
-
-	$response = new Response();
-
-	if ($status->success() == true) {
-		$response->setJsonContent(
-			array(
-				"status" => "1"
-			)
-		);
+			);
+		}
+		else {
+			echo json_encode(
+				array(
+					"status" => "QUERYFAIL"
+				)
+			);
+		}
 	}
 	else {
-		$response->setStatusCode(409, "Conflict");
-
-		$errors = array();
-		foreach ($status->getMessages() as $message) {
-			$errors[] = $message->getMessage();
-		}
-
-		$response->setJsonContent(
+		echo json_encode(
 			array(
-				"status" => "-1",
-				"messages" => $errors
+				"status" => "INVALID",
+				"message" => "Data is invalid!"
 			)
 		);
 	}
+}
 
-	return $response;
-});
-
-$app->put("/api/servers/{id:[0-9]+}/disable", function ($id) use ($app) {
-	$phql = "UPDATE Servers SET dtEnabled = 0 WHERE idServer = :id:";
-	$status = $app->modelsManager->executeQuery(
-		$phql,
-		array(
-			"id" => $id
-		)
-	);
-
-	$response = new Response();
-
-	if ($status->success() == true) {
-		$response->setJsonContent(
-			array(
-				"status" => "1"
-			)
-		);
-	}
-	else {
-		$response->setStatusCode(409, "Conflict");
-
-		$errors = array();
-		foreach ($status->getMessages() as $message) {
-			$errors[] = $message->getMessage();
-		}
-
-		$response->setJsonContent(
-			array(
-				"status" => "-1",
-				"messages" => $errors
-			)
-		);
-	}
-
-	return $response;
-});
-
-$app->post("/api/servers/scanstatus", function () use ($app) {
-	$status = Servers::updateState();
-
-	$response = new Response();
-
-	if ($status == true) {
-		$response->setJsonContent(
+function disableChildrenChecks($id) {
+	if (!DB::getInstance()->doQuery("CALL disableChildrenChecks(?,@err)", array($id))->error()) {
+		echo json_encode(
 			array(
 				"status" => "OK"
 			)
 		);
 	}
 	else {
-		$response->setStatusCode(409, "Conflict");
-
-		$response->setJsonContent(
+		echo json_encode(
 			array(
-				"status" => "FAILED"
+				"status" => "QUERYFAIL"
 			)
 		);
 	}
+}
 
-	return $response;
-});
+function setFailedSystems() {
+	$failcnt = 0;
 
-// SERVICE MGMT
+	if (!DB::getInstance()->doQuery("SELECT idServer, dtLastCheckTS FROM tblServer WHERE dtLastCheckTS < (NOW() - INTERVAL 5 MINUTE)")->error()) {
+		//echo json_encode(DB::getInstance()->results());
+		$results = DB::getInstance()->results();
+		foreach ($results as $server) {
+			if (!DB::getInstance()->doQuery("CALL setSystemStatus(?,0,@err)", array($server->idServer))->error()) {
+				$failcnt++;
+			}
+			else {
+				die(json_encode(
+					array(
+						"status" => "QUERYFAIL",
+						"message" => "Query failed at ID = " . $server->idServer
+					)
+				));
+			}
+		}
 
-$app->get("/api/servers/{id:[0-9]+}/services", function ($id) use ($app) {
-	
-});
+		echo json_encode(
+			array(
+				"status" => "OK",
+				"failedcount" => $failcnt
+			)
+		);
+	}
+	else {
+		echo json_encode(
+			array(
+				"status" => "QUERYFAIL"
+			)
+		);
+	}
+}
 
-/*---*/
+function updateServiceOfServer($hid, $sid) {}
 
-$app->notFound(function () use ($app) {
-	$app->response->setStatusCode(404, "Not Found")->sendHeaders();
-	
-	$response = new Response();
+function getAllServicesForServer($hid) {
+	if (!DB::getInstance()->doQuery("CALL getServicesForServer(?,-1,0,@err)", array($hid))->error()) {
+		echo json_encode(
+			array(
+				"status" => "OK",
+				"services" => DB::getInstance()->results()
+			)
+		);
+	}
+	else {
+		echo json_encode(
+			array(
+				"status" => "QUERYFAIL"
+			)
+		);
+	}
+}
 
-	$response->setJsonContent(
+function getServiceForServer($hid, $sid) {
+	if (!DB::getInstance()->doQuery("CALL getServicesForServer(?,?,0,@err)", array($hid, $sid))->error()) {
+		$result = DB::getInstance()->first();
+		echo json_encode(
+			array(
+				"status" => "OK",
+				"service" => DB::getInstance()->first()
+			)
+		);
+	}
+	else {
+		echo json_encode(
+			array(
+				"status" => "QUERYFAIL"
+			)
+		);
+	}
+}
+
+function showVersion() {
+	echo json_encode(
 		array(
-			"status" => "Unknown Operation"
+			"status" => "OK",
+			"mesg" => array(
+				"program" => "SRVMON Director",
+				"version" => "2.0 A1",
+				"copyright" => "2016 Pol Warnimont",
+				"license" => "GPLv2"
+			)
 		)
 	);
-
-	return $response;
-});
-
-$app->handle();
+}

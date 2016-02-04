@@ -30,15 +30,103 @@
 
 #include "task.h"
 #include <QTextStream>
+#include <QNetworkReply>
 
-Task::Task(QObject *parent) : QObject(parent) {}
-
-void Task::run() {
-	testRun();
-
-	emit finished();
+Task::Task(QObject *parent) : QObject(parent) {
+	busy = false;
+	qDebug("**Task created");
 }
 
-void Task::testRun() {
-	qDebug("This is a test from the task class.");
+void Task::run() {
+	qDebug(">> run()");
+	if (busy == false) {
+		mode = 1;
+		busy = true;
+
+		QString url_str = "http://localhost/director/servers/" + myid + "/keepalive";
+
+		HttpRequestInput input(url_str, "PUT");
+
+		HttpRequestWorker *worker = new HttpRequestWorker(this);
+		connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handle_result(HttpRequestWorker*)));
+		worker->execute(&input);
+	}
+}
+
+void Task::getID() {
+	qDebug(">> getID(..)");
+	if (busy == false) {
+		mode = 0;
+		busy = true;
+
+		QString hname = "lbs4065";
+
+		QString url_str = "http://localhost/director/servers/" + hname + "/getid";
+
+		HttpRequestInput input(url_str, "GET");
+
+		HttpRequestWorker *worker = new HttpRequestWorker(this);
+		connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handle_result(HttpRequestWorker*)));
+		worker->execute(&input);
+	}
+}
+
+/*void Task::testRun(int mode) {
+	qDebug("testRun()");
+
+	QString url_str = "http://localhost/director/servers";
+
+	HttpRequestInput input(url_str, "GET");
+
+	HttpRequestWorker *worker = new HttpRequestWorker(this);
+	connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handle_result(HttpRequestWorker*)));
+	worker->execute(&input);
+	
+	qDebug("testRun() -> end");
+}*/
+
+void Task::handle_result(HttpRequestWorker *worker) {
+	QString msg;
+
+		qDebug() << "MODE == " << mode;
+
+	    if (worker->error_type == QNetworkReply::NoError) {
+			//switch (mode) {
+				//case 0: {
+				if (mode == 0) {
+
+					qDebug() << "M0-RESP>" << worker->response;
+
+					QJsonDocument d = QJsonDocument::fromJson(worker->response);
+					QJsonObject jobj = d.object();
+					QJsonValue val1 = jobj.value(QString("data"));
+
+					QJsonObject item = val1.toObject();
+
+					QJsonValue id = item["idServer"];
+
+					myid =id.toString();
+
+					qDebug() << "M0> The server ID is" << myid;
+
+					//break;
+				}
+
+				//case 1: {
+				else if (mode == 1) {
+					qDebug() << "M1-RESP>" << worker->response;
+
+					//break;
+				}
+			//}
+			//msg = "Success - Response: " + worker->response;
+		}
+		else {
+			msg = "Error: " + worker->error_str;
+			qDebug() << msg;
+		}
+
+		busy = false;
+
+		//qDebug() << msg;
 }

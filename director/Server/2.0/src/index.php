@@ -13,6 +13,7 @@
  * ---------
  *  2016-02-02 : Created file.
  *  2016-02-03 : Switching to Slim framework.
+ *  2016-02-04 : Adding keepAlive function.
  *
  * License information
  * -------------------
@@ -45,7 +46,9 @@ $app->get("/", function () {
 $app->get("/servers", "getServers");
 $app->get("/servers/:id", "getServer");
 $app->put("/servers/:id/setstatus", "setServerStatus");
+$app->put("/servers/:id/keepalive", "keepAlive");
 $app->put("/servers/:id/children/disablechecks", "disableChildrenChecks");
+$app->get("/servers/:name/getid", "getServerIDByName");
 $app->put("/servers/setfailedsystems", "setFailedSystems");
 $app->put("/servers/:hid/services/:sid/update", "updateServiceOfServer");
 $app->get("/servers/:hid/services", "getAllServicesForServer");
@@ -89,6 +92,30 @@ function getServer($id) {
 		echo json_encode(
 			array(
 				"status" => "QUERYFAIL"
+			)
+		);
+	}
+}
+
+function getServerIDByName($name) {
+	if (!DB::getInstance()->doQuery("SELECT getServerID(?) AS idServer", array($name))->error()) {
+		echo json_encode(
+			array(
+				"status" => "OK",
+				"data" => DB::getInstance()->first()
+			)
+		);
+	}
+	else {
+	}
+}
+
+function keepAlive($id) {
+	//if (!DB::getInstance()->doQuery("UPDATE tblServer SET dtLastCheckTS = NULL WHERE idServer = ?", array($id))->error()) {
+	if (!DB::getInstance()->doQuery("CALL keepAlive(?,@err)", array($id))->error()) {
+		echo json_encode(
+			array(
+				"status" => "OK"
 			)
 		);
 	}

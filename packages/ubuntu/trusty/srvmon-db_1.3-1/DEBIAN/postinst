@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+cd /tmp/srvmon-db
+./setup.sh
+
+if [ $? -eq 0 ]
+then
+	echo "The database has been successfully installed!"
+	rm -rf /tmp/srvmon-db
+fi
+
+exit 0

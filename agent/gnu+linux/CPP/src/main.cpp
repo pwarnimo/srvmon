@@ -30,6 +30,7 @@
  */
 
 #include "task.h"
+#include "httprequestworker.h"
 
 void printVersion() {
 	qDebug() << "SRVMON Agent Daemon for GNU/Linux";
@@ -70,12 +71,28 @@ int main (int argc, char *argv[]) {
 		QCoreApplication app(argc, argv);
 		QSettings settings("SRVMON", "Agent");
 
-		if (QFile(settings.fileName()).exists()) {
+		/*if (QFile(settings.fileName()).exists()) {*/
 			Task *task = new Task(&app);
 
-			QObject::connect(task, SIGNAL(finished()), &app, SLOT(quit()));
-			QTimer::singleShot(0, task, SLOT(run()));
-		}
+			/*QObject::connect(task, SIGNAL(finished()), &app, SLOT(quit()));
+			QTimer::singleShot(0, task, SLOT(run()));*/
+
+		/*while (1) {
+			QCoreApplication::processEvents();
+			task->run();
+		}*/
+
+		QTimer::singleShot(0, task, SLOT(getID()));
+
+		QTimer *timer = new QTimer(&app);
+		
+		QObject::connect(timer, SIGNAL(timeout()), task, SLOT(run()));
+		//QObject::connect(task, SIGNAL(finished()), &app, SLOT(quit()));
+		
+		timer->start(10000);
+
+
+		/*}
 		else {
 			qDebug("Settings file does not exist!\nCreating placeholder file.");
 
@@ -87,7 +104,10 @@ int main (int argc, char *argv[]) {
 			settings.endGroup();
 
 			return 1;
-		}
+		}*/
+
+		/** TESTING */
+		
 
 		return app.exec();
 	}

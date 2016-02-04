@@ -31,6 +31,7 @@
  */
 
 #include <QtCore>
+#include "httprequestworker.h"
 
 class Task : public QObject {
 	Q_OBJECT
@@ -40,9 +41,17 @@ class Task : public QObject {
 
 	public slots:
 		void run();
+		void getID();
 
 	private:
-		void testRun();
+		//void testRun(int mode);
+		//int getID();
+		bool busy;
+		int mode;
+		QString myid;
+
+	private slots:
+		void handle_result(HttpRequestWorker *worker);
 
 	signals:
 		void finished();

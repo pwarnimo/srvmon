@@ -53,8 +53,18 @@ void Task::run() {
 	}
 }
 
+void Task::loadServices() {
+	qDebug(">> loadServices()");
+	if (busy == false) {
+		mode = 2;
+		busy = true;
+
+		QString url_str = "http://localhost/director/servers/" + myid + "/services";
+	}
+}
+
 void Task::getID() {
-	qDebug(">> getID(..)");
+	qDebug(">> getID()");
 	if (busy == false) {
 		mode = 0;
 		busy = true;

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+cd /tmp/srvmon-director
+./setup.sh
+
+if [ $? -eq 0 ]
+then
+	echo "The server has been successfully installed!"
+	rm -rf /tmp/srvmon-director
+fi
+
+exit 0

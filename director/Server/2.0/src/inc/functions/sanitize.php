@@ -1,9 +1,9 @@
 <?php
 /*
- * File : sanitize.php
- * Author(s) : Pol Warnimont
+ * File        : sanitize.php
+ * Author(s)   : Pol Warnimont
  * Create date : 2015-05-07
- * Version : 2.0 A1
+ * Version     : 2.0 A1
  *
  * Description : This file contains data sanitizing functions.
  *
@@ -14,6 +14,7 @@
  *  2015-05-20 : Final bugfixing + Adding comments.
  *  2015-07-24 : Preparing for package release.
  *  2016-02-03 : Beginning with version 2.0.
+ *  2016-02-06 : Alpha 2.0-1 package preparation.
  *
  * License information
  * -------------------

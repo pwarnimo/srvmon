@@ -19,6 +19,7 @@
  * *	2015-05-20 : Final bugfixing + Adding comments.
  * *	2015-07-24 : Preparing for package release.
  * *  2016-02-03 : Beginning with version 2.0.
+ * *	2016-02-06 : Alpha 2.0-1 package preparation.
  *  
  * ### License
  *  

@@ -1,0 +1,10 @@
+Package: srvmon-director
+Version: 2.0ALPHA1-1
+Section: base
+Priority: optional
+Architecture: all
+Depends: mariadb-server (>=5.5.46), apache2 (>=2.4.7), php5 (>=5.5.9), php5-mysql (>=5.5.9)
+Maintainer: Pol Warnimont <pwarnimo@gmail.com>
+Description: SRVMON Director
+ Web application for controlling
+ the SRVMON Agents.

@@ -10,6 +10,8 @@
  * Changelog
  * ---------
  *  2016-02-09 : Created file.
+ *  2016-02-10 : Added action for displaying single server data.
+ *               Support for services added.
  *
  * License
  * -------
@@ -36,6 +38,14 @@ if (Input::exists("get")) {
 	switch (Input::get("action")) {
 		case "getServers":
 			echo \Httpful\Request::get(Config::get("director/host") . "/servers")->send();
+			break;
+
+		case "getServer":
+			echo \Httpful\Request::get(Config::get("director/host") . "/servers/" . Input::get("id"))->send();
+			break;
+
+		case "getAllServicesForServer":
+			echo \Httpful\Request::get(Config::get("director/host") . "/servers/" . Input::get("id") . "/services")->send();
 			break;
 	}
 }

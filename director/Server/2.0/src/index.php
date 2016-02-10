@@ -51,6 +51,8 @@ $app->get("/servers/:id", function ($id) { echo ServerMngr::getServers($id); });
 $app->put("/servers/:id/keepalive", function ($id) { echo ServerMngr::keepAlive($id); });
 $app->put("/servers/:id/setstatus", function ($id) { echo ServerMngr::setServerStatus($id, \Slim\Slim::getInstance()->request()->getBody()); });
 $app->put("/servers/:id/children/disablechecks", function ($id) { echo ServerMngr::disableChildHosts($id); });
+$app->get("/servers/:hid/services", function ($hid) { echo ServiceMngr::getServicesForServer($hid); });
+$app->get("/servers/:hid/services/:sid", function ($hid, $sid) { echo ServiceMngr::getServicesForServer($hid, $sid); });
 
 /*$app->put("/servers/:hid/services/:sid/update", "updateServiceOfServer");
 $app->get("/servers/:hid/services", "getAllServicesForServer");

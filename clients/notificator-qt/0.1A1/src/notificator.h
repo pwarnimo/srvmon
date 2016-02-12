@@ -1,17 +1,17 @@
-#ifndef SERVICE_H
-#define SERVICE_H
+#ifndef NOTIFICATOR_H
+#define NOTIFICATOR_H
 
 /*
- * File : service.h
- * Author(s) : Pol Warnimont
- * Create date : 2016-02-12
- * Version : 3.0A1
+ * File        : notificator.h
+ * Author(s)   : Pol Warnimont
+ * Create date : 2016-02-11
+ * Version     : 0.1A1
  *
- * Description : Header file for service class.
+ * Description : Main form header file.
  *
  * Changelog
  * ---------
- *  2016-02-12 : Created file.
+ *  2016-02-11 : Created fi e.
  *
  * License
  * -------
@@ -32,30 +32,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QString>
+#include "httprequestworker.h"
 
-class Service {
-	private:
-		int id;
-		int value;
-		QString cmd;
-		QString checkOutput;
-		QString parameters;
+#include "ui_Notificator.h"
+
+class Notificator : public QMainWindow, public Ui::MainWindow {
+	Q_OBJECT
 
 	public:
-		Service(int id, int value, QString cmd, QString checkOutput, QString parameters);
-		
-		void setID(int id);
-		void setValue(int value);
-		void setCmd(QString cmd);
-		void setCheckOutput(QString checkOutput);
-		void setParameters(QString parameters);
-		
-		int getID();
-		int getValue();
-		QString getCmd();
-		QString getCheckOutput();
-		QString getParameters();
+		Notificator(QMainWindow *parent = 0);
+		~Notificator();
+
+	private slots:
+		void testJSON();
+		void handleResult(HttpRequestWorker *worker);
 };
 
 #endif

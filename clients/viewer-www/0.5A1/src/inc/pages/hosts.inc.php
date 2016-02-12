@@ -1,17 +1,15 @@
-#ifndef SERVICE_H
-#define SERVICE_H
-
+<?php
 /*
- * File : service.h
+ * File : hosts.inc.php
  * Author(s) : Pol Warnimont
- * Create date : 2016-02-12
- * Version : 3.0A1
+ * Create date : 2016-02-11
+ * Version : 0.5A1
  *
- * Description : Header file for service class.
+ * Description : Content for host overview.
  *
  * Changelog
  * ---------
- *  2016-02-12 : Created file.
+ *  2016-02-11 : Created file.
  *
  * License
  * -------
@@ -32,30 +30,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QString>
+echo <<< PG
+	<h1>Hosts Overview</h1>
 
-class Service {
-	private:
-		int id;
-		int value;
-		QString cmd;
-		QString checkOutput;
-		QString parameters;
+	<div id="tableview">
+		<table id="dataHosts" width="100%">
+			<thead>
+				<tr>
+					<th><input type="checkbox" name="checkAll" id="checkAll"></th>
+					<th>Hostname</th>
+					<th>IP Address</th>
+					<th>Type</th>
+					<th>OS</th>
+					<th>Model</th>
+					<th>Manufacturer</th>
+					<th>Last Checked</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
 
-	public:
-		Service(int id, int value, QString cmd, QString checkOutput, QString parameters);
-		
-		void setID(int id);
-		void setValue(int value);
-		void setCmd(QString cmd);
-		void setCheckOutput(QString checkOutput);
-		void setParameters(QString parameters);
-		
-		int getID();
-		int getValue();
-		QString getCmd();
-		QString getCheckOutput();
-		QString getParameters();
-};
-
-#endif
+	<button id="btnRefresh"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+PG;

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TASK_H
+#define TASK_H
 
 /*
  * File        : task .h
@@ -42,6 +43,7 @@ class Task : public QObject {
 	public slots:
 		void run();
 		void getID();
+		void loadServices();
 
 	private:
 		//void testRun(int mode);
@@ -56,3 +58,5 @@ class Task : public QObject {
 	signals:
 		void finished();
 };
+
+#endif

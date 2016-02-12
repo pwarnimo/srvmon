@@ -60,6 +60,11 @@ void Task::loadServices() {
 		busy = true;
 
 		QString url_str = "http://localhost/director/servers/" + myid + "/services";
+
+		HttpRequestInput input(url_str, "GET");
+
+		HttpRequestWorker *worker = new HttpRequestWorker(this);
+		//connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)))
 	}
 }
 
@@ -107,19 +112,21 @@ void Task::handle_result(HttpRequestWorker *worker) {
 
 					qDebug() << "M0-RESP>" << worker->response;
 
-					QJsonDocument d = QJsonDocument::fromJson(worker->response);
-					QJsonObject jobj = d.object();
-					QJsonValue val1 = jobj.value(QString("data"));
+					QJsonDocument doc(QJsonDocument::fromJson(worker->response));
+					QJsonObject jobj = doc.object();
 
-					QJsonObject item = val1.toObject();
+					//qDebug() << "JSON-OBJ = " << jobj["status"].toString();
 
-					QJsonValue id = item["idServer"];
+					if (QString::compare(jobj["status"].toString(), "OK", Qt::CaseInsensitive) == 0) {
+						qDebug() << "M0-QRY = OK";
 
-					myid =id.toString();
+						//qDebug() << "M0-DECODED = " << jobj["data"].toArray()[0].toObject()["idServer"].toString();
+						myid = jobj["data"].toArray()[0].toObject()["idServer"].toString();
+					}
+					else {
+						qDebug() << "M0-QRY = FAILED";
+					}
 
-					qDebug() << "M0> The server ID is" << myid;
-
-					//break;
 				}
 
 				//case 1: {

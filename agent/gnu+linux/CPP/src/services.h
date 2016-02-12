@@ -1,13 +1,13 @@
-#ifndef SERVICE_H
-#define SERVICE_H
+#ifndef SERVICES_H
+#define SERVICES_H
 
 /*
- * File : service.h
+ * File : services.h
  * Author(s) : Pol Warnimont
  * Create date : 2016-02-12
- * Version : 3.0A1
+ * Version : 3.0 A1
  *
- * Description : Header file for service class.
+ * Description : Header file for the service management class.
  *
  * Changelog
  * ---------
@@ -32,30 +32,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QString>
+#include "service.h"
 
-class Service {
+class Services {
 	private:
-		int id;
-		int value;
-		QString cmd;
-		QString checkOutput;
-		QString parameters;
+		QVector<Service> v_services;
+		QVector<Service>::iterator v_iter;
 
 	public:
-		Service(int id, int value, QString cmd, QString checkOutput, QString parameters);
-		
-		void setID(int id);
-		void setValue(int value);
-		void setCmd(QString cmd);
-		void setCheckOutput(QString checkOutput);
-		void setParameters(QString parameters);
-		
-		int getID();
-		int getValue();
-		QString getCmd();
-		QString getCheckOutput();
-		QString getParameters();
+		Services();
+
+		void addServiceToVector(Service service);
+		void clearList();
 };
 
 #endif

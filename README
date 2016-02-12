@@ -19,10 +19,9 @@ SRVMON SERVER MONITORING SUITE
  ***   -UPDATER         ---       -- Scratched    None
  ***   -SERVER          2.0       P1 Development  High
  *** SRVMON AGENT       3.0       P1 Development  High
- *** SRVMON WEBUI       0.5       P1 Development  High
- *** SRVMON NOTIFICATOR 0.9       P1 Development  High
- *** ANDROID CLIENT     0.1       P2 Development  Medium
- *** IOS CLIENT         ?.?       P2 Planning     None
+ *** SRVMON CLIENTS
+       -Viewer HTTP     0.5       P1 Development  High
+       -NotificatorQT   0.1       P1 Development  Medium
 
  *** Priorities explained:
  *** -Planning    : Project is currently being planned.

@@ -1,17 +1,14 @@
-#ifndef SERVICE_H
-#define SERVICE_H
-
 /*
- * File : service.h
+ * File : main.cpp
  * Author(s) : Pol Warnimont
- * Create date : 2016-02-12
- * Version : 3.0A1
+ * Create date : 2016-02-11
+ * Version : 0.1A1
  *
- * Description : Header file for service class.
+ * Description : Main method.
  *
  * Changelog
  * ---------
- *  2016-02-12 : Created file.
+ *  2016-02-11 : Created file.
  *
  * License
  * -------
@@ -32,30 +29,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QString>
+#include "notificator.h"
+#include <QApplication>
 
-class Service {
-	private:
-		int id;
-		int value;
-		QString cmd;
-		QString checkOutput;
-		QString parameters;
+int main(int argc, char *argv[]) {
+	QApplication app(argc, argv);
+	Notificator ntfcr;
 
-	public:
-		Service(int id, int value, QString cmd, QString checkOutput, QString parameters);
-		
-		void setID(int id);
-		void setValue(int value);
-		void setCmd(QString cmd);
-		void setCheckOutput(QString checkOutput);
-		void setParameters(QString parameters);
-		
-		int getID();
-		int getValue();
-		QString getCmd();
-		QString getCheckOutput();
-		QString getParameters();
-};
+	ntfcr.show();
 
-#endif
+	return app.exec();
+}

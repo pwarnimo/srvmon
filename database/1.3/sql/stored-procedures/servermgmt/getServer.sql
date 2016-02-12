@@ -23,6 +23,7 @@
 |  2015-04-28 : Prepared procedure for DB release 1.0.
 |  2015-04-30 : Changed license to AGPLv3.
 |  2015-05-06 : Cleaning up function.
+|  2016-02-11 : Adding "dtLastCheckTS" to output.
 |
 | License information
 | -------------------
@@ -64,14 +65,14 @@ BEGIN
 		BEGIN
 			IF pID = -1 THEN
 				BEGIN
-					SET @qry = "SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup";
+					SET @qry = "SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer, dtLastCheckTS FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup";
 
 					PREPARE STMT FROM @qry;
 					EXECUTE STMT;
 				END;
 			ELSE
 				BEGIN
-					SET @qry = "SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup AND idServer = ?";
+					SET @qry = "SELECT idServer, dtHostname, dtIPAddress, SR.dtDescription, OS.dtDescription AS dtOS, TY.dtDescription AS dtType, dtEnabled, GR.dtCaption AS dtResponsible, HW.dtModel, HW.dtManufacturer, dtLastCheckTS FROM tblServer SR, tblOS OS, tblType TY, tblGroup GR, tblHardware HW WHERE fiType = idType AND fiOS = idOS AND fiHardware = idHardware AND fiResponsible = idGroup AND idServer = ?";
 
 					SET @p1 = pID;
 

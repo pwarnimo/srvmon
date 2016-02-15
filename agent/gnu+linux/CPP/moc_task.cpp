@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Task_t {
-    QByteArrayData data[9];
-    char stringdata[79];
+    QByteArrayData data[11];
+    char stringdata[107];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,13 +35,15 @@ QT_MOC_LITERAL(2, 14, 0),
 QT_MOC_LITERAL(3, 15, 3),
 QT_MOC_LITERAL(4, 19, 5),
 QT_MOC_LITERAL(5, 25, 12),
-QT_MOC_LITERAL(6, 38, 13),
-QT_MOC_LITERAL(7, 52, 18),
-QT_MOC_LITERAL(8, 71, 6)
+QT_MOC_LITERAL(6, 38, 12),
+QT_MOC_LITERAL(7, 51, 13),
+QT_MOC_LITERAL(8, 65, 18),
+QT_MOC_LITERAL(9, 84, 6),
+QT_MOC_LITERAL(10, 91, 14)
     },
     "Task\0finished\0\0run\0getID\0loadServices\0"
-    "handle_result\0HttpRequestWorker*\0"
-    "worker\0"
+    "testingFunc1\0handle_result\0"
+    "HttpRequestWorker*\0worker\0handleServices\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -51,7 +53,7 @@ static const uint qt_meta_data_Task[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -59,13 +61,15 @@ static const uint qt_meta_data_Task[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   39,    2, 0x06,
+       1,    0,   49,    2, 0x06,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,   40,    2, 0x0a,
-       4,    0,   41,    2, 0x0a,
-       5,    0,   42,    2, 0x0a,
-       6,    1,   43,    2, 0x08,
+       3,    0,   50,    2, 0x0a,
+       4,    0,   51,    2, 0x0a,
+       5,    0,   52,    2, 0x0a,
+       6,    0,   53,    2, 0x0a,
+       7,    1,   54,    2, 0x08,
+      10,    1,   57,    2, 0x08,
 
  // signals: parameters
     QMetaType::Void,
@@ -74,7 +78,9 @@ static const uint qt_meta_data_Task[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 7,    8,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 8,    9,
+    QMetaType::Void, 0x80000000 | 8,    9,
 
        0        // eod
 };
@@ -88,13 +94,22 @@ void Task::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         case 1: _t->run(); break;
         case 2: _t->getID(); break;
         case 3: _t->loadServices(); break;
-        case 4: _t->handle_result((*reinterpret_cast< HttpRequestWorker*(*)>(_a[1]))); break;
+        case 4: _t->testingFunc1(); break;
+        case 5: _t->handle_result((*reinterpret_cast< HttpRequestWorker*(*)>(_a[1]))); break;
+        case 6: _t->handleServices((*reinterpret_cast< HttpRequestWorker*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-        case 4:
+        case 5:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< HttpRequestWorker* >(); break;
+            }
+            break;
+        case 6:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
@@ -139,13 +154,13 @@ int Task::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 5)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }

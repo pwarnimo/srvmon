@@ -34,7 +34,7 @@
 Services::Services() {}
 
 void Services::addServiceToVector(Service service) {
-	v_services << service;
+	//v_services << service;
 }
 
 void Services::clearList() {}

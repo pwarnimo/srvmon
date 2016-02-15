@@ -82,14 +82,15 @@ int main (int argc, char *argv[]) {
 			task->run();
 		}*/
 
-		QTimer::singleShot(0, task, SLOT(getID()));
+		//QTimer::singleShot(0, task, SLOT(getID()));
+		QTimer::singleShot(0, task, SLOT(loadServices()));
 
 		QTimer *timer = new QTimer(&app);
 		
-		QObject::connect(timer, SIGNAL(timeout()), task, SLOT(run()));
-		//QObject::connect(task, SIGNAL(finished()), &app, SLOT(quit()));
+		//QObject::connect(timer, SIGNAL(timeout()), task, SLOT(run()));
+		QObject::connect(task, SIGNAL(finished()), &app, SLOT(quit()));
 		
-		timer->start(10000);
+		//timer->start(10000);
 
 
 		/*}

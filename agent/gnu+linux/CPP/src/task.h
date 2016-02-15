@@ -44,6 +44,9 @@ class Task : public QObject {
 		void run();
 		void getID();
 		void loadServices();
+		// TESTING //
+		void testingFunc1();
+		// TESTING //
 
 	private:
 		//void testRun(int mode);
@@ -54,6 +57,7 @@ class Task : public QObject {
 
 	private slots:
 		void handle_result(HttpRequestWorker *worker);
+		void handleServices(HttpRequestWorker *worker);
 
 	signals:
 		void finished();

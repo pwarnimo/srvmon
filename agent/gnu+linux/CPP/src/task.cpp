@@ -32,6 +32,8 @@
 #include <QTextStream>
 #include <QNetworkReply>
 
+#include "service.h"
+
 Task::Task(QObject *parent) : QObject(parent) {
 	busy = false;
 	qDebug("**Task created");
@@ -53,19 +55,35 @@ void Task::run() {
 	}
 }
 
+void Task::testingFunc1() {
+	qDebug() << "***TESTING AREA";
+
+	Service svc0(0, 4, "chkping", "N/A", "", "16c02c1990231d13352d89a604f70933f2202d29");
+
+	if (svc0.isValid()) {
+		qDebug() << "[TASK] Script ok!";
+	}
+	else {
+		qDebug() << "[TASK] Script tampered!!";
+	}
+
+	emit(finished());
+	qDebug() << "***TESTING AREA";
+}
+
 void Task::loadServices() {
 	qDebug(">> loadServices()");
-	if (busy == false) {
-		mode = 2;
-		busy = true;
 
-		QString url_str = "http://localhost/director/servers/" + myid + "/services";
+	//test
+	myid = "1";
 
-		HttpRequestInput input(url_str, "GET");
+	QString url_str = "http://localhost/director/servers/" + myid + "/services";
 
-		HttpRequestWorker *worker = new HttpRequestWorker(this);
-		//connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)))
-	}
+	HttpRequestInput input(url_str, "GET");
+
+	HttpRequestWorker *worker = new HttpRequestWorker(this);
+	connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handleServices(HttpRequestWorker*)));
+	worker->execute(&input);
 }
 
 void Task::getID() {
@@ -99,6 +117,42 @@ void Task::getID() {
 	
 	qDebug("testRun() -> end");
 }*/
+
+void Task::handleServices(HttpRequestWorker *worker) {
+	qDebug() << "[TASK] PARSING DATA...";
+
+	if (worker->error_type == QNetworkReply::NoError) {
+		qDebug() << "[TASK] Response received...";
+
+		qDebug() << "[TASK] DATA = " << worker->response;
+
+		QJsonDocument doc(QJsonDocument::fromJson(worker->response));
+		QJsonObject jobj = doc.object();
+
+		if (QString::compare(jobj["status"].toString(), "OK", Qt::CaseInsensitive) == 0) {
+			qDebug() << "[TASK] Query data is valid.";
+			QJsonArray arrServices = jobj["data"].toArray();
+
+			for (auto it = arrServices.begin(); it != arrServices.end(); it++) {
+				QJsonObject serviceObj = (*it).toObject();
+
+				//qDebug() << serviceObj["idService"].toString() << " -- " << serviceObj["dtCheckCommand"].toString();
+
+				//Service svcTmp(..);
+				//if (svcTmp.isValid()) {..}
+			}
+		}
+		else {
+			qDebug() << "[TASK] Query data is invalid!!";
+		}
+	}
+	else {
+		qDebug() << "[TASK] ERROR!! >" << worker->error_str;
+	}
+
+	//test
+	emit(finished());
+}
 
 void Task::handle_result(HttpRequestWorker *worker) {
 	QString msg;

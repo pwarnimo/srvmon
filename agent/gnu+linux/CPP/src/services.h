@@ -36,8 +36,8 @@
 
 class Services {
 	private:
-		QVector<Service> v_services;
-		QVector<Service>::iterator v_iter;
+		//QVector<Service> v_services;
+		//QVector<Service>::iterator v_iter;
 
 	public:
 		Services();

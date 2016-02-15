@@ -12,6 +12,7 @@
  * Changelog
  * ---------
  *  2016-02-12 : Created file.
+ *  2016-02-15 : Adding functions for checksum and script execution.
  *
  * License
  * -------
@@ -41,21 +42,26 @@ class Service {
 		QString cmd;
 		QString checkOutput;
 		QString parameters;
+		QString checksum;
 
 	public:
-		Service(int id, int value, QString cmd, QString checkOutput, QString parameters);
+		Service(int id, int value, QString cmd, QString checkOutput, QString parameters, QString checksum);
 		
 		void setID(int id);
 		void setValue(int value);
 		void setCmd(QString cmd);
 		void setCheckOutput(QString checkOutput);
 		void setParameters(QString parameters);
+		void setChecksum(QString checksum);
 		
 		int getID();
 		int getValue();
 		QString getCmd();
 		QString getCheckOutput();
 		QString getParameters();
+		QString getChecksum();
+
+		bool isValid();
 };
 
 #endif

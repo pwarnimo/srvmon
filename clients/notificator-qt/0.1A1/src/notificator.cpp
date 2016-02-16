@@ -43,7 +43,7 @@ Notificator::Notificator(QMainWindow *parent) : QMainWindow(parent) {
 Notificator::~Notificator() {}
 
 void Notificator::testJSON() {
-	QString url_str = "http://localhost/director/servers";
+	QString url_str = "http://192.168.210.49/director/servers";
 
 	HttpRequestInput input(url_str, "GET");
 

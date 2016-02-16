@@ -149,19 +149,10 @@ void Task::handleServices(HttpRequestWorker *worker) {
 				//if (svcTmp.isValid()) {..}
 				//qDebug() << svcTmp.toString();
 				if (svcTmp.isValid()) {
-					qDebug() << "[TASK] Script checksum test passed :D! Executing script...";
-
-					// TESTING
-					/*QProcess *process = new QProcess();
-
-					process->setWorkingDirectory("/usr/share/srvmon/agent/scripts/");
-					process->start("/bin/bash", QStringList() << svcTmp.getCmd() << " " << svcTmp.getParameters());
-					process->waitForFinished();
-
-					qDebug() << process->readAllStandardOutput();*/
+					qDebug() << "[TASK] Script checksum test passed :D!";
 				}
 				else {
-					qDebug() << "[TASK] Script has been tampered :(! ABORTING!!";
+					qDebug() << "[TASK] Script has been tampered :(!";
 				}
 			}
 		}

@@ -82,3 +82,7 @@ bool Service::isValid() {
 
 	return false;
 }
+
+QString Service::toString() {
+	return "SID-" + QString::number(id) + " => " + cmd;
+}

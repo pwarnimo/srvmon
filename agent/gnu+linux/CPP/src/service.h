@@ -13,6 +13,7 @@
  * ---------
  *  2016-02-12 : Created file.
  *  2016-02-15 : Adding functions for checksum and script execution.
+ *  2016-02-16 : Adding toString function.
  *
  * License
  * -------
@@ -62,6 +63,8 @@ class Service {
 		QString getChecksum();
 
 		bool isValid();
+
+		QString toString();
 };
 
 #endif

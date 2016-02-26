@@ -33,6 +33,7 @@
 
 #include <QtCore>
 #include "httprequestworker.h"
+#include "service.h"
 
 class Task : public QObject {
 	Q_OBJECT
@@ -44,13 +45,13 @@ class Task : public QObject {
 		void run();
 		void getID();
 		void loadServices();
-		// TESTING //
-		void testingFunc1();
-		// TESTING //
+		void keepAlive();
 
 	private:
 		//void testRun(int mode);
 		//int getID();
+		void updateService(Service);
+
 		bool busy;
 		int mode;
 		QString myid;
@@ -58,6 +59,7 @@ class Task : public QObject {
 	private slots:
 		void handle_result(HttpRequestWorker *worker);
 		void handleServices(HttpRequestWorker *worker);
+		void handleKeepAlive(HttpRequestWorker *worker);
 
 	signals:
 		void finished();

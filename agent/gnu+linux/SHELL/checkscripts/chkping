@@ -13,6 +13,7 @@
 #  2015-04-30 : Changed license to AGPLv3.
 #  2015-05-26 : Modifying script.
 #  2016-02-03 : Changed license.
+#  2016-02-26 : Disabled newline on output.
 #
 # License
 # -------
@@ -62,7 +63,7 @@ then
 		OUTPUT="$1 is reachable!"
 	fi
 
-	echo "$EXCODE;$OUTPUT"
+	echo -n "$EXCODE;$OUTPUT"
 	exit $EXCODE
 else
 	echo "Syntax error!"

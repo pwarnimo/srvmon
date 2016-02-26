@@ -11,6 +11,7 @@
 # ---------
 #  2015-05-26 : Created script.
 #  2016-02-03 : Changed license.
+#  2016-02-26 : Disabled newline on output.
 #
 # License
 # -------
@@ -48,7 +49,7 @@ then
 		EXCODE=2
 	fi
 
-	echo "$EXCODE;$OUTPUT"
+	echo -n "$EXCODE;$OUTPUT"
 	exit $EXCODE
 else
 	echo "Syntax error!"

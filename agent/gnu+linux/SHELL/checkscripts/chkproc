@@ -13,6 +13,7 @@
 #  2015-04-30 : Changed license to AGPLv3.
 #  2015-05-26 : Modified script.
 #  2016-02-03 : Changed license.
+#  2016-02-26 : Disabled newline on output.
 #
 # License
 # -------
@@ -49,7 +50,7 @@ then
 		EXCODE=0
 	fi
 
-	echo "$EXCODE;$OUTPUT;$PROCCOUNT;$1;$2"
+	echo -n "$EXCODE;$OUTPUT;$PROCCOUNT;$1;$2"
 	exit $EXCODE
 else
 	echo "Syntax error!"

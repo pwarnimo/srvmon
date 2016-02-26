@@ -9,6 +9,7 @@
  * Changelog
  * ---------
  *  2016-02-03 : Created file.
+ *  2016-02-26 : Adding help option.
  *
  * License information
  * -------------------
@@ -55,7 +56,13 @@ void printLicense() {
 	qDebug() << "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.";
 }
 
+void printHelp() {
+	qDebug() << "Help data";
+}
+
 int main (int argc, char *argv[]) {
+	qDebug() << "THIS IS A TESTING VERSION!\nDO NOT USE IN PRODUCTION ENVIRONMENT!";
+
 	if (argc > 1) {
 		if (QString::compare(argv[1], "-v") == 0) {
 			printVersion();
@@ -64,6 +71,11 @@ int main (int argc, char *argv[]) {
 
 		if (QString::compare(argv[1], "-l") == 0) {
 			printLicense();
+			return 0;
+		}
+
+		if (QString::compare(argv[1], "-h") == 0) {
+			printHelp();
 			return 0;
 		}
 	}
@@ -84,6 +96,7 @@ int main (int argc, char *argv[]) {
 
 		//QTimer::singleShot(0, task, SLOT(getID()));
 		QTimer::singleShot(0, task, SLOT(loadServices()));
+		//QTimer::singleShot(0, task, SLOT(keepAlive()));
 
 		QTimer *timer = new QTimer(&app);
 		

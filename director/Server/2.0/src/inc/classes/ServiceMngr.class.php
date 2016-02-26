@@ -15,6 +15,7 @@
  * ### List of changes
  *  
  * *	2016-02-10 : Created class.
+ * *	2016-02-26 : Adding functions for updating service data.
  *  
  * ### License
  *  
@@ -66,5 +67,9 @@ class ServiceMngr {
 		else {
 			return self::generateError("QUERY-FAIL", "The SQL procedure getServicesForServer(..) has failed!");
 		}
+	}
+
+	public static function updateServiceData($hid, $sid, $jsonData) {
+		$service = json_decode($jsonData);
 	}
 }

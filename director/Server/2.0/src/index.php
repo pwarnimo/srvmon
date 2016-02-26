@@ -15,6 +15,7 @@
  *  2016-02-03 : Switching to Slim framework.
  *  2016-02-04 : Adding keepAlive function.
  *  2016-02-06 : Server functions moved to new class.
+ *  2016-02-26 : Adding functions for updating services.
  *
  * License information
  * -------------------
@@ -53,6 +54,9 @@ $app->put("/servers/:id/setstatus", function ($id) { echo ServerMngr::setServerS
 $app->put("/servers/:id/children/disablechecks", function ($id) { echo ServerMngr::disableChildHosts($id); });
 $app->get("/servers/:hid/services", function ($hid) { echo ServiceMngr::getServicesForServer($hid); });
 $app->get("/servers/:hid/services/:sid", function ($hid, $sid) { echo ServiceMngr::getServicesForServer($hid, $sid); });
+
+/* SERVICES FUNCS */
+$app->put("/servers/:hid/services/:sid/updatedata", function ($hid, $sid) { echo ServiceMngr::updateServiceData($hid, $sid, \Slim\Slim::getInstance()->request()->getBody()); });
 
 /*$app->put("/servers/:hid/services/:sid/update", "updateServiceOfServer");
 $app->get("/servers/:hid/services", "getAllServicesForServer");

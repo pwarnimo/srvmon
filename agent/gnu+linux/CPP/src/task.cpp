@@ -55,35 +55,43 @@ void Task::run() {
 	}
 }
 
-void Task::testingFunc1() {
-	qDebug() << "***TESTING AREA";
-
-	Service svc0(0, 4, "chkping", "N/A", "", "16c02c1990231d13352d89a604f70933f2202d29");
-
-	if (svc0.isValid()) {
-		qDebug() << "[TASK] Script ok!";
-	}
-	else {
-		qDebug() << "[TASK] Script tampered!!";
-	}
-
-	emit(finished());
-	qDebug() << "***TESTING AREA";
-}
-
 void Task::loadServices() {
 	qDebug(">> loadServices()");
 
 	//test
 	myid = "1";
 
-	QString url_str = "http://192.168.210.49/director/servers/" + myid + "/services";
+	QString url_str = "http://localhost/director/servers/" + myid + "/services";
 
 	HttpRequestInput input(url_str, "GET");
 
 	HttpRequestWorker *worker = new HttpRequestWorker(this);
 	connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handleServices(HttpRequestWorker*)));
 	worker->execute(&input);
+}
+
+void Task::keepAlive() {
+	qDebug(">> keepAlive()");
+
+	//test
+	myid = "1";
+
+	if (QString::compare(myid, "-1") != 0) {
+		QString url_str = "http://localhost/director/servers/" + myid + "/keepalive";
+
+		HttpRequestInput input(url_str, "PUT");
+
+		HttpRequestWorker *worker = new HttpRequestWorker(this);
+		connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handleKeepAlive(HttpRequestWorker*)));
+		worker->execute(&input);
+	}
+	else {
+		qDebug() << "[TASK] ID NOT SET!";
+	}
+}
+
+void Task::updateService(Service svc) {
+	qDebug() << ">> updateService(..)";
 }
 
 void Task::getID() {
@@ -117,6 +125,30 @@ void Task::getID() {
 	
 	qDebug("testRun() -> end");
 }*/
+
+void Task::handleKeepAlive(HttpRequestWorker *worker) {
+	qDebug() << "[TASK] PARSING DATA...";
+
+	if (worker->error_type == QNetworkReply::NoError) {
+		qDebug() << "[TASK] Response received...";
+		qDebug() << "[TASK] DATA = " << worker->response;
+
+		QJsonDocument doc(QJsonDocument::fromJson(worker->response));
+		QJsonObject jobj = doc.object();
+
+		if (QString::compare(jobj["status"].toString(), "OK", Qt::CaseInsensitive) == 0) {
+			qDebug() << "[TASK] Query has been successfully executed on the server.";
+		}
+		else {
+			qDebug() << "[TASK] The query has failed on the server!";
+		}
+	}
+	else {
+		qDebug() << "[TASK] ERROR!! >" << worker->error_str;
+	}
+
+	emit(finished());
+}
 
 void Task::handleServices(HttpRequestWorker *worker) {
 	qDebug() << "[TASK] PARSING DATA...";
@@ -159,6 +191,40 @@ void Task::handleServices(HttpRequestWorker *worker) {
 					process->waitForFinished();
 
 					qDebug() << process->readAllStandardOutput();*/
+
+					QProcess *process = new QProcess();
+
+					process->setWorkingDirectory("/usr/share/srvmon/agent/scripts/");
+					//process->start("./chkping 10.0.2.15 4 2");
+					process->start("./" + svcTmp.getCmd() + " " + svcTmp.getParameters());
+					process->waitForFinished(-1);
+
+					QString chkData = process->readAllStandardOutput();
+					//qDebug() << process->readAllStandardError();
+
+					QStringList lstData = chkData.split(";");
+
+					switch (lstData.at(0).toInt()) {
+						case 0:
+							qDebug() << "[TASK] >>Check OK => S0";
+							break;
+
+						case 1:
+							qDebug() << "[TASK] >>Check WARN => S1";
+							break;
+
+						case 2:
+							qDebug() << "[TASK] >>Check CRIT => S2";
+							break;
+
+						case 3:
+							qDebug() << "[TASK] >>TIMED OUT => S3";
+							break;
+					}
+
+					qDebug() << "[TASK] >>SVC-STR = " << lstData.at(1);
+
+					updateService(svcTmp);
 				}
 				else {
 					qDebug() << "[TASK] Script has been tampered :(! ABORTING!!";
@@ -178,49 +244,4 @@ void Task::handleServices(HttpRequestWorker *worker) {
 }
 
 void Task::handle_result(HttpRequestWorker *worker) {
-	QString msg;
-
-		qDebug() << "MODE == " << mode;
-
-	    if (worker->error_type == QNetworkReply::NoError) {
-			//switch (mode) {
-				//case 0: {
-				if (mode == 0) {
-
-					qDebug() << "M0-RESP>" << worker->response;
-
-					QJsonDocument doc(QJsonDocument::fromJson(worker->response));
-					QJsonObject jobj = doc.object();
-
-					//qDebug() << "JSON-OBJ = " << jobj["status"].toString();
-
-					if (QString::compare(jobj["status"].toString(), "OK", Qt::CaseInsensitive) == 0) {
-						qDebug() << "M0-QRY = OK";
-
-						//qDebug() << "M0-DECODED = " << jobj["data"].toArray()[0].toObject()["idServer"].toString();
-						myid = jobj["data"].toArray()[0].toObject()["idServer"].toString();
-					}
-					else {
-						qDebug() << "M0-QRY = FAILED";
-					}
-
-				}
-
-				//case 1: {
-				else if (mode == 1) {
-					qDebug() << "M1-RESP>" << worker->response;
-
-					//break;
-				}
-			//}
-			//msg = "Success - Response: " + worker->response;
-		}
-		else {
-			msg = "Error: " + worker->error_str;
-			qDebug() << msg;
-		}
-
-		busy = false;
-
-		//qDebug() << msg;
 }
